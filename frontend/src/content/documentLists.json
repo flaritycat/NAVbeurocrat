@@ -1,0 +1,65 @@
+[
+  {
+    "id": "identity_and_bank",
+    "title": "Identitet og konto",
+    "items": [
+      "Gyldig legitimasjon eller annen sikker identifikasjon",
+      "Kontonummer du vil bruke ved søknad eller utbetaling",
+      "Eventuelle tidligere vedtak eller meldinger du allerede har fra NAV"
+    ]
+  },
+  {
+    "id": "employment_loss",
+    "title": "Arbeid og inntekt som har falt bort",
+    "items": [
+      "Oppsigelse, permitteringsvarsel eller annen bekreftelse på at arbeidsforholdet er endret",
+      "Lønnsslipper eller annen oversikt over tidligere inntekt",
+      "Eventuell dialog med arbeidsgiver om siste arbeidsdag, permittering eller redusert stilling"
+    ]
+  },
+  {
+    "id": "health_docs",
+    "title": "Helse og arbeidsevne",
+    "items": [
+      "Sykmelding, legeerklæring eller annen medisinsk dokumentasjon hvis helse er en viktig del av situasjonen",
+      "Kort oversikt over hvordan helsen påvirker arbeidsevnen din i praksis",
+      "Eventuelle vedtak eller planer du allerede har fra NAV eller helsetjenesten"
+    ]
+  },
+  {
+    "id": "income_and_expenses",
+    "title": "Løpende økonomi",
+    "items": [
+      "Kontoutskrift eller oversikt over hva du faktisk har tilgjengelig nå",
+      "Regninger som haster mest, for eksempel husleie, strøm eller matutgifter",
+      "Oversikt over faste utgifter og eventuelle andre inntekter i husstanden"
+    ]
+  },
+  {
+    "id": "housing_docs",
+    "title": "Bolig og boutgifter",
+    "items": [
+      "Leiekontrakt, husleiekrav eller annen dokumentasjon på boligforholdet ditt",
+      "Varsel om oppsigelse, utkastelse eller betalingsmislighold hvis du har fått det",
+      "Oversikt over husleie, strøm og andre nødvendige boutgifter"
+    ]
+  },
+  {
+    "id": "debt_docs",
+    "title": "Gjeld og betalingspress",
+    "items": [
+      "Inkassovarsler, betalingsoppfordringer eller brev fra namsmann",
+      "En enkel oversikt over hvem du skylder penger og hvor mye",
+      "Regninger du ikke klarer å betale innen fristen"
+    ]
+  },
+  {
+    "id": "follow_up_docs",
+    "title": "Oppfølging og arbeid",
+    "items": [
+      "CV eller en enkel oversikt over arbeidserfaring og utdanning",
+      "Notater om hvilke hindringer som gjør det vanskelig å komme i jobb akkurat nå",
+      "Tidligere tiltaksplaner, aktivitetsplaner eller annen oppfølging du allerede har fått"
+    ]
+  }
+]

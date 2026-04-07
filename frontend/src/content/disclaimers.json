@@ -1,0 +1,17 @@
+[
+  {
+    "id": "not_decision",
+    "title": "Veiviseren fatter ikke vedtak",
+    "text": "Dette verktøyet hjelper deg å strukturere situasjonen din, men det avgjør ikke om du får en ytelse eller tjeneste."
+  },
+  {
+    "id": "official_assessment",
+    "title": "NAV vurderer saken konkret",
+    "text": "Endelig vurdering gjøres av NAV eller kommunen på grunnlag av regler, dokumentasjon og din konkrete situasjon."
+  },
+  {
+    "id": "privacy",
+    "title": "Svar lagres ikke på server",
+    "text": "Svarene dine holdes bare i nettleseren på denne enheten og sendes ikke inn som en personsak til serveren."
+  }
+]

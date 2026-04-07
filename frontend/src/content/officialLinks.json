@@ -1,0 +1,65 @@
+[
+  {
+    "id": "dagpenger",
+    "title": "Dagpenger",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/dagpenger",
+    "description": "Offisiell oversikt over dagpenger, vilkår og hvordan du søker."
+  },
+  {
+    "id": "arbeidsledig_permittert",
+    "title": "Arbeidsledig eller permittert",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/arbeidsledig-permittert",
+    "description": "Samleside for deg som står uten jobb eller er permittert."
+  },
+  {
+    "id": "okonomisk_sosialhjelp",
+    "title": "Økonomisk sosialhjelp",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/okonomisk-sosialhjelp",
+    "description": "Offisiell informasjon om økonomisk sosialhjelp og søknad via NAV-kontoret."
+  },
+  {
+    "id": "aap",
+    "title": "Arbeidsavklaringspenger (AAP)",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/aap",
+    "description": "Offisiell side om AAP, vilkår og dokumentasjon."
+  },
+  {
+    "id": "kvalifiseringsprogrammet",
+    "title": "Kvalifiseringsprogrammet",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/kvalifiseringsprogrammet",
+    "description": "Offisiell informasjon om kvalifiseringsprogram og kvalifiseringsstønad."
+  },
+  {
+    "id": "okonomi_gjeld",
+    "title": "Råd om økonomi og gjeld",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/okonomi-gjeld",
+    "description": "Offisiell side om økonomi- og gjeldsrådgivning via NAV."
+  },
+  {
+    "id": "arbeid",
+    "title": "Arbeid og oppfølging",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/arbeid",
+    "description": "Offisiell oversikt over arbeidsrettet oppfølging og hjelp til å komme i jobb."
+  },
+  {
+    "id": "midlertidig_botilbud",
+    "title": "Midlertidig botilbud",
+    "publisher": "NAV",
+    "url": "https://www.nav.no/midlertidig-botilbud",
+    "description": "Offisiell informasjon om hjelp ved akutt mangel på bolig eller et sted å sove."
+  },
+  {
+    "id": "bostotte",
+    "title": "Bostøtte",
+    "publisher": "Husbanken",
+    "url": "https://www.husbanken.no/person/bostotte/",
+    "description": "Offisiell informasjon om bostøtte fra Husbanken."
+  }
+]

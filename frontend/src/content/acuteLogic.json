@@ -1,0 +1,32 @@
+[
+  {
+    "id": "urgent_housing_now",
+    "priority": 1,
+    "title": "Boligsituasjonen bør avklares først",
+    "summary": "Hvis du ikke har et sted å sove eller kan miste boligen svært snart, bør du kontakte NAV-kontoret raskt og be om vurdering av akutt hjelp eller midlertidig botilbud.",
+    "whenAnyFlags": ["urgent_housing", "no_stable_home"],
+    "documentListIds": ["housing_docs", "income_and_expenses"],
+    "officialLinkIds": ["midlertidig_botilbud", "okonomisk_sosialhjelp"],
+    "recommendedIds": ["midlertidig_botilbud", "okonomisk_sosialhjelp"]
+  },
+  {
+    "id": "urgent_basic_needs_now",
+    "priority": 2,
+    "title": "Nødvendige utgifter bør tas først",
+    "summary": "Hvis du mangler penger til mat, strøm eller andre helt nødvendige utgifter nå, bør du raskt be om veiledning om akutt økonomisk hjelp.",
+    "whenAnyFlags": ["urgent_basic_needs", "no_income"],
+    "documentListIds": ["income_and_expenses", "identity_and_bank"],
+    "officialLinkIds": ["okonomisk_sosialhjelp"],
+    "recommendedIds": ["okonomisk_sosialhjelp"]
+  },
+  {
+    "id": "debt_escalation",
+    "priority": 3,
+    "title": "Betalingspresset bør ryddes tidlig",
+    "summary": "Hvis inkasso eller andre krav bygger seg opp, kan det være viktig å få oversikt og råd tidlig før situasjonen blir mer låst.",
+    "whenAnyFlags": ["severe_debt_pressure", "mounting_debt"],
+    "documentListIds": ["debt_docs", "income_and_expenses"],
+    "officialLinkIds": ["okonomi_gjeld"],
+    "recommendedIds": ["okonomi_gjeld"]
+  }
+]

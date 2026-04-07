@@ -1,0 +1,455 @@
+[
+  {
+    "id": "start_situation",
+    "title": "Hva passer best for deg akkurat nå?",
+    "description": "Velg det som ligner mest. Veiviseren bruker dette som startpunkt og kan foreslå flere muligheter senere.",
+    "selectionMode": "single",
+    "options": [
+      {
+        "id": "job_loss",
+        "label": "Jeg har mistet jobben / er permittert",
+        "description": "Du står uten vanlig jobbinntekt eller er midlertidig tatt ut av arbeid.",
+        "effects": {
+          "flags": ["job_loss", "income_loss"],
+          "scores": { "dagpenger": 5, "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["job_loss"]
+        }
+      },
+      {
+        "id": "no_money",
+        "label": "Jeg har ikke penger til nødvendige utgifter",
+        "description": "Du strever med å dekke mat, strøm, husleie eller andre grunnleggende behov.",
+        "effects": {
+          "flags": ["income_loss", "urgent_basic_finance"],
+          "scores": { "okonomisk_sosialhjelp": 5, "okonomi_gjeld": 2, "bostotte": 2 },
+          "rationaleIds": ["income_shortfall"]
+        }
+      },
+      {
+        "id": "sick",
+        "label": "Jeg er syk og kan ikke jobbe",
+        "description": "Helseplager gjør at arbeid eller aktivitet er vanskelig å stå i nå.",
+        "effects": {
+          "flags": ["sick", "reduced_work_capacity"],
+          "scores": { "aap": 5, "arbeid_oppfolging": 1, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["health_limits_work"]
+        }
+      },
+      {
+        "id": "housing_risk",
+        "label": "Jeg står i fare for å miste bolig / har ikke bolig",
+        "description": "Boligsituasjonen er ustabil eller akutt.",
+        "effects": {
+          "flags": ["housing_risk"],
+          "scores": { "midlertidig_botilbud": 4, "bostotte": 4, "okonomisk_sosialhjelp": 2 },
+          "rationaleIds": ["housing_risk"]
+        }
+      },
+      {
+        "id": "debt",
+        "label": "Jeg har gjeld og trenger hjelp",
+        "description": "Regninger, inkasso eller annen gjeld gjør økonomien vanskelig å håndtere.",
+        "effects": {
+          "flags": ["debt_pressure"],
+          "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["debt_pressure"]
+        }
+      },
+      {
+        "id": "work_help",
+        "label": "Jeg trenger hjelp til å komme i arbeid",
+        "description": "Du trenger veiledning, oppfølging eller et tydeligere løp mot jobb.",
+        "effects": {
+          "flags": ["needs_work_support"],
+          "scores": { "arbeid_oppfolging": 5, "kvalifiseringsprogram": 2 },
+          "rationaleIds": ["needs_work_support"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Jeg vet ikke hva jeg kan ha rett på",
+        "description": "Du trenger først og fremst hjelp til å sortere mulighetene.",
+        "effects": {
+          "flags": ["unclear_rights"],
+          "scores": { "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1, "bostotte": 1, "okonomi_gjeld": 1 },
+          "rationaleIds": ["unclear_rights"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "acute_now",
+    "title": "Hva haster mest de neste 24 til 72 timene?",
+    "description": "Hvis noe haster, prioriterer veiviseren det foran mer langsiktige løp.",
+    "selectionMode": "single",
+    "options": [
+      {
+        "id": "food_or_power",
+        "label": "Jeg mangler penger til mat, strøm eller andre helt nødvendige utgifter",
+        "effects": {
+          "flags": ["urgent_basic_needs"],
+          "scores": { "okonomisk_sosialhjelp": 5 },
+          "rationaleIds": ["urgent_basic_needs"]
+        }
+      },
+      {
+        "id": "no_place_tonight",
+        "label": "Jeg har ikke et trygt sted å bo eller sove",
+        "effects": {
+          "flags": ["urgent_housing"],
+          "scores": { "midlertidig_botilbud": 6, "okonomisk_sosialhjelp": 3 },
+          "rationaleIds": ["urgent_housing"]
+        }
+      },
+      {
+        "id": "cutoff_or_notice",
+        "label": "Jeg står i fare for å miste strøm, bolig eller en annen grunnleggende nødvendighet veldig snart",
+        "effects": {
+          "flags": ["urgent_basic_needs"],
+          "scores": { "okonomisk_sosialhjelp": 4, "bostotte": 1 },
+          "rationaleIds": ["urgent_basic_needs"]
+        }
+      },
+      {
+        "id": "multiple_acute",
+        "label": "Flere ting haster samtidig",
+        "effects": {
+          "flags": ["urgent_basic_needs", "urgent_housing"],
+          "scores": { "okonomisk_sosialhjelp": 5, "midlertidig_botilbud": 4 },
+          "rationaleIds": ["urgent_basic_needs", "urgent_housing"]
+        }
+      },
+      {
+        "id": "nothing_acute",
+        "label": "Ingenting er helt akutt akkurat nå",
+        "effects": {
+          "flags": ["stable_now"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "work_relation",
+    "title": "Hva stemmer best om arbeidssituasjonen din?",
+    "description": "Dette brukes til å skille mellom inntektssikring, oppfølging og mer langsiktige løp.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["job_loss", "needs_work_support", "unclear_rights", "income_loss"],
+    "options": [
+      {
+        "id": "permittert",
+        "label": "Jeg er permittert",
+        "effects": {
+          "flags": ["permittert"],
+          "scores": { "dagpenger": 4, "arbeid_oppfolging": 1 },
+          "rationaleIds": ["permittert"]
+        }
+      },
+      {
+        "id": "recent_unemployed",
+        "label": "Jeg har nylig blitt arbeidsledig etter å ha vært i jobb",
+        "effects": {
+          "flags": ["unemployed_after_job"],
+          "scores": { "dagpenger": 4, "arbeid_oppfolging": 2 },
+          "rationaleIds": ["unemployed_after_job"]
+        }
+      },
+      {
+        "id": "long_out_of_work",
+        "label": "Jeg har vært lenge utenfor arbeid",
+        "effects": {
+          "flags": ["long_term_out_of_work"],
+          "scores": { "kvalifiseringsprogram": 4, "arbeid_oppfolging": 4, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["long_term_out_of_work"]
+        }
+      },
+      {
+        "id": "reduced_hours",
+        "label": "Jeg jobber noe, men inntekten er for lav eller arbeidstiden er kraftig redusert",
+        "effects": {
+          "flags": ["reduced_hours"],
+          "scores": { "dagpenger": 2, "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["reduced_hours"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "health_capacity",
+    "title": "Hvordan påvirker helse arbeidsevnen din nå?",
+    "description": "Spørsmålet vises når helse kan være en viktig del av situasjonen.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["sick", "unclear_rights", "needs_work_support"],
+    "options": [
+      {
+        "id": "cannot_work_now",
+        "label": "Helse gjør at jeg ikke kan jobbe nå",
+        "effects": {
+          "flags": ["health_blocks_work"],
+          "scores": { "aap": 5, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["health_blocks_work"]
+        }
+      },
+      {
+        "id": "can_work_some",
+        "label": "Jeg kan jobbe noe, men ikke fullt eller ikke som før",
+        "effects": {
+          "flags": ["partial_work_capacity"],
+          "scores": { "aap": 3, "arbeid_oppfolging": 2, "kvalifiseringsprogram": 1 },
+          "rationaleIds": ["partial_work_capacity"]
+        }
+      },
+      {
+        "id": "health_not_main",
+        "label": "Helse er ikke hovedgrunnen til at jeg trenger hjelp",
+        "effects": {
+          "flags": ["health_not_main"],
+          "scores": { "arbeid_oppfolging": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "income_level",
+    "title": "Hvordan ser økonomien din ut denne måneden?",
+    "description": "Spørsmålet hjelper veiviseren å prioritere mellom akutt hjelp og mer langsiktige ordninger.",
+    "selectionMode": "single",
+    "options": [
+      {
+        "id": "no_income",
+        "label": "Jeg står uten inntekt akkurat nå",
+        "effects": {
+          "flags": ["no_income"],
+          "scores": { "okonomisk_sosialhjelp": 4, "dagpenger": 1, "aap": 1, "kvalifiseringsprogram": 1 },
+          "rationaleIds": ["no_income"]
+        }
+      },
+      {
+        "id": "low_income",
+        "label": "Jeg har noe inntekt, men den dekker ikke nødvendige utgifter",
+        "effects": {
+          "flags": ["low_income"],
+          "scores": { "okonomisk_sosialhjelp": 4, "bostotte": 2, "okonomi_gjeld": 1 },
+          "rationaleIds": ["low_income"]
+        }
+      },
+      {
+        "id": "temporary_buffer",
+        "label": "Jeg klarer meg kortsiktig, men trenger rask avklaring videre",
+        "effects": {
+          "flags": ["temporary_buffer"],
+          "scores": { "dagpenger": 1, "arbeid_oppfolging": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "stable_enough",
+        "label": "Jeg får dekket det nødvendigste akkurat nå",
+        "effects": {
+          "flags": ["can_cover_basics"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "housing_now",
+    "title": "Hva passer best om boligsituasjonen din?",
+    "description": "Dette brukes til å vurdere både akutt hjelp og mer stabil støtte til boutgifter.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["housing_risk", "income_loss", "unclear_rights"],
+    "options": [
+      {
+        "id": "no_home_or_temporary",
+        "label": "Jeg har ikke fast bolig eller bor veldig midlertidig",
+        "effects": {
+          "flags": ["no_stable_home"],
+          "scores": { "midlertidig_botilbud": 5, "okonomisk_sosialhjelp": 2, "bostotte": 1 },
+          "rationaleIds": ["no_stable_home"]
+        }
+      },
+      {
+        "id": "can_lose_home",
+        "label": "Jeg kan miste boligen snart",
+        "effects": {
+          "flags": ["housing_notice"],
+          "scores": { "midlertidig_botilbud": 3, "bostotte": 4, "okonomisk_sosialhjelp": 3 },
+          "rationaleIds": ["housing_notice"]
+        }
+      },
+      {
+        "id": "hard_to_pay_housing",
+        "label": "Boligen er stabil, men det er vanskelig å betale boutgiftene",
+        "effects": {
+          "flags": ["housing_cost_pressure"],
+          "scores": { "bostotte": 4, "okonomisk_sosialhjelp": 2, "okonomi_gjeld": 1 },
+          "rationaleIds": ["housing_cost_pressure"]
+        }
+      },
+      {
+        "id": "housing_stable",
+        "label": "Boligsituasjonen er stabil",
+        "effects": {
+          "flags": ["housing_stable"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "debt_pressure",
+    "title": "Hvordan ser gjelds- og betalingspresset ut?",
+    "description": "Dette brukes til å vurdere om økonomi- og gjeldsrådgivning bør løftes høyere.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["debt_pressure", "income_loss", "unclear_rights"],
+    "options": [
+      {
+        "id": "inkasso_or_bailiff",
+        "label": "Jeg har inkasso, trekk eller press fra namsmann / kreditorer",
+        "effects": {
+          "flags": ["severe_debt_pressure"],
+          "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["severe_debt_pressure"]
+        }
+      },
+      {
+        "id": "overdue_bills",
+        "label": "Regninger hoper seg opp og jeg mister oversikten",
+        "effects": {
+          "flags": ["mounting_debt"],
+          "scores": { "okonomi_gjeld": 4, "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": ["mounting_debt"]
+        }
+      },
+      {
+        "id": "under_control",
+        "label": "Jeg har gjeld, men den er ganske under kontroll",
+        "effects": {
+          "flags": ["debt_under_control"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "no_debt_issue",
+        "label": "Gjeld er ikke hovedproblemet mitt nå",
+        "effects": {
+          "flags": ["no_debt_issue"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "follow_up_need",
+    "title": "Hvilken type hjelp tror du at du trenger mest videre?",
+    "description": "Dette brukes til å prioritere mellom økonomisk støtte, oppfølging og mer helhetlige løp.",
+    "selectionMode": "single",
+    "options": [
+      {
+        "id": "close_follow_up",
+        "label": "Jeg trenger tett oppfølging for å komme videre",
+        "effects": {
+          "flags": ["needs_close_follow_up"],
+          "scores": { "kvalifiseringsprogram": 4, "arbeid_oppfolging": 4 },
+          "rationaleIds": ["needs_close_follow_up"]
+        }
+      },
+      {
+        "id": "guidance_to_contact_nav",
+        "label": "Jeg trenger hjelp til å forstå NAV og ta neste steg",
+        "effects": {
+          "flags": ["needs_guidance"],
+          "scores": { "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "money_first",
+        "label": "Det viktigste først er å få økonomien til å gå rundt",
+        "effects": {
+          "flags": ["needs_money_first"],
+          "scores": { "okonomisk_sosialhjelp": 3, "dagpenger": 1, "aap": 1 },
+          "rationaleIds": ["needs_money_first"]
+        }
+      },
+      {
+        "id": "already_in_dialogue",
+        "label": "Jeg er allerede i dialog med NAV og trenger bedre oversikt",
+        "effects": {
+          "flags": ["already_in_nav_dialogue"],
+          "scores": { "arbeid_oppfolging": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  }
+]

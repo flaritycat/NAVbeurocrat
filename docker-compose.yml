@@ -1,0 +1,27 @@
+name: nav
+
+services:
+  nav-frontend:
+    container_name: nav-frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_APP_BASE_PATH: ${VITE_APP_BASE_PATH:-/nav/}
+        VITE_SESSION_STORAGE_KEY: ${VITE_SESSION_STORAGE_KEY:-nav.guide.session.v1}
+        VITE_CONTENT_DRAFT_STORAGE_KEY: ${VITE_CONTENT_DRAFT_STORAGE_KEY:-nav.content.draft.v1}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NAV_PUBLIC_PORT:-18081}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/nav/healthz >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks:
+      - proxy-edge
+
+networks:
+  proxy-edge:
+    external: true
+    name: arctic_edge_public

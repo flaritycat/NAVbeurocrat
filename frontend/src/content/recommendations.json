@@ -1,0 +1,137 @@
+[
+  {
+    "id": "okonomisk_sosialhjelp",
+    "title": "Økonomisk sosialhjelp",
+    "category": "ytelse",
+    "priority": 10,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du mangler penger til nødvendige utgifter og trenger en rask vurdering av grunnleggende økonomisk hjelp.",
+    "documentListIds": ["identity_and_bank", "income_and_expenses", "housing_docs"],
+    "phraseTemplateId": "social_assistance_contact",
+    "officialLinkIds": ["okonomisk_sosialhjelp"],
+    "rationaleMap": {
+      "income_shortfall": "Du har oppgitt at økonomien ikke strekker til for nødvendige utgifter.",
+      "urgent_basic_needs": "Noe i situasjonen ser ut til å haste de neste dagene.",
+      "no_income": "Du har oppgitt at du står uten inntekt akkurat nå.",
+      "low_income": "Du har oppgitt at inntekten ikke dekker grunnleggende behov.",
+      "needs_money_first": "Du har oppgitt at det viktigste akkurat nå er å få oversikt over økonomisk hjelp.",
+      "housing_notice": "Boligsituasjonen og boutgiftene ser ut til å skape akutt eller nær-akutt press."
+    }
+  },
+  {
+    "id": "midlertidig_botilbud",
+    "title": "Midlertidig botilbud ved akutt behov",
+    "category": "hjelpetiltak",
+    "priority": 11,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du står uten et sted å sove eller ikke kan bli boende trygt de nærmeste dagene.",
+    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses"],
+    "phraseTemplateId": "housing_contact",
+    "officialLinkIds": ["midlertidig_botilbud"],
+    "rationaleMap": {
+      "urgent_housing": "Du har oppgitt at boligsituasjonen haster umiddelbart.",
+      "no_stable_home": "Du har oppgitt at du mangler stabil bolig eller bor midlertidig.",
+      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen."
+    }
+  },
+  {
+    "id": "dagpenger",
+    "title": "Dagpenger",
+    "category": "ytelse",
+    "priority": 20,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du nylig har mistet jobb, blitt permittert eller har fått arbeidstiden betydelig redusert.",
+    "documentListIds": ["identity_and_bank", "employment_loss", "income_and_expenses"],
+    "phraseTemplateId": "dagpenger_contact",
+    "officialLinkIds": ["dagpenger", "arbeidsledig_permittert"],
+    "rationaleMap": {
+      "job_loss": "Du startet veiviseren med at du har mistet jobben eller er permittert.",
+      "permittert": "Du har oppgitt at du er permittert.",
+      "unemployed_after_job": "Du har oppgitt at du nylig har blitt arbeidsledig etter jobb.",
+      "reduced_hours": "Du har oppgitt redusert arbeidstid eller mindre inntekt fra jobb."
+    }
+  },
+  {
+    "id": "aap",
+    "title": "Arbeidsavklaringspenger (AAP)",
+    "category": "ytelse",
+    "priority": 21,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis helse begrenser arbeidsevnen din over tid og du trenger et avklart løp mot arbeid eller aktivitet.",
+    "documentListIds": ["identity_and_bank", "health_docs", "income_and_expenses"],
+    "phraseTemplateId": "aap_contact",
+    "officialLinkIds": ["aap"],
+    "rationaleMap": {
+      "health_limits_work": "Du startet veiviseren med at sykdom eller helse er en hovedutfordring.",
+      "health_blocks_work": "Du har oppgitt at helsen gjør at du ikke kan jobbe nå.",
+      "partial_work_capacity": "Du har oppgitt at du kan jobbe noe, men ikke som før."
+    }
+  },
+  {
+    "id": "kvalifiseringsprogram",
+    "title": "Kvalifiseringsprogram",
+    "category": "tjeneste",
+    "priority": 30,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du står langt fra arbeid og trenger tettere, mer helhetlig oppfølging over tid.",
+    "documentListIds": ["identity_and_bank", "follow_up_docs", "income_and_expenses"],
+    "phraseTemplateId": "kvalifiseringsprogram_contact",
+    "officialLinkIds": ["kvalifiseringsprogrammet", "arbeid"],
+    "rationaleMap": {
+      "long_term_out_of_work": "Du har oppgitt at du har stått lenge utenfor arbeid.",
+      "needs_close_follow_up": "Du har oppgitt behov for tett oppfølging for å komme videre.",
+      "needs_work_support": "Du startet veiviseren med at du trenger hjelp til å komme i arbeid."
+    }
+  },
+  {
+    "id": "arbeid_oppfolging",
+    "title": "Hjelp til å komme i arbeid",
+    "category": "tjeneste",
+    "priority": 31,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du trenger veiledning, arbeidsrettet oppfølging eller et mer strukturert løp mot jobb.",
+    "documentListIds": ["identity_and_bank", "follow_up_docs"],
+    "phraseTemplateId": "work_followup_contact",
+    "officialLinkIds": ["arbeid"],
+    "rationaleMap": {
+      "needs_work_support": "Du har oppgitt at du trenger hjelp til å komme i arbeid.",
+      "long_term_out_of_work": "Du har oppgitt lang tid utenfor arbeid eller aktivitet.",
+      "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå neste steg og komme i kontakt med riktig del av NAV.",
+      "reduced_hours": "Du har oppgitt redusert arbeid eller behov for ny retning."
+    }
+  },
+  {
+    "id": "okonomi_gjeld",
+    "title": "Økonomi- og gjeldsrådgivning",
+    "category": "tjeneste",
+    "priority": 32,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis regninger hoper seg opp, du har inkasso eller trenger hjelp til å få oversikt og prioritering.",
+    "documentListIds": ["identity_and_bank", "debt_docs", "income_and_expenses"],
+    "phraseTemplateId": "debt_contact",
+    "officialLinkIds": ["okonomi_gjeld"],
+    "rationaleMap": {
+      "debt_pressure": "Du startet veiviseren med at gjeld eller økonomisk press er et hovedproblem.",
+      "severe_debt_pressure": "Du har oppgitt inkasso, namsmann eller annet alvorlig betalingspress.",
+      "mounting_debt": "Du har oppgitt at regninger og gjeld vokser.",
+      "low_income": "Du har oppgitt at inntekten ikke strekker til og at betalingsproblemer bygger seg opp."
+    }
+  },
+  {
+    "id": "bostotte",
+    "title": "Bostøtte",
+    "category": "ytelse",
+    "priority": 33,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du har lav inntekt og høye boutgifter, og boligen i utgangspunktet er stabil nok til at støtte kan hjelpe.",
+    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses"],
+    "phraseTemplateId": "housing_contact",
+    "officialLinkIds": ["bostotte"],
+    "rationaleMap": {
+      "housing_risk": "Du startet veiviseren med at bolig er en viktig del av situasjonen.",
+      "housing_cost_pressure": "Du har oppgitt at boutgiftene er tunge å bære.",
+      "low_income": "Du har oppgitt lav inntekt i forhold til nødvendige utgifter.",
+      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen og at støtte til boutgifter kan være relevant å undersøke."
+    }
+  }
+]

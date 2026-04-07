@@ -1,0 +1,37 @@
+[
+  {
+    "id": "dagpenger_contact",
+    "title": "Forslag til formulering om dagpenger",
+    "content": "Hei. Jeg ønsker veiledning om hvorvidt dagpenger kan være riktig ordning for meg nå. Arbeidssituasjonen min har endret seg, og jeg trenger avklaring på hva jeg bør søke først, hvilke vilkår som må vurderes, og hvilken dokumentasjon dere trenger fra meg."
+  },
+  {
+    "id": "social_assistance_contact",
+    "title": "Forslag til formulering om økonomisk sosialhjelp",
+    "content": "Hei. Jeg trenger rask veiledning om økonomisk sosialhjelp fordi jeg ikke får dekket nødvendige utgifter. Jeg ønsker å avklare hva som haster mest, hvordan jeg bør beskrive situasjonen min kort og saklig, og hvilken dokumentasjon dere trenger for å vurdere saken."
+  },
+  {
+    "id": "aap_contact",
+    "title": "Forslag til formulering om AAP",
+    "content": "Hei. Jeg ønsker veiledning om arbeidsavklaringspenger fordi helse ser ut til å påvirke arbeidsevnen min. Jeg trenger hjelp til å forstå om dette kan være riktig løp, hva som må dokumenteres, og hvordan jeg best kan beskrive situasjonen min overfor NAV."
+  },
+  {
+    "id": "kvalifiseringsprogram_contact",
+    "title": "Forslag til formulering om kvalifiseringsprogram",
+    "content": "Hei. Jeg ønsker å avklare om kvalifiseringsprogrammet kan være aktuelt for meg. Jeg trenger tett oppfølging for å komme nærmere arbeid eller aktivitet, og ønsker en vurdering av hva som skal til for å komme i gang og hvilken dokumentasjon dere trenger."
+  },
+  {
+    "id": "debt_contact",
+    "title": "Forslag til formulering om økonomi- og gjeldsrådgivning",
+    "content": "Hei. Jeg trenger råd om økonomi og gjeld fordi betalingspresset mitt er vanskelig å håndtere alene. Jeg ønsker veiledning om hva jeg bør prioritere først, hva jeg bør samle av oversikter og brev, og hvordan NAV kan hjelpe meg videre."
+  },
+  {
+    "id": "housing_contact",
+    "title": "Forslag til formulering om bolig og akutt hjelp",
+    "content": "Hei. Boligsituasjonen min er ustabil eller akutt, og jeg trenger rask avklaring på hva jeg bør gjøre først. Jeg ønsker veiledning om midlertidig botilbud, økonomisk hjelp til nødvendige boutgifter, og hvilken dokumentasjon dere trenger fra meg nå."
+  },
+  {
+    "id": "work_followup_contact",
+    "title": "Forslag til formulering om hjelp til å komme i arbeid",
+    "content": "Hei. Jeg ønsker hjelp til å komme i arbeid eller aktivitet og trenger veiledning om hvilket oppfølgingsløp som kan passe best for meg. Jeg ønsker en tydelig oversikt over neste steg, hvilke tilbud som kan være relevante, og hva jeg bør forberede før kontakt med NAV."
+  }
+]
