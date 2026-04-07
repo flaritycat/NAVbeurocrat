@@ -12,11 +12,15 @@ Hovednivåer i produktet:
 Informasjonsstruktur i resultatet:
 
 - anbefalt hovedspor
-- andre spor som også kan være relevante
+- parallelle løp som kan være relevante samtidig
+- støtteløp som kan være nyttige når det viktigste er avklart
 - hva som haster
+- kort før-kontakt-visning
+- handlingsplan delt i `i dag`, `denne uken` og `senere`
 - hvem som kan hjelpe videre
 - hva brukeren kan be om
 - hvorfor dette foreslås
+- svar som bør dobbeltsjekkes
 - risiko og avgrensninger
 - vanlig dokumentasjon
 - forslag til formulering
@@ -105,6 +109,9 @@ Støttestrukturer:
 - formuleringstekster
 - offisielle lenker
 - disclaimere
+- handlingsbøtter for tidsprioritering
+- før-kontakt-kort
+- konsistensnotater
 
 ## 4. Full UI-flyt
 
@@ -137,17 +144,20 @@ Start:
 
 Deretter:
 
-- hva haster de neste 24 til 72 timene
+- tematisk avklaring når brukeren starter med `jeg vet ikke`
+- hva haster de neste 24 til 72 timene i relevante spor
 - hvem situasjonen gjelder
 - arbeidssituasjon
 - helse og arbeidsevne
 - støttebehov knyttet til hjelpemidler, tilrettelegging, pleie eller ekstrautgifter
 - inntekt denne måneden
 - husholdning og forsørgeransvar
+- barns faktiske bosituasjon eller omsorgsordning når barn er en viktig del av saken
 - husholdningens økonomiske belastning
-- boligsituasjon
-- gjeldspress
+- tidlig boligkontekst i direkte boligspor
+- tidlig gjeldskontekst i direkte gjeldsspor
 - hva som allerede er avklart eller i gang
+- brev, vedtak og frister i juridiske spor
 - type oppfølging brukeren trenger mest
 
 ## 6. Eksportfunksjon til PDF
@@ -155,7 +165,7 @@ Deretter:
 Eksporten skjer fullt lokalt i nettleseren:
 
 - resultatsammendrag bygges som ren tekst
-- `jspdf` genererer PDF på klientsiden
+- `jspdf` genererer PDF på klientsiden med handlingskort, callouts og klikkbare lenker
 - ingen resultater sendes til backend eller tredjepart
 
 ## 7. Personvernarkitektur
@@ -199,11 +209,10 @@ Innholdet dekker minst disse situasjonsløpene:
 
 Kort sikt:
 
-- mer presis regelmodell for sammensatte situasjoner
-- bedre forklaring av hvorfor anbefalinger havner høyt eller lavt
-- mer granulære dokumentlister per løp
-- finere vekting av husholdning, forsørgeransvar, barn og omsorgsbelastning
-- flere offisielle lenker og lokale hjelpespor per kommune
+- mer presis regelmodell for sammensatte situasjoner og grensetilfeller
+- finere vekting av husholdning, delt omsorg og skiftende bosituasjon
+- flere målrettede juridiske og kommunale hjelpespor
+- flere tester som låser ned anbefalingsvekting og PDF-innhold
 
 Mellomlang sikt:
 

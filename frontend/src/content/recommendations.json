@@ -300,6 +300,9 @@
     "rationaleMap": {
       "unclear_rights": "Du startet veiviseren med at du ikke vet hvilke rettigheter som kan være aktuelle.",
       "has_existing_decision": "Du har oppgitt at det allerede finnes vedtak, avslag eller brev som må forstås eller følges opp.",
+      "deadline_running": "Du har oppgitt at en frist kan løpe snart og at saken derfor kan trenge rask avklaring.",
+      "recent_decision": "Du har oppgitt at du nylig har fått brev eller vedtak og trenger hjelp til neste steg.",
+      "older_unresolved_case": "Du har oppgitt at saken er eldre, men fortsatt uavklart eller vanskelig å følge opp.",
       "needs_help_with_forms": "Du har oppgitt at du trenger hjelp til å forstå brev, skjema eller hva som må sendes inn.",
       "needs_legal_guidance": "Du har oppgitt at du trenger hjelp til klage, rettigheter eller neste steg i en sak."
     }

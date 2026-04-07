@@ -5,7 +5,7 @@ import { ProgressBar } from "../../components/ProgressBar";
 import { PublicNotice } from "../../components/PublicNotice";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
-import { buildGuideResult, evaluateWizard } from "../../lib/ruleEngine";
+import { buildConsistencyNotes, buildGuideResult, buildQuestionReason, evaluateWizard } from "../../lib/ruleEngine";
 import { clearWizardSession, pruneWizardAnswers, readWizardSession, setWizardAnswer, writeWizardSession } from "../../lib/sessionState";
 import type { AnswerValue, Question, WizardSession } from "../../lib/types";
 
@@ -181,6 +181,9 @@ export function GuidePage() {
   }
 
   const currentStep = evaluation.visibleQuestions.findIndex((question) => question.id === activeQuestion.id) + 1;
+  const questionReasons = buildQuestionReason(activeQuestion, evaluation);
+  const consistencyNotes = buildConsistencyNotes(evaluation);
+  const firstConsistencyNote = consistencyNotes[0];
 
   return (
     <div className="page stack">
@@ -196,7 +199,22 @@ export function GuidePage() {
         </div>
 
         {activeQuestion.description ? <p className="lead lead--compact">{activeQuestion.description}</p> : null}
+        {questionReasons.length ? (
+          <article className="question-context">
+            <p className="eyebrow">Dette kan være aktuelt fordi</p>
+            <ul className="plain-list plain-list--spaced">
+              {questionReasons.map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+          </article>
+        ) : null}
         <PublicNotice />
+        {firstConsistencyNote ? (
+          <InlineNotice tone={firstConsistencyNote.tone === "warning" ? "warning" : "error"}>
+            <strong>{firstConsistencyNote.title}.</strong> {firstConsistencyNote.description}
+          </InlineNotice>
+        ) : null}
         {notice ? <InlineNotice tone={notice.tone}>{notice.message}</InlineNotice> : null}
 
         <form

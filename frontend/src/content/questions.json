@@ -782,6 +782,60 @@
     ]
   },
   {
+    "id": "child_household_detail",
+    "title": "Hva passer best om barnas bosituasjon eller omsorgsordning?",
+    "description": "Dette spørsmålet brukes bare når barn er en viktig del av situasjonen. Det gjør vurderingen av husholdning, dokumentasjon og videre kontakt mer presis.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["single_with_children", "household_with_children", "for_child"],
+    "options": [
+      {
+        "id": "children_live_mostly_with_me",
+        "label": "Barnet eller barna bor fast eller mest hos meg",
+        "effects": {
+          "flags": ["children_live_with_me"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1, "hjelpestonad": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "shared_custody",
+        "label": "Vi har delt omsorg eller samvær som påvirker økonomi eller oppfølging",
+        "effects": {
+          "flags": ["shared_custody"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "child_temporary_or_unclear",
+        "label": "Barnets bosituasjon er midlertidig, skiftende eller uavklart",
+        "effects": {
+          "flags": ["child_housing_unclear"],
+          "scores": { "okonomisk_sosialhjelp": 1, "midlertidig_botilbud": 1, "bostotte": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "not_daily_responsibility",
+        "label": "Barn er en del av saken, men bor ikke fast hos meg i det daglige",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
     "id": "household_finances",
     "title": "Hvordan påvirker husholdningen behovet ditt for støtte akkurat nå?",
     "description": "Spørsmålet brukes til å fange opp om andre i husholdningen er avhengige av inntekten din, eller om husholdningens økonomi samlet sett ikke strekker til.",
@@ -1014,6 +1068,60 @@
           "flags": ["nothing_started"],
           "scores": { "arbeid_oppfolging": 1 },
           "rationaleIds": ["nothing_started"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "decision_timeline",
+    "title": "Hva passer best om brev, vedtak eller frister akkurat nå?",
+    "description": "Dette spørsmålet brukes når saken handler om brev, vedtak, klage eller noe du trenger å forstå videre. Det gjør veiviseren mer konkret om hva som bør tas først.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["unknown_focus_legal", "has_existing_decision", "needs_help_with_forms"],
+    "options": [
+      {
+        "id": "deadline_soon",
+        "label": "Jeg tror en frist løper snart, eller jeg er redd for å miste en frist",
+        "effects": {
+          "flags": ["deadline_running"],
+          "scores": { "juridisk_veiledning": 4 },
+          "rationaleIds": ["deadline_running"]
+        }
+      },
+      {
+        "id": "recent_letter",
+        "label": "Jeg har nylig fått et brev eller vedtak og trenger å forstå neste steg",
+        "effects": {
+          "flags": ["recent_decision"],
+          "scores": { "juridisk_veiledning": 3 },
+          "rationaleIds": ["recent_decision"]
+        }
+      },
+      {
+        "id": "older_case_unclear",
+        "label": "Saken er eldre, men jeg trenger fortsatt oversikt over hva som gjelder",
+        "effects": {
+          "flags": ["older_unresolved_case"],
+          "scores": { "juridisk_veiledning": 2 },
+          "rationaleIds": ["older_unresolved_case"]
+        }
+      },
+      {
+        "id": "no_written_decision",
+        "label": "Jeg har ikke noe tydelig skriftlig vedtak ennå, men trenger hjelp til hva jeg bør be om",
+        "effects": {
+          "flags": ["no_written_decision"],
+          "scores": { "juridisk_veiledning": 1, "arbeid_oppfolging": 1 },
+          "rationaleIds": []
         }
       },
       {

@@ -51,6 +51,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 textarea,
 input,
 select {
@@ -165,7 +170,8 @@ select:focus {
 
 .hero-card__signals,
 .stats-row,
-.process-grid {
+.process-grid,
+.timeline-grid {
   display: grid;
   gap: 1rem;
 }
@@ -176,6 +182,10 @@ select:focus {
 }
 
 .process-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.timeline-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -193,6 +203,26 @@ select:focus {
   padding: 1rem;
   display: grid;
   gap: 0.45rem;
+}
+
+.timeline-card {
+  border-radius: 24px;
+  border: 1px solid rgba(23, 32, 38, 0.08);
+  padding: 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.timeline-card--warning {
+  background: linear-gradient(180deg, rgba(245, 228, 211, 0.92), rgba(255, 248, 241, 0.94));
+}
+
+.timeline-card--fact {
+  background: linear-gradient(180deg, rgba(220, 233, 236, 0.86), rgba(247, 252, 253, 0.94));
+}
+
+.timeline-card--neutral {
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .public-notice {
@@ -217,6 +247,15 @@ select:focus {
   letter-spacing: 0.12em;
   font-size: 0.72rem;
   font-weight: 600;
+}
+
+.question-context {
+  border-radius: 20px;
+  border: 1px solid rgba(31, 91, 108, 0.16);
+  background: rgba(220, 233, 236, 0.72);
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.4rem;
 }
 
 .eyebrow {
@@ -473,7 +512,8 @@ h3 {
   .dashboard-grid,
   .hero-card,
   .process-grid,
-  .stats-row {
+  .stats-row,
+  .timeline-grid {
     grid-template-columns: 1fr;
   }
 }

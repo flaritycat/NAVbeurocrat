@@ -12,6 +12,10 @@ Offentlig base path er `https://dev.raoul.no/nav`.
 - foreslår relevante ordninger, tjenester og hjelpetiltak hos NAV, kommunen, Husbanken eller helsetjenesten
 - viser vanlig dokumentasjon som bør samles
 - viser hva brukeren kan be om i kontakt med hjelpeapparatet
+- viser en kort `før kontakt`-oversikt med hva brukeren kan si, ha klart og be om
+- deler resultatet i `gjør dette i dag`, `gjør dette denne uken` og `dette kan vente litt`
+- skiller mellom hovedløp, parallelle løp og støtteløp
+- markerer svar som virker uklare eller motstridende, slik at brukeren kan rydde før videre kontakt
 - genererer saklig forslag til formulering for kontakt, melding eller forberedelse
 - peker videre til offisielle kilder på `nav.no`, `husbanken.no`, `helsenorge.no` og `statsforvalteren.no`
 - lar brukeren kopiere tekst og eksportere resultatet til PDF
@@ -82,6 +86,12 @@ NAV/
    - App: `http://127.0.0.1:18081/nav/`
    - Health: `http://127.0.0.1:18081/nav/healthz`
    - Ready: `http://127.0.0.1:18081/nav/readyz`
+
+4. Kjør tester:
+
+   ```bash
+   docker run --rm -v "$PWD/frontend:/app" -w /app node:20-alpine npm test
+   ```
 
 ## Base path `/nav`
 

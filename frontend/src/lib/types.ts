@@ -15,6 +15,7 @@ export type Question = {
   id: string;
   title: string;
   description?: string;
+  whyPrompt?: string;
   selectionMode: "single" | "multi";
   showWhenAnyFlags?: string[];
   showWhenAllFlags?: string[];
@@ -101,12 +102,35 @@ export type WizardEvaluation = {
   scores: Record<string, number>;
   rationaleMap: Record<string, string[]>;
   answeredFacts: string[];
+  flagSources: Record<string, string[]>;
 };
 
 export type RankedRecommendation = {
   recommendation: Recommendation;
   score: number;
   reasons: string[];
+};
+
+export type ActionBucket = {
+  id: "today" | "this_week" | "later";
+  title: string;
+  tone: "warning" | "fact" | "neutral";
+  items: string[];
+};
+
+export type BeforeContactCard = {
+  contactFirst: string;
+  whyNow: string[];
+  sayThisFirst: string[];
+  haveReady: string[];
+  askFor: string[];
+  copyText: string;
+};
+
+export type ConsistencyNote = {
+  title: string;
+  description: string;
+  tone: "warning" | "missing";
 };
 
 export type MatchedAcuteItem = {
@@ -124,9 +148,14 @@ export type GuideResult = {
   evaluation: WizardEvaluation;
   primaryRecommendation: RankedRecommendation;
   alternativeRecommendations: RankedRecommendation[];
+  parallelRecommendations: RankedRecommendation[];
+  supportRecommendations: RankedRecommendation[];
   acuteItems: MatchedAcuteItem[];
   documentSections: ResultDocumentSection[];
   officialLinks: OfficialLink[];
+  actionBuckets: ActionBucket[];
+  beforeContact: BeforeContactCard;
+  consistencyNotes: ConsistencyNote[];
   nextSteps: string[];
   askForList: string[];
   riskNotes: string[];

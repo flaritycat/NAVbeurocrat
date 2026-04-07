@@ -330,6 +330,59 @@ function drawStepCard(state: PdfState, stepNumber: number, text: string) {
   state.cursorY += height + 10;
 }
 
+function drawChecklistCard(state: PdfState, label: string, title: string, items: string[], tone: PdfTone) {
+  const colors = resolveToneColors(tone);
+  const titleLines = measureLines(state.document, title, state.contentWidth - 30, {
+    fontSize: 12,
+    fontStyle: "bold",
+  });
+  const itemLines = items.map((item) =>
+    measureLines(state.document, item, state.contentWidth - 44, {
+      fontSize: 10,
+    }),
+  );
+  const height = 26 + titleLines.length * 16 + itemLines.reduce((total, lines) => total + lines.length * 14 + 4, 0) + 12;
+
+  ensureSpace(state, height);
+
+  setFillColor(state.document, colors.fill);
+  setDrawColor(state.document, COLORS.border);
+  state.document.roundedRect(state.margin, state.cursorY, state.contentWidth, height, 18, 18, "FD");
+
+  setFillColor(state.document, colors.line);
+  state.document.roundedRect(state.margin + 12, state.cursorY + 12, 5, height - 24, 2.5, 2.5, "F");
+
+  state.document.setFont("helvetica", "bold");
+  state.document.setFontSize(7);
+  setTextColor(state.document, colors.text);
+  state.document.text(label.toUpperCase(), state.margin + 25, state.cursorY + 18);
+
+  drawLines(state, titleLines, state.margin + 25, state.cursorY + 34, {
+    fontSize: 12,
+    lineHeight: 16,
+    color: COLORS.ink,
+    fontStyle: "bold",
+  });
+
+  let y = state.cursorY + 34 + titleLines.length * 16 + 2;
+  itemLines.forEach((lines) => {
+    state.document.setFont("helvetica", "bold");
+    state.document.setFontSize(10);
+    setTextColor(state.document, colors.text);
+    state.document.text("-", state.margin + 25, y);
+
+    drawLines(state, lines, state.margin + 37, y, {
+      fontSize: 10,
+      lineHeight: 14,
+      color: COLORS.ink,
+    });
+
+    y += lines.length * 14 + 4;
+  });
+
+  state.cursorY += height + 10;
+}
+
 function drawDocumentCard(state: PdfState, title: string, items: string[]) {
   const titleLines = measureLines(state.document, title, state.contentWidth - 28, {
     fontSize: 12,
@@ -475,6 +528,19 @@ function drawPageFooters(document: jsPDF) {
   }
 }
 
+function buildPdfFilename(title: string) {
+  const slug = title
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+  const generatedAt = new Date().toISOString().slice(0, 10);
+
+  return `hjelpeveiviser-${slug || "resultat"}-${generatedAt}.pdf`;
+}
+
 export function exportGuideResultToPdf(result: GuideResult) {
   const state = createPdfState();
 
@@ -487,11 +553,38 @@ export function exportGuideResultToPdf(result: GuideResult) {
     "warning",
   );
 
+  drawChecklistCard(
+    state,
+    "Kort oversikt",
+    "Dette bør du ha med deg videre",
+    [
+      `Hovedspor: ${result.primaryRecommendation.recommendation.title}`,
+      `Kontakt først: ${result.beforeContact.contactFirst}`,
+      result.acuteItems[0]
+        ? `Haster mest: ${result.acuteItems[0].rule.title}`
+        : `Det viktigste først: ${result.actionBuckets[0]?.items[0] ?? "Start med første kontakt og be om konkret veiledning."}`,
+      ...result.beforeContact.sayThisFirst.slice(0, 1),
+      ...result.beforeContact.haveReady.slice(0, 2).map((item) => `Ha klart: ${item}`),
+    ],
+    "accent",
+  );
+
   if (result.acuteItems.length) {
     result.acuteItems.forEach((item) => {
       drawCallout(state, "Hva haster", item.rule.title, item.rule.summary, "warning");
     });
   }
+
+  drawSectionHeading(state, "Handlingsplan", "Dette bør du gjøre først");
+  result.actionBuckets.forEach((bucket) => {
+    drawChecklistCard(
+      state,
+      bucket.title,
+      bucket.title,
+      bucket.items,
+      bucket.tone === "warning" ? "warning" : bucket.tone === "fact" ? "accent" : "neutral",
+    );
+  });
 
   drawSectionHeading(state, "Anbefalt hovedspor", result.primaryRecommendation.recommendation.title);
   const primaryReasons = result.primaryRecommendation.reasons.length
@@ -499,15 +592,36 @@ export function exportGuideResultToPdf(result: GuideResult) {
     : ["Veiviseren har for lite informasjon til en mer presis prioritering, og foreslår derfor en trygg start med generell offentlig veiledning."];
   drawBulletList(state, primaryReasons);
 
-  if (result.alternativeRecommendations.length) {
+  if (result.parallelRecommendations.length) {
     state.cursorY += 6;
-    drawSectionHeading(state, "Andre spor", "Dette kan også være relevant");
-    result.alternativeRecommendations.forEach((item) => {
+    drawSectionHeading(state, "Parallelle løp", "Dette kan være lurt å undersøke samtidig");
+    result.parallelRecommendations.forEach((item) => {
       drawCallout(state, item.recommendation.category, item.recommendation.title, item.recommendation.summary, "neutral");
     });
   }
 
-  drawSectionHeading(state, "Forslag til videre steg", "Hva som kan være lurt å gjøre videre");
+  if (result.supportRecommendations.length) {
+    state.cursorY += 6;
+    drawSectionHeading(state, "Støtteløp", "Kan være nyttig når det viktigste er avklart");
+    result.supportRecommendations.forEach((item) => {
+      drawCallout(state, item.recommendation.category, item.recommendation.title, item.recommendation.summary, "neutral");
+    });
+  }
+
+  if (result.consistencyNotes.length) {
+    drawSectionHeading(state, "Dobbeltsjekk", "Svar som bør ryddes før videre kontakt");
+    result.consistencyNotes.forEach((note) => {
+      drawCallout(
+        state,
+        "Dobbeltsjekk",
+        note.title,
+        note.description,
+        note.tone === "warning" ? "warning" : "danger",
+      );
+    });
+  }
+
+  drawSectionHeading(state, "Flere steg", "Hva som kan være lurt å gjøre videre");
   result.nextSteps.forEach((step, index) => drawStepCard(state, index + 1, step));
 
   if (result.askForList.length) {
@@ -534,6 +648,9 @@ export function exportGuideResultToPdf(result: GuideResult) {
     });
   }
 
+  drawSectionHeading(state, "Før kontakt", "Kort notat du kan kopiere eller lese opp");
+  drawTextPanel(state, "Kortversjon", result.beforeContact.copyText);
+
   drawSectionHeading(state, "Formulering", "Forslag til tekst ved kontakt eller videre oppfølging");
   drawTextPanel(state, "Utkast", result.contactDraft);
 
@@ -555,5 +672,5 @@ export function exportGuideResultToPdf(result: GuideResult) {
   });
 
   drawPageFooters(state.document);
-  state.document.save("hjelpeveiviser.pdf");
+  state.document.save(buildPdfFilename(result.primaryRecommendation.recommendation.title));
 }
