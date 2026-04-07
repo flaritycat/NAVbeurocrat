@@ -258,6 +258,15 @@ select:focus {
   gap: 0.4rem;
 }
 
+.question-preview {
+  border-radius: 20px;
+  border: 1px solid rgba(31, 91, 108, 0.2);
+  background: linear-gradient(180deg, rgba(220, 233, 236, 0.84), rgba(255, 255, 255, 0.78));
+  padding: 1rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   color: var(--muted);

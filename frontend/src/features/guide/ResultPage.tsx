@@ -128,6 +128,9 @@ export function ResultPage() {
           <button className="primary-button" disabled={isExportingPdf} onClick={handlePdfExport} type="button">
             {isExportingPdf ? "Lager PDF..." : "Eksporter PDF"}
           </button>
+          <Link className="ghost-button" to="/brief">
+            Åpne kortversjon
+          </Link>
           <button className="ghost-button" onClick={handleRestart} type="button">
             Start på nytt
           </button>
@@ -182,6 +185,32 @@ export function ResultPage() {
       <section className="card">
         <div className="section-heading">
           <div>
+            <p className="eyebrow">Hva slags hjelp er dette?</p>
+            <h2>Skille mellom nødhjelp, rettigheter, praktisk hjelp og veiledning</h2>
+          </div>
+        </div>
+
+        <div className="timeline-grid">
+          {result.helpModeCards.map((card) => (
+            <article className={`timeline-card timeline-card--${card.tone}`} key={card.id}>
+              <div className="section-heading">
+                <h3>{card.title}</h3>
+                <StatusBadge tone={badgeTone(card.tone)}>{card.items.length ? `${card.items.length} spor` : "Oversikt"}</StatusBadge>
+              </div>
+              <p>{card.description}</p>
+              <ul className="plain-list plain-list--spaced">
+                {card.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
             <p className="eyebrow">Handlingsplan</p>
             <h2>Hva du kan gjøre nå, denne uken og senere</h2>
           </div>
@@ -201,6 +230,43 @@ export function ResultPage() {
               </ul>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Kortversjoner</p>
+            <h2>Mobil og møteformat</h2>
+          </div>
+        </div>
+
+        <div className="dashboard-grid">
+          <section className="stack">
+            <article className="policy-card">
+              <h3>{result.phoneCard.title}</h3>
+              <p>{result.phoneCard.intro}</p>
+              <ul className="plain-list plain-list--spaced">
+                {result.phoneCard.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+            <CopyBlock content={result.phoneCard.copyText} title="Kopier telefonkort" />
+          </section>
+
+          <section className="stack">
+            <article className="policy-card">
+              <h3>{result.meetingCard.title}</h3>
+              <p>{result.meetingCard.intro}</p>
+              <ul className="plain-list plain-list--spaced">
+                {result.meetingCard.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+            <CopyBlock content={result.meetingCard.copyText} title="Kopier møteark" />
+          </section>
         </div>
       </section>
 
@@ -301,6 +367,35 @@ export function ResultPage() {
                 <li key={reason}>{reason}</li>
               ))}
             </ul>
+          </section>
+
+          <section className="card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Hvorfor ikke høyere</p>
+                <h2>Andre spor som fortsatt kan være relevante</h2>
+              </div>
+            </div>
+            <div className="stack">
+              {result.alternativeAssessments.length === 0 ? <p>Veiviseren fant ikke tydelige sekundære spor å forklare nærmere denne gangen.</p> : null}
+              {result.alternativeAssessments.map((item) => (
+                <article className="policy-card" key={item.recommendation.recommendation.id}>
+                  <div className="section-heading">
+                    <strong>{item.recommendation.recommendation.title}</strong>
+                    <StatusBadge>{item.recommendation.recommendation.category}</StatusBadge>
+                  </div>
+                  <p>{item.recommendation.recommendation.summary}</p>
+                  <ul className="plain-list plain-list--spaced">
+                    {item.whyStillRelevant.map((reason) => (
+                      <li key={`still-${item.recommendation.recommendation.id}-${reason}`}>Fortsatt relevant: {reason}</li>
+                    ))}
+                    {item.whyNotHigher.map((reason) => (
+                      <li key={`lower-${item.recommendation.recommendation.id}-${reason}`}>Ikke løftet høyere nå: {reason}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
           </section>
 
           <section className="card">

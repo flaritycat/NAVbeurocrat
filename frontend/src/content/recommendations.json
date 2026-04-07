@@ -21,6 +21,7 @@
       "household_with_children": "Du har oppgitt at det er barn i husholdningen, noe som kan gjøre grunnleggende utgifter mer sårbare.",
       "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten eller støtten din.",
       "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter.",
+      "partner_needs_support": "Du har oppgitt at en annen voksen i husholdningen også trenger støtte eller har lav inntekt.",
       "unclear_household_economy": "Du har oppgitt at husholdningens økonomi er sammensatt eller vanskelig å beskrive kort.",
       "temporary_household": "Du har oppgitt at du bor midlertidig hos andre og har en ustabil hverdag rundt økonomi og bolig."
     }
@@ -61,6 +62,8 @@
       "permittert": "Du har oppgitt at du er permittert.",
       "unemployed_after_job": "Du har oppgitt at du nylig har blitt arbeidsledig etter jobb.",
       "reduced_hours": "Du har oppgitt redusert arbeidstid eller mindre inntekt fra jobb.",
+      "young_adult": "Du har oppgitt at du er ung og trenger en første avklaring av hvordan du skal komme videre.",
+      "transition_support": "Du har oppgitt en overgang mellom hjem, skole, arbeid eller egen bolig som gjør første avklaring viktig.",
       "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten din, noe som gjør rask avklaring viktig."
     }
   },
@@ -115,6 +118,9 @@
       "needs_work_support": "Du har oppgitt at du trenger hjelp til å komme i arbeid.",
       "long_term_out_of_work": "Du har oppgitt lang tid utenfor arbeid eller aktivitet.",
       "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå neste steg og komme i kontakt med riktig instans.",
+      "young_adult": "Du har oppgitt at du er ung og trenger hjelp til å forstå hvor du skal starte.",
+      "first_public_contact": "Du har oppgitt at dette er første gang du trenger en slik offentlig avklaring.",
+      "transition_support": "Du har oppgitt en overgang mellom hjem, skole, arbeid eller bolig som gjør et tydelig oppfølgingsløp nyttig.",
       "reduced_hours": "Du har oppgitt redusert arbeid eller behov for ny retning.",
       "nothing_started": "Du har oppgitt at lite er satt i gang ennå og at du trenger en tydelig første retning.",
       "has_nav_or_service_dialogue": "Du har oppgitt at du allerede er i dialog med NAV eller en annen tjeneste, men fortsatt trenger en tydeligere retning.",
@@ -136,6 +142,7 @@
       "debt_pressure": "Du startet veiviseren med at gjeld eller økonomisk press er et hovedproblem.",
       "severe_debt_pressure": "Du har oppgitt inkasso, namsmann eller annet alvorlig betalingspress.",
       "mounting_debt": "Du har oppgitt at regninger og gjeld vokser.",
+      "repayment_or_claim": "Du har oppgitt at et krav, trekk eller tilbakebetalingsspor kan få økonomiske følger som bør ryddes i.",
       "low_income": "Du har oppgitt at inntekten ikke strekker til og at betalingsproblemer bygger seg opp.",
       "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter."
     }
@@ -161,6 +168,7 @@
       "household_with_children": "Du har oppgitt at det er barn i husholdningen og at boutgiftene må bæres for flere.",
       "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten eller støtten din.",
       "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter.",
+      "partner_needs_support": "Du har oppgitt at en annen voksen i husholdningen også trenger støtte eller har lav inntekt.",
       "unclear_household_economy": "Du har oppgitt at husholdningens økonomi er sammensatt eller uoversiktlig."
     }
   },
@@ -187,6 +195,7 @@
       "needs_quick_support_clarification": "Du har oppgitt at støtte- eller omsorgssituasjonen bør avklares raskt de neste dagene.",
       "needs_service_coordination": "Du har oppgitt at du trenger hjelp til å koordinere mellom flere tjenester eller instanser.",
       "has_school_or_municipal_dialogue": "Du har oppgitt at skole, barnehage eller kommune allerede er inne i bildet.",
+      "child_extra_needs_costs": "Du har oppgitt at barnet har ekstra behov eller utgifter som gjør støtte- og tilretteleggingssporet mer aktuelt.",
       "unclear_support_rights": "Du har oppgitt at du ikke vet hvilke støtte- og tilretteleggingsspor som passer best."
     }
   },
@@ -205,6 +214,7 @@
       "needs_disability_support": "Du startet veiviseren med at funksjonsnedsettelse eller langvarig behov kan være en viktig del av situasjonen.",
       "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
       "extra_expenses_condition": "Du har oppgitt løpende ekstrautgifter på grunn av sykdom eller funksjonsnedsettelse.",
+      "child_extra_needs_costs": "Du har oppgitt at barnet har ekstra behov eller utgifter som påvirker husholdningen over tid.",
       "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
     }
   },
@@ -224,6 +234,7 @@
       "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
       "care_for_other": "Du har oppgitt at dette gjelder en person du har omsorg for.",
       "ongoing_care_need": "Du har oppgitt et langvarig behov for pleie, tilsyn eller særskilt oppfølging.",
+      "child_extra_needs_costs": "Du har oppgitt ekstra behov hos barn som kan gjøre omsorgsbelastningen mer omfattende.",
       "needs_quick_support_clarification": "Du har oppgitt at omsorgs- eller støttesituasjonen bør avklares raskt de neste dagene.",
       "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
     }
@@ -300,6 +311,8 @@
     "rationaleMap": {
       "unclear_rights": "Du startet veiviseren med at du ikke vet hvilke rettigheter som kan være aktuelle.",
       "has_existing_decision": "Du har oppgitt at det allerede finnes vedtak, avslag eller brev som må forstås eller følges opp.",
+      "rejected_or_stopped": "Du har oppgitt at brevet eller vedtaket gjelder avslag, stans eller endring du reagerer på.",
+      "repayment_or_claim": "Du har oppgitt at brevet gjelder krav, trekk eller tilbakebetaling og derfor kan trenge rask vurdering.",
       "deadline_running": "Du har oppgitt at en frist kan løpe snart og at saken derfor kan trenge rask avklaring.",
       "recent_decision": "Du har oppgitt at du nylig har fått brev eller vedtak og trenger hjelp til neste steg.",
       "older_unresolved_case": "Du har oppgitt at saken er eldre, men fortsatt uavklart eller vanskelig å følge opp.",

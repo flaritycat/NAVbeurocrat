@@ -1,11 +1,14 @@
 import type {
   ActionBucket,
   AcuteRule,
+  AlternativeAssessment,
   AnswerValue,
   BeforeContactCard,
+  CompactGuideCard,
   ConsistencyNote,
   GuideContentBundle,
   GuideResult,
+  HelpModeCard,
   MatchedAcuteItem,
   OfficialLink,
   PhraseTemplate,
@@ -180,11 +183,14 @@ const questionFallbackReasons: Record<string, string> = {
   household_situation: "Husholdning, barn og bosituasjon kan endre hvilke støtteordninger som er mest relevante.",
   child_household_detail: "Barnas faktiske bosituasjon og omsorgsordning kan påvirke både dokumentasjon og hvilke spor som bør undersøkes.",
   household_finances: "Veiviseren trenger å vite om husholdningen samlet sett klarer seg, eller om flere er avhengige av den samme inntekten.",
+  household_extra_factors: "Dette fanger opp delt omsorg, ekstra behov hos barn og andre husholdningsforhold som kan endre vurderingen.",
   housing_context_first: "Dette klargjør om problemet handler om akutt bolig, fare for å miste bolig eller mer varig press på boutgiftene.",
   debt_context_first: "Dette skiller mellom akutt betalingspress og mer håndterbare gjeldsproblemer.",
   housing_now: "Boligsituasjonen påvirker om akutt hjelp, boutgiftsstøtte eller annen oppfølging bør løftes høyere.",
   debt_pressure: "Betalingspresset påvirker hvor raskt økonomi- og gjeldsrådgivning bør inn i løpet.",
   existing_followup: "Dette viser om du trenger å starte på nytt, følge opp noe som allerede finnes eller få hjelp til å forstå det som er i gang.",
+  young_first_contact_context: "Dette spørsmålet gjør førstegangskontakten mindre overveldende og hjelper veiviseren å sortere mellom arbeid, økonomi, bolig og ren veiledning.",
+  letter_decision_context: "Dette gjør brevet eller vedtaket mer konkret, slik at veiviseren lettere kan prioritere frist, klage og riktig første kontakt.",
   decision_timeline: "Brevdato og frister kan avgjøre om du må handle raskt eller om saken først og fremst trenger bedre oversikt.",
   follow_up_need: "Dette siste spørsmålet gjør resultatet mer handlingsrettet og lettere å bruke i møte med riktig instans.",
 };
@@ -302,6 +308,125 @@ function buildRecommendationBuckets(
     parallelRecommendations,
     supportRecommendations,
   };
+}
+
+function recommendationNeedsMoreDocumentation(recommendationId: string, evaluation: WizardEvaluation) {
+  const flags = new Set(evaluation.flags);
+
+  switch (recommendationId) {
+    case "dagpenger":
+      return !flags.has("job_loss") && !flags.has("permittert") && !flags.has("unemployed_after_job");
+    case "aap":
+      return !flags.has("has_medical_followup");
+    case "bostotte":
+      return !flags.has("housing_cost_pressure") && !flags.has("housing_notice");
+    case "grunnstonad":
+    case "hjelpestonad":
+    case "pleiepenger_barn":
+    case "opplaeringspenger":
+      return !flags.has("has_medical_followup") && !flags.has("child_extra_needs_costs");
+    case "juridisk_veiledning":
+      return !flags.has("has_existing_decision") && !flags.has("deadline_running") && !flags.has("needs_help_with_forms");
+    default:
+      return false;
+  }
+}
+
+function buildAlternativeAssessments(
+  primaryRecommendation: RankedRecommendation,
+  alternativeRecommendations: RankedRecommendation[],
+  acuteItems: MatchedAcuteItem[],
+  evaluation: WizardEvaluation,
+) {
+  const acuteRecommendedIds = new Set(acuteItems.flatMap((item) => item.rule.recommendedIds));
+
+  return alternativeRecommendations.slice(0, 4).map((item) => {
+    const whyStillRelevant = item.reasons.length
+      ? item.reasons.slice(0, 2)
+      : [`${item.recommendation.title} kan fortsatt være relevant når situasjonen din blir vurdert mer konkret.`];
+
+    const whyNotHigher = uniqueStrings([
+      acuteItems.length > 0 && !acuteRecommendedIds.has(item.recommendation.id)
+        ? "Veiviseren prioriterer mer akutte eller grunnleggende forhold foran dette sporet akkurat nå."
+        : "",
+      primaryRecommendation.score - item.score >= 3 ? "Svarene dine ga foreløpig tydeligere treff på hovedsporet." : "",
+      recommendationNeedsMoreDocumentation(item.recommendation.id, evaluation)
+        ? "Dette sporet trenger mer dokumentasjon eller en tydeligere avklaring før det kan løftes høyere."
+        : "",
+      item.recommendation.category === "tjeneste" && primaryRecommendation.recommendation.category === "ytelse"
+        ? "Veiviseren løfter først sporet som ser mest kritisk ut for økonomi, bolig eller andre grunnbehov."
+        : "",
+      item.recommendation.category === "ytelse" && primaryRecommendation.recommendation.category !== "ytelse"
+        ? "Dette ser mulig ut, men veiviseren mener først at du trenger avklaring, oppfølging eller dokumentasjon rundt situasjonen."
+        : "",
+    ]).slice(0, 2);
+
+    return {
+      recommendation: item,
+      whyStillRelevant,
+      whyNotHigher: whyNotHigher.length
+        ? whyNotHigher
+        : ["Dette ser foreløpig svakere ut enn hovedsporet, men kan fortsatt være relevant som parallelt eller senere løp."],
+    } satisfies AlternativeAssessment;
+  });
+}
+
+function buildHelpModeCards(
+  primaryRecommendation: RankedRecommendation,
+  parallelRecommendations: RankedRecommendation[],
+  supportRecommendations: RankedRecommendation[],
+  acuteItems: MatchedAcuteItem[],
+) {
+  const allRecommendations = [primaryRecommendation, ...parallelRecommendations, ...supportRecommendations];
+  const uniqueRecommendations = [...new Map(allRecommendations.map((item) => [item.recommendation.id, item])).values()];
+  const cards: HelpModeCard[] = [];
+
+  if (acuteItems.length > 0) {
+    cards.push({
+      id: "emergency",
+      title: "Nødhjelp og hasteforhold",
+      description: "Dette er ikke langsiktig rettighetsvurdering. Det handler om hva som må tas først for at situasjonen skal være forsvarlig nå.",
+      tone: "warning",
+      items: acuteItems.map((item) => item.rule.title).slice(0, 3),
+    });
+  }
+
+  const rights = uniqueRecommendations.filter((item) => item.recommendation.category === "ytelse").map((item) => item.recommendation.title);
+  if (rights.length > 0) {
+    cards.push({
+      id: "rights",
+      title: "Rettigheter og ytelser",
+      description: "Dette er ordninger eller økonomiske løp som må vurderes konkret av offentlig instans.",
+      tone: "fact",
+      items: rights.slice(0, 3),
+    });
+  }
+
+  const practical = uniqueRecommendations
+    .filter((item) => item.recommendation.category === "hjelpetiltak")
+    .map((item) => item.recommendation.title);
+  if (practical.length > 0) {
+    cards.push({
+      id: "practical",
+      title: "Praktisk hjelp og tilrettelegging",
+      description: "Dette er spor der målet er å få hverdagen, boligen, omsorgen eller tilretteleggingen til å fungere bedre i praksis.",
+      tone: "neutral",
+      items: practical.slice(0, 3),
+    });
+  }
+
+  const guidance = uniqueRecommendations
+    .filter((item) => item.recommendation.category === "tjeneste")
+    .map((item) => item.recommendation.title);
+  cards.push({
+    id: "guidance",
+    title: "Veiledning og oppfølging",
+    description: "Dette er spor der du kan be om avklaring, koordinering, oppfølging eller hjelp til å forstå hva som bør skje videre.",
+    tone: cards.length === 0 ? "fact" : "neutral",
+    items: guidance.length ? guidance.slice(0, 3) : [`Start med ${primaryRecommendation.recommendation.title} og bruk første kontaktpunkt for å få konkret veiledning.`],
+  });
+
+  return cards;
 }
 
 function buildContactDraft(
@@ -428,6 +553,14 @@ function buildAskForList(
     askForList.push("Be om tydelig beskjed om hvilken frist som gjelder, og om du bør sende noe inn med en gang for å sikre deg.");
   }
 
+  if (evaluation.flags.includes("first_public_contact") || evaluation.flags.includes("young_first_contact")) {
+    askForList.push("Be om en enkel forklaring på hvem som gjør hva, og hva som er riktig første steg før du får mer detaljerte råd.");
+  }
+
+  if (evaluation.flags.includes("no_written_decision")) {
+    askForList.push("Be om at videre beskjed eller vurdering blir gitt skriftlig hvis det er mulig, slik at det blir lettere å følge opp senere.");
+  }
+
   if (parallelRecommendations.length > 0) {
     askForList.push("Be også om å få avklart om ett eller flere av de parallelle sporene bør vurderes samtidig.");
   }
@@ -479,6 +612,22 @@ export function buildConsistencyNotes(evaluation: WizardEvaluation) {
     });
   }
 
+  if (flags.has("partner_income_or_benefits") && flags.has("household_depends_on_me")) {
+    notes.push({
+      title: "Husholdningens inntekter bør beskrives tydeligere",
+      description: "Du har både oppgitt at andre i husholdningen har inntekt eller ytelser, og at husholdningen i stor grad er avhengig av din støtte. Det er lurt å presisere hvordan økonomien faktisk er fordelt.",
+      tone: "warning",
+    });
+  }
+
+  if (flags.has("first_public_contact") && flags.has("has_existing_decision")) {
+    notes.push({
+      title: "Dette ser ikke lenger ut som en ren førstegangskontakt",
+      description: "Svarene peker både mot førstegangskontakt og mot at det allerede finnes brev eller vedtak. Det er lurt å tydeliggjøre om du trenger ny søknad, videre oppfølging eller klagehjelp.",
+      tone: "warning",
+    });
+  }
+
   if (flags.has("household_with_children") && !flags.has("children_live_with_me") && !flags.has("shared_custody") && !flags.has("child_housing_unclear")) {
     notes.push({
       title: "Barn i husholdningen er ikke fullt ut avklart",
@@ -513,6 +662,7 @@ function buildActionBuckets(
   const today = uniqueStrings([
     acuteItems[0] ? `Start med det som haster mest: ${acuteItems[0].rule.title}.` : "",
     firstContact ? `${firstContact.actionLabel}.` : `Start med å avklare ${primaryRecommendation.recommendation.title.toLowerCase()} hos riktig instans.`,
+    evaluation.flags.includes("first_public_contact") ? "Skriv ned én kort setning om hva du trenger hjelp til, så første kontakt blir enklere å starte." : "",
     evaluation.flags.includes("deadline_running") ? "Les brevet eller vedtaket på nytt i dag og noter hvilken frist som faktisk løper." : "",
     consistencyNotes[0] ? `Dobbeltsjekk først: ${consistencyNotes[0].title.toLowerCase()}.` : "",
   ]).slice(0, 4);
@@ -614,6 +764,52 @@ function buildBeforeContact(
   } satisfies BeforeContactCard;
 }
 
+function buildPhoneCard(
+  primaryRecommendation: RankedRecommendation,
+  actionBuckets: ActionBucket[],
+  beforeContact: BeforeContactCard,
+  acuteItems: MatchedAcuteItem[],
+) {
+  const items = [
+    `Kontakt først: ${beforeContact.contactFirst}`,
+    acuteItems[0]
+      ? `Haster mest: ${acuteItems[0].rule.title}`
+      : `Haster mest: ${actionBuckets[0]?.items[0] ?? `Start med ${primaryRecommendation.recommendation.title.toLowerCase()}.`}`,
+    `Si først: ${beforeContact.sayThisFirst[0] ?? `Jeg trenger veiledning om ${primaryRecommendation.recommendation.title.toLowerCase()}.`}`,
+    `Ha klart: ${beforeContact.haveReady[0] ?? "En kort oppsummering av situasjonen din."}`,
+  ];
+
+  return {
+    title: "Telefonkort",
+    intro: "Kortversjon for mobil eller telefonsamtale. Fire linjer som gjør det lettere å starte riktig.",
+    items,
+    copyText: ["Telefonkort", "", ...items.map((item) => `- ${item}`)].join("\n"),
+  } satisfies CompactGuideCard;
+}
+
+function buildMeetingCard(
+  primaryRecommendation: RankedRecommendation,
+  beforeContact: BeforeContactCard,
+  askForList: string[],
+  documentSections: ResultDocumentSection[],
+  consistencyNotes: ConsistencyNote[],
+) {
+  const items = [
+    `Hva saken gjelder: ${primaryRecommendation.recommendation.title}.`,
+    `Start med å si: ${beforeContact.sayThisFirst[0] ?? `Jeg trenger veiledning om ${primaryRecommendation.recommendation.title.toLowerCase()}.`}`,
+    `Be om: ${askForList[0] ?? "en konkret vurdering av hva som bør gjøres først."}`,
+    `Ta med: ${documentSections[0]?.items[0] ?? "en kort oversikt over situasjonen din og det som haster."}`,
+    consistencyNotes[0] ? `Dobbeltsjekk: ${consistencyNotes[0].title}.` : "Dobbeltsjekk: noter frister, dokumentasjon og hvem du faktisk har snakket med.",
+  ];
+
+  return {
+    title: "Ta med til møte",
+    intro: "Én side som oppsummerer hva saken gjelder, hva du bør be om og hva du bør ha foran deg i møte eller på telefon.",
+    items,
+    copyText: ["Ta med til møte", "", ...items.map((item) => `- ${item}`)].join("\n"),
+  } satisfies CompactGuideCard;
+}
+
 function buildNextSteps(
   primaryRecommendation: RankedRecommendation,
   officialLinks: OfficialLink[],
@@ -675,6 +871,12 @@ function buildRiskNotes(
     );
   }
 
+  if (evaluation.flags.includes("partner_income_or_benefits")) {
+    riskNotes.push(
+      "Inntekt eller ytelser hos en partner eller annen voksen i husholdningen kan gjøre at støtte og behovsprøving blir vurdert annerledes enn i veiviseren.",
+    );
+  }
+
   if (evaluation.flags.includes("shared_household") || evaluation.flags.includes("shared_household_shortfall")) {
     riskNotes.push(
       "Når dere er flere voksne i husholdningen, vil riktig instans ofte se på husholdningens samlede økonomi, boutgifter og faktiske forsørgelse før de vurderer hvilket løp som passer best.",
@@ -690,6 +892,12 @@ function buildRiskNotes(
   if (evaluation.flags.includes("shared_custody")) {
     riskNotes.push(
       "Delt omsorg eller samværsordning kan påvirke både dokumentasjonsbehov og hvordan husholdning og utgifter vurderes i saken din.",
+    );
+  }
+
+  if (evaluation.flags.includes("child_extra_needs_costs")) {
+    riskNotes.push(
+      "Når barnets behov gir ekstra kostnader eller større omsorgsbelastning, må dette vanligvis beskrives og dokumenteres mer konkret enn veiviseren kan gjøre alene.",
     );
   }
 
@@ -723,6 +931,12 @@ function buildRiskNotes(
   if (needsMedicalDocumentation && !evaluation.flags.includes("has_medical_followup")) {
     riskNotes.push(
       "Flere av sporene i resultatet forutsetter medisinsk eller faglig dokumentasjon. Hvis slik dokumentasjon ikke er på plass ennå, kan vurderingen endre seg når saken blir konkretisert.",
+    );
+  }
+
+  if (evaluation.flags.includes("first_public_contact")) {
+    riskNotes.push(
+      "Hvis dette er første gang du er i kontakt med NAV, kommunen eller lignende om saken, kan det hende riktig instans først må hjelpe deg å sortere ansvar, språk og prosess før de vurderer konkrete ordninger.",
     );
   }
 
@@ -817,13 +1031,17 @@ function buildRiskNotes(
 
 function buildSummaryText(
   primaryRecommendation: RankedRecommendation,
+  alternativeAssessments: AlternativeAssessment[],
   parallelRecommendations: RankedRecommendation[],
   supportRecommendations: RankedRecommendation[],
   acuteItems: MatchedAcuteItem[],
   documentSections: ResultDocumentSection[],
   officialLinks: OfficialLink[],
+  helpModeCards: HelpModeCard[],
   actionBuckets: ActionBucket[],
   beforeContact: BeforeContactCard,
+  phoneCard: CompactGuideCard,
+  meetingCard: CompactGuideCard,
   nextSteps: string[],
   askForList: string[],
   riskNotes: string[],
@@ -855,9 +1073,26 @@ function buildSummaryText(
     supportRecommendations.forEach((item) => lines.push(`- ${item.recommendation.title}: ${item.recommendation.summary}`));
   }
 
+  if (alternativeAssessments.length) {
+    lines.push("", "Hvorfor andre spor ikke er løftet høyere nå:");
+    alternativeAssessments.forEach((item) => {
+      lines.push(`- ${item.recommendation.recommendation.title}`);
+      item.whyStillRelevant.forEach((reason) => lines.push(`  * Fortsatt relevant: ${reason}`));
+      item.whyNotHigher.forEach((reason) => lines.push(`  * Ikke løftet høyere nå: ${reason}`));
+    });
+  }
+
   if (acuteItems.length) {
     lines.push("", "Hva som haster:");
     acuteItems.forEach((item) => lines.push(`- ${item.rule.title}: ${item.rule.summary}`));
+  }
+
+  if (helpModeCards.length) {
+    lines.push("", "Hva slags hjelp dette handler om:");
+    helpModeCards.forEach((card) => {
+      lines.push(`- ${card.title}: ${card.description}`);
+      card.items.forEach((item) => lines.push(`  * ${item}`));
+    });
   }
 
   lines.push(
@@ -867,6 +1102,12 @@ function buildSummaryText(
     ...beforeContact.whyNow.map((item) => `- Hvorfor nå: ${item}`),
     ...beforeContact.sayThisFirst.map((item) => `- Dette kan du si: ${item}`),
   );
+
+  lines.push("", `${phoneCard.title}:`);
+  phoneCard.items.forEach((item) => lines.push(`- ${item}`));
+
+  lines.push("", `${meetingCard.title}:`);
+  meetingCard.items.forEach((item) => lines.push(`- ${item}`));
 
   lines.push("", "Handlingsplan:");
   actionBuckets.forEach((bucket) => {
@@ -928,6 +1169,12 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     acuteItems,
   );
   const alternativeRecommendations = [...parallelRecommendations, ...supportRecommendations].slice(0, 4);
+  const alternativeAssessments = buildAlternativeAssessments(
+    primaryRecommendation,
+    alternativeRecommendations,
+    acuteItems,
+    evaluation,
+  );
 
   const documentListIds = [
     ...acuteItems.flatMap((item) => item.rule.documentListIds),
@@ -950,13 +1197,14 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
   const contactDraft = buildContactDraft(evaluation, primaryRecommendation, phraseTemplate, acuteItems);
   const askForList = buildAskForList(evaluation, primaryRecommendation, acuteItems, parallelRecommendations);
   const consistencyNotes = buildConsistencyNotes(evaluation);
+  const helpModeCards = buildHelpModeCards(primaryRecommendation, parallelRecommendations, supportRecommendations, acuteItems);
   const beforeContact = buildBeforeContact(
     evaluation,
     primaryRecommendation,
     acuteItems,
     documentSections,
     officialLinks,
-    askForList,
+      askForList,
   );
   const actionBuckets = buildActionBuckets(
     evaluation,
@@ -969,6 +1217,8 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     supportRecommendations,
     consistencyNotes,
   );
+  const phoneCard = buildPhoneCard(primaryRecommendation, actionBuckets, beforeContact, acuteItems);
+  const meetingCard = buildMeetingCard(primaryRecommendation, beforeContact, askForList, documentSections, consistencyNotes);
   const nextSteps = buildNextSteps(primaryRecommendation, officialLinks, documentSections, askForList, actionBuckets);
   const riskNotes = buildRiskNotes(
     evaluation,
@@ -979,13 +1229,17 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
   );
   const summaryText = buildSummaryText(
     primaryRecommendation,
+    alternativeAssessments,
     parallelRecommendations,
     supportRecommendations,
     acuteItems,
     documentSections,
     officialLinks,
+    helpModeCards,
     actionBuckets,
     beforeContact,
+    phoneCard,
+    meetingCard,
     nextSteps,
     askForList,
     riskNotes,
@@ -998,13 +1252,17 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     evaluation,
     primaryRecommendation,
     alternativeRecommendations,
+    alternativeAssessments,
     parallelRecommendations,
     supportRecommendations,
     acuteItems,
     documentSections,
     officialLinks,
+    helpModeCards,
     actionBuckets,
     beforeContact,
+    phoneCard,
+    meetingCard,
     consistencyNotes,
     nextSteps,
     askForList,

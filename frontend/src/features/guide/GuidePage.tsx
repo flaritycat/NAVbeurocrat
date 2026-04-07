@@ -129,6 +129,30 @@ export function GuidePage() {
     setNotice(null);
   }
 
+  const hasSelection =
+    activeQuestion?.selectionMode === "multi"
+      ? Array.isArray(selection) && selection.length > 0
+      : typeof selection === "string" && selection.length > 0;
+  const previewAnswers = useMemo(() => {
+    if (!activeQuestion || !hasSelection) {
+      return session.answers;
+    }
+
+    return {
+      ...session.answers,
+      [activeQuestion.id]: selection as AnswerValue,
+    };
+  }, [activeQuestion, hasSelection, selection, session.answers]);
+  const previewEvaluation = useMemo(() => evaluateWizard(bundle, previewAnswers), [bundle, previewAnswers]);
+  const previewConsistencyNote = hasSelection ? buildConsistencyNotes(previewEvaluation)[0] ?? null : null;
+  const previewResult = useMemo(() => {
+    if (!hasSelection) {
+      return null;
+    }
+
+    return buildGuideResult(bundle, previewAnswers);
+  }, [bundle, hasSelection, previewAnswers]);
+
   if (!activeQuestion && evaluation.visibleQuestions.length > 0) {
     const result = buildGuideResult(bundle, session.answers);
 
@@ -213,6 +237,30 @@ export function GuidePage() {
         {firstConsistencyNote ? (
           <InlineNotice tone={firstConsistencyNote.tone === "warning" ? "warning" : "error"}>
             <strong>{firstConsistencyNote.title}.</strong> {firstConsistencyNote.description}
+          </InlineNotice>
+        ) : null}
+        {previewResult ? (
+          <article className="question-preview">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Foreløpig retning</p>
+                <h3>{previewResult.primaryRecommendation.recommendation.title}</h3>
+              </div>
+              <StatusBadge tone="fact">{previewResult.primaryRecommendation.recommendation.category}</StatusBadge>
+            </div>
+            <p>{previewResult.primaryRecommendation.recommendation.summary}</p>
+            <ul className="plain-list plain-list--spaced">
+              {(previewResult.primaryRecommendation.reasons.length
+                ? previewResult.primaryRecommendation.reasons
+                : ["Dette ser foreløpig ut som et trygt sted å starte videre avklaring."]).map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+          </article>
+        ) : null}
+        {previewConsistencyNote && previewConsistencyNote.title !== firstConsistencyNote?.title ? (
+          <InlineNotice tone={previewConsistencyNote.tone === "warning" ? "warning" : "error"}>
+            <strong>Hvis du velger dette:</strong> {previewConsistencyNote.title}. {previewConsistencyNote.description}
           </InlineNotice>
         ) : null}
         {notice ? <InlineNotice tone={notice.tone}>{notice.message}</InlineNotice> : null}

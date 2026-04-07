@@ -25,7 +25,7 @@ const processSteps = [
   },
   {
     title: "6. Eksporter lokalt",
-    description: "Du kan kopiere tekst eller eksportere resultatet som PDF uten at svarene dine blir lagret som en serverbasert sak.",
+    description: "Du kan bruke kortversjon for telefon eller møte, kopiere tekst eller eksportere resultatet som PDF uten at svarene dine blir lagret som en serverbasert sak.",
   },
 ] as const;
 

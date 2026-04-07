@@ -11,6 +11,8 @@ type PdfState = {
   pageHeight: number;
   contentWidth: number;
   cursorY: number;
+  runningTitle: string;
+  runningSubtitle: string;
 };
 
 type TextMeasureOptions = {
@@ -60,7 +62,7 @@ function paintPage(document: jsPDF) {
   document.roundedRect(16, 16, width - 32, height - 32, 18, 18, "FD");
 }
 
-function createPdfState() {
+function createPdfState(result: GuideResult) {
   const document = new jsPDF({
     unit: "pt",
     format: "a4",
@@ -79,13 +81,47 @@ function createPdfState() {
     pageHeight,
     contentWidth: pageWidth - margin * 2,
     cursorY: margin,
+    runningTitle: result.primaryRecommendation.recommendation.title,
+    runningSubtitle: result.beforeContact.contactFirst,
   } satisfies PdfState;
+}
+
+function drawRunningHeader(state: PdfState) {
+  setDrawColor(state.document, COLORS.border);
+  state.document.line(state.margin, state.margin + 12, state.pageWidth - state.margin, state.margin + 12);
+
+  state.document.setFont("helvetica", "bold");
+  state.document.setFontSize(9);
+  setTextColor(state.document, COLORS.accent);
+  state.document.text("HJELPEVEIVISER", state.margin, state.margin);
+
+  const titleLines = measureLines(state.document, state.runningTitle, state.contentWidth - 160, {
+    fontSize: 10,
+    fontStyle: "bold",
+  });
+  drawLines(state, titleLines.slice(0, 1), state.margin + 92, state.margin, {
+    fontSize: 10,
+    lineHeight: 12,
+    color: COLORS.ink,
+    fontStyle: "bold",
+  });
+
+  const subtitleLines = measureLines(state.document, state.runningSubtitle, state.contentWidth - 160, {
+    fontSize: 8,
+  });
+  drawLines(state, subtitleLines.slice(0, 1), state.margin + 92, state.margin + 11, {
+    fontSize: 8,
+    lineHeight: 10,
+    color: COLORS.muted,
+  });
+
+  state.cursorY = state.margin + 26;
 }
 
 function addPage(state: PdfState) {
   state.document.addPage();
   paintPage(state.document);
-  state.cursorY = state.margin;
+  drawRunningHeader(state);
 }
 
 function ensureSpace(state: PdfState, requiredHeight: number) {
@@ -118,14 +154,14 @@ function drawLines(
   });
 }
 
-function drawSectionHeading(state: PdfState, eyebrow: string, title: string) {
+function drawSectionHeading(state: PdfState, eyebrow: string, title: string, nextBlockHeight = 56) {
   const titleLines = measureLines(state.document, title, state.contentWidth, {
     fontSize: 18,
     fontStyle: "bold",
   });
   const height = 18 + titleLines.length * 20;
 
-  ensureSpace(state, height);
+  ensureSpace(state, height + nextBlockHeight);
 
   state.document.setFont("helvetica", "bold");
   state.document.setFontSize(8);
@@ -383,6 +419,12 @@ function drawChecklistCard(state: PdfState, label: string, title: string, items:
   state.cursorY += height + 10;
 }
 
+function drawSectionMapCard(state: PdfState, sections: string[]) {
+  const label = "Innhold";
+  const title = "Slik er dokumentet bygd opp";
+  drawChecklistCard(state, label, title, sections, "neutral");
+}
+
 function drawDocumentCard(state: PdfState, title: string, items: string[]) {
   const titleLines = measureLines(state.document, title, state.contentWidth - 28, {
     fontSize: 12,
@@ -542,7 +584,7 @@ function buildPdfFilename(title: string) {
 }
 
 export function exportGuideResultToPdf(result: GuideResult) {
-  const state = createPdfState();
+  const state = createPdfState(result);
 
   drawHero(state, result);
   drawCallout(
@@ -568,12 +610,26 @@ export function exportGuideResultToPdf(result: GuideResult) {
     ],
     "accent",
   );
+  drawSectionMapCard(state, [
+    "Kort oversikt og viktige forbehold",
+    result.acuteItems.length ? "Hva som haster mest" : "Hva slags hjelp dette handler om",
+    "Handlingsplan og hovedspor",
+    "Andre spor som fortsatt kan være relevante",
+    "Telefonkort og møteark",
+    "Dokumentasjon, spørsmål og kontaktpunkter",
+    "Forbehold og offisielle lenker",
+  ]);
 
   if (result.acuteItems.length) {
     result.acuteItems.forEach((item) => {
       drawCallout(state, "Hva haster", item.rule.title, item.rule.summary, "warning");
     });
   }
+
+  drawSectionHeading(state, "Hjelpetyper", "Hva slags hjelp dette handler om");
+  result.helpModeCards.forEach((card) => {
+    drawChecklistCard(state, "Hjelpetype", card.title, [card.description, ...card.items], card.tone === "fact" ? "accent" : card.tone);
+  });
 
   drawSectionHeading(state, "Handlingsplan", "Dette bør du gjøre først");
   result.actionBuckets.forEach((bucket) => {
@@ -591,6 +647,22 @@ export function exportGuideResultToPdf(result: GuideResult) {
     ? result.primaryRecommendation.reasons
     : ["Veiviseren har for lite informasjon til en mer presis prioritering, og foreslår derfor en trygg start med generell offentlig veiledning."];
   drawBulletList(state, primaryReasons);
+
+  if (result.alternativeAssessments.length) {
+    drawSectionHeading(state, "Hvorfor ikke høyere", "Andre spor som fortsatt kan være relevante");
+    result.alternativeAssessments.forEach((item) => {
+      drawChecklistCard(
+        state,
+        item.recommendation.recommendation.category,
+        item.recommendation.recommendation.title,
+        [
+          ...item.whyStillRelevant.map((reason) => `Fortsatt relevant: ${reason}`),
+          ...item.whyNotHigher.map((reason) => `Ikke løftet høyere nå: ${reason}`),
+        ],
+        "neutral",
+      );
+    });
+  }
 
   if (result.parallelRecommendations.length) {
     state.cursorY += 6;
@@ -621,6 +693,10 @@ export function exportGuideResultToPdf(result: GuideResult) {
     });
   }
 
+  drawSectionHeading(state, "Kortversjoner", "Telefonkort og møteark");
+  drawChecklistCard(state, "Telefonkort", result.phoneCard.title, result.phoneCard.items, "accent");
+  drawChecklistCard(state, "Møteark", result.meetingCard.title, result.meetingCard.items, "neutral");
+
   drawSectionHeading(state, "Flere steg", "Hva som kan være lurt å gjøre videre");
   result.nextSteps.forEach((step, index) => drawStepCard(state, index + 1, step));
 
@@ -650,6 +726,8 @@ export function exportGuideResultToPdf(result: GuideResult) {
 
   drawSectionHeading(state, "Før kontakt", "Kort notat du kan kopiere eller lese opp");
   drawTextPanel(state, "Kortversjon", result.beforeContact.copyText);
+  drawTextPanel(state, "Telefonkort", result.phoneCard.copyText);
+  drawTextPanel(state, "Møteark", result.meetingCard.copyText);
 
   drawSectionHeading(state, "Formulering", "Forslag til tekst ved kontakt eller videre oppfølging");
   drawTextPanel(state, "Utkast", result.contactDraft);

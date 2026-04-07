@@ -133,6 +133,27 @@ export type ConsistencyNote = {
   tone: "warning" | "missing";
 };
 
+export type AlternativeAssessment = {
+  recommendation: RankedRecommendation;
+  whyStillRelevant: string[];
+  whyNotHigher: string[];
+};
+
+export type HelpModeCard = {
+  id: "emergency" | "rights" | "practical" | "guidance";
+  title: string;
+  description: string;
+  tone: "warning" | "fact" | "neutral";
+  items: string[];
+};
+
+export type CompactGuideCard = {
+  title: string;
+  intro: string;
+  items: string[];
+  copyText: string;
+};
+
 export type MatchedAcuteItem = {
   rule: AcuteRule;
   links: OfficialLink[];
@@ -148,13 +169,17 @@ export type GuideResult = {
   evaluation: WizardEvaluation;
   primaryRecommendation: RankedRecommendation;
   alternativeRecommendations: RankedRecommendation[];
+  alternativeAssessments: AlternativeAssessment[];
   parallelRecommendations: RankedRecommendation[];
   supportRecommendations: RankedRecommendation[];
   acuteItems: MatchedAcuteItem[];
   documentSections: ResultDocumentSection[];
   officialLinks: OfficialLink[];
+  helpModeCards: HelpModeCard[];
   actionBuckets: ActionBucket[];
   beforeContact: BeforeContactCard;
+  phoneCard: CompactGuideCard;
+  meetingCard: CompactGuideCard;
   consistencyNotes: ConsistencyNote[];
   nextSteps: string[];
   askForList: string[];

@@ -12,10 +12,13 @@ Hovednivåer i produktet:
 Informasjonsstruktur i resultatet:
 
 - anbefalt hovedspor
+- forklaring på hvorfor andre spor ikke er løftet høyere
 - parallelle løp som kan være relevante samtidig
 - støtteløp som kan være nyttige når det viktigste er avklart
 - hva som haster
+- tydelig skille mellom nødhjelp, rettigheter, praktisk hjelp og veiledning
 - kort før-kontakt-visning
+- telefonkort og møteark i kompaktformat
 - handlingsplan delt i `i dag`, `denne uken` og `senere`
 - hvem som kan hjelpe videre
 - hva brukeren kan be om
@@ -44,6 +47,7 @@ Sider:
 - `DashboardPage`
 - `GuidePage`
 - `ResultPage`
+- `BriefPage`
 - `AdminPage`
 
 Tekniske moduler:
@@ -111,6 +115,8 @@ Støttestrukturer:
 - disclaimere
 - handlingsbøtter for tidsprioritering
 - før-kontakt-kort
+- telefonkort og møteark
+- hjelpetypekort og vurdering av alternative spor
 - konsistensnotater
 
 ## 4. Full UI-flyt
@@ -140,11 +146,15 @@ Start:
 - hjelp til å komme i arbeid
 - hjelpemidler / tilrettelegging / støtte i hverdagen
 - foresatt eller omsorgsperson som trenger oversikt
+- brev, vedtak eller avslag som trenger neste steg
+- ung eller førstegangskontakt som trenger trygg sortering
 - vet ikke hva som kan være aktuelt
 
 Deretter:
 
 - tematisk avklaring når brukeren starter med `jeg vet ikke`
+- egen avklaring for ung/førstegangskontakt før mer detaljspørsmål
+- egen avklaring for brev, vedtak og frister i direkte juridiske spor
 - hva haster de neste 24 til 72 timene i relevante spor
 - hvem situasjonen gjelder
 - arbeidssituasjon
@@ -154,6 +164,7 @@ Deretter:
 - husholdning og forsørgeransvar
 - barns faktiske bosituasjon eller omsorgsordning når barn er en viktig del av saken
 - husholdningens økonomiske belastning
+- ekstra husholdningsfaktorer som delt omsorg, partner med ytelser, ekstra behov hos barn og husholdning som flytter mellom flere steder
 - tidlig boligkontekst i direkte boligspor
 - tidlig gjeldskontekst i direkte gjeldsspor
 - hva som allerede er avklart eller i gang
@@ -165,7 +176,7 @@ Deretter:
 Eksporten skjer fullt lokalt i nettleseren:
 
 - resultatsammendrag bygges som ren tekst
-- `jspdf` genererer PDF på klientsiden med handlingskort, callouts og klikkbare lenker
+- `jspdf` genererer PDF på klientsiden med handlingskort, callouts, kompakte kortversjoner, løpende sidehode og klikkbare lenker
 - ingen resultater sendes til backend eller tredjepart
 
 ## 7. Personvernarkitektur

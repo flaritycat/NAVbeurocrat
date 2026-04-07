@@ -13,8 +13,11 @@ Offentlig base path er `https://dev.raoul.no/nav`.
 - viser vanlig dokumentasjon som bør samles
 - viser hva brukeren kan be om i kontakt med hjelpeapparatet
 - viser en kort `før kontakt`-oversikt med hva brukeren kan si, ha klart og be om
+- bygger også `telefonkort` og `møteark` som korte lokale arbeidsflater for mobil, telefon og møte
 - deler resultatet i `gjør dette i dag`, `gjør dette denne uken` og `dette kan vente litt`
 - skiller mellom hovedløp, parallelle løp og støtteløp
+- forklarer hvorfor andre spor ikke er løftet høyere akkurat nå
+- skiller tydelig mellom nødhjelp, rettigheter, praktisk hjelp og veiledning
 - markerer svar som virker uklare eller motstridende, slik at brukeren kan rydde før videre kontakt
 - genererer saklig forslag til formulering for kontakt, melding eller forberedelse
 - peker videre til offisielle kilder på `nav.no`, `husbanken.no`, `helsenorge.no` og `statsforvalteren.no`
@@ -136,6 +139,8 @@ Modulen følger samme enkle containerstrategi som `kommune`, men uten backend:
 - Opplæringspenger
 - Helseoppfølging og dokumentasjon
 - Klage og juridisk veiledning
+- Brev, vedtak og frister som eget inngangsspor
+- Ung eller førstegangskontakt som eget inngangsspor
 
 ## Dokumentasjon
 

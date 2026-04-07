@@ -68,4 +68,63 @@ describe("ruleEngine flows", () => {
     const notes = buildConsistencyNotes(evaluation);
     expect(notes.some((note) => note.title.includes("Boligsituasjonen"))).toBe(true);
   });
+
+  it("routes direct letter and decision cases into a legal clarification flow before anything else", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "letter_or_decision",
+    });
+
+    expect(questionIds).toContain("letter_decision_context");
+    expect(questionIds).toContain("decision_timeline");
+    expect(questionIds).not.toContain("acute_now");
+  });
+
+  it("asks young or first-contact users to clarify the type of first contact before urgency", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "young_or_first_contact",
+    });
+
+    expect(questionIds[1]).toBe("young_first_contact_context");
+    expect(questionIds).not.toContain("acute_now");
+  });
+
+  it("brings urgency into the flow after a first-contact answer that points to money or housing pressure", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "young_or_first_contact",
+      young_first_contact_context: "first_contact_money_housing",
+    });
+
+    expect(questionIds).toContain("acute_now");
+    expect(questionIds).toContain("income_level");
+  });
+
+  it("captures additional household factors for child and caregiver related flows", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "caregiver_rights",
+      help_applies_to: "for_child",
+      support_needs: ["extra_expenses_due_to_condition"],
+      support_acute_now: "support_not_acute",
+      household_situation: "single_with_children",
+      child_household_detail: "shared_custody",
+      income_level: "low_income",
+      household_finances: "shared_finances_not_enough",
+    });
+
+    expect(questionIds).toContain("household_extra_factors");
+  });
+
+  it("builds compact phone and meeting cards plus alternative explanations", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "letter_or_decision",
+      letter_decision_context: "rejection_or_stop",
+      decision_timeline: "deadline_soon",
+      existing_followup: "have_decision_or_rejection",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.phoneCard.items).toHaveLength(4);
+    expect(result.meetingCard.items.length).toBeGreaterThanOrEqual(4);
+    expect(result.helpModeCards.length).toBeGreaterThan(0);
+    expect(result.alternativeAssessments.every((item) => item.whyNotHigher.length > 0)).toBe(true);
+  });
 });

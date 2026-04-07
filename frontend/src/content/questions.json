@@ -86,6 +86,26 @@
         }
       },
       {
+        "id": "letter_or_decision",
+        "label": "Jeg har fått brev, vedtak eller avslag og trenger hjelp til neste steg",
+        "description": "Du trenger hjelp til å forstå brevet, frister, klage eller hva du bør be om videre.",
+        "effects": {
+          "flags": ["letter_start", "needs_legal_guidance"],
+          "scores": { "juridisk_veiledning": 5, "arbeid_oppfolging": 1 },
+          "rationaleIds": ["needs_legal_guidance"]
+        }
+      },
+      {
+        "id": "young_or_first_contact",
+        "label": "Jeg er ung eller i førstegangskontakt og vet ikke hvor jeg skal starte",
+        "description": "Du trenger en trygg første sortering av hvem du bør kontakte og hva du bør gripe tak i først.",
+        "effects": {
+          "flags": ["young_first_contact", "first_contact_needed"],
+          "scores": { "arbeid_oppfolging": 3, "okonomisk_sosialhjelp": 1, "juridisk_veiledning": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
         "id": "dont_know",
         "label": "Jeg vet ikke hva jeg kan ha rett på",
         "description": "Du trenger først og fremst hjelp til å sortere mulighetene.",
@@ -163,6 +183,142 @@
           "flags": ["unknown_still_broad"],
           "scores": { "arbeid_oppfolging": 1, "juridisk_veiledning": 1 },
           "rationaleIds": ["unclear_rights"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "young_first_contact_context",
+    "title": "Hva passer best om hvorfor du trenger en første avklaring?",
+    "description": "Dette spørsmålet brukes bare når du er ung eller i førstegangskontakt. Det hjelper veiviseren å skille mellom arbeid, økonomi, bolig og ren veiledning.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["young_first_contact", "first_contact_needed"],
+    "options": [
+      {
+        "id": "under_25_and_unsure",
+        "label": "Jeg er ung og trenger hjelp til å forstå hvor jeg skal starte",
+        "effects": {
+          "flags": ["young_adult", "needs_work_support"],
+          "scores": { "arbeid_oppfolging": 3, "kvalifiseringsprogram": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "first_public_services_contact",
+        "label": "Dette er første gang jeg må forholde meg til NAV, kommunen eller lignende på denne måten",
+        "effects": {
+          "flags": ["first_public_contact", "needs_guidance"],
+          "scores": { "arbeid_oppfolging": 2, "juridisk_veiledning": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "transition_home_school_work",
+        "label": "Jeg står i overgang mellom hjem, skole, arbeid eller egen bolig og trenger hjelp til å sortere det",
+        "effects": {
+          "flags": ["transition_support", "needs_work_support", "income_loss", "housing_risk"],
+          "scores": { "arbeid_oppfolging": 3, "bostotte": 1, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "need_help_understanding_roles",
+        "label": "Jeg trenger mest å forstå hvem som gjør hva og hva jeg bør be om først",
+        "effects": {
+          "flags": ["needs_guidance"],
+          "scores": { "arbeid_oppfolging": 2, "juridisk_veiledning": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "first_contact_money_housing",
+        "label": "Jeg trenger først å få oversikt over penger, bolig eller andre helt nødvendige ting",
+        "effects": {
+          "flags": ["income_loss", "housing_risk", "needs_guidance"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 1, "midlertidig_botilbud": 1 },
+          "rationaleIds": ["income_shortfall"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["needs_guidance"],
+          "scores": { "arbeid_oppfolging": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "letter_decision_context",
+    "title": "Hva slags brev, vedtak eller oppfølging handler det om?",
+    "description": "Dette spørsmålet gjør brevet eller vedtaket mer konkret, slik at veiviseren lettere kan prioritere frist, klage, dokumentasjon og riktig kontaktpunkt.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["letter_start", "unknown_focus_legal", "needs_legal_guidance"],
+    "showWhenNoFlags": ["decision_context_known"],
+    "options": [
+      {
+        "id": "rejection_or_stop",
+        "label": "Det er et avslag, en stans eller en endring jeg er uenig i",
+        "effects": {
+          "flags": ["has_existing_decision", "rejected_or_stopped", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 4 },
+          "rationaleIds": ["has_existing_decision"]
+        }
+      },
+      {
+        "id": "request_for_more_info",
+        "label": "Jeg har fått beskjed om å sende mer informasjon eller dokumentasjon",
+        "effects": {
+          "flags": ["needs_help_with_forms", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 2, "arbeid_oppfolging": 1 },
+          "rationaleIds": ["needs_help_with_forms"]
+        }
+      },
+      {
+        "id": "repayment_or_claim",
+        "label": "Det handler om tilbakebetaling, trekk, krav eller noe jeg frykter får økonomiske følger",
+        "effects": {
+          "flags": ["has_existing_decision", "repayment_or_claim", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 4, "okonomi_gjeld": 1 },
+          "rationaleIds": ["has_existing_decision"]
+        }
+      },
+      {
+        "id": "dont_understand_letter",
+        "label": "Jeg forstår ikke helt hva brevet betyr eller hva jeg skal gjøre videre",
+        "effects": {
+          "flags": ["has_existing_decision", "needs_help_with_forms", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 3 },
+          "rationaleIds": ["needs_help_with_forms"]
+        }
+      },
+      {
+        "id": "complaint_already_sent",
+        "label": "Jeg har allerede klaget eller fulgt opp, men trenger oversikt over neste steg",
+        "effects": {
+          "flags": ["has_existing_decision", "appeal_in_progress", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 3 },
+          "rationaleIds": ["older_unresolved_case"]
+        }
+      },
+      {
+        "id": "no_written_decision_yet",
+        "label": "Jeg har ikke noe tydelig skriftlig vedtak ennå, men trenger hjelp til hva jeg bør be om",
+        "effects": {
+          "flags": ["no_written_decision", "decision_context_known"],
+          "scores": { "juridisk_veiledning": 1, "arbeid_oppfolging": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["decision_context_known"],
+          "scores": {},
+          "rationaleIds": []
         }
       }
     ]
@@ -723,7 +879,7 @@
     "title": "Hvordan ser husholdningen din ut akkurat nå?",
     "description": "Dette brukes til å vurdere om forsørgeransvar, barn i husholdningen eller en ustabil bosituasjon kan gjøre enkelte løp mer aktuelle.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["income_loss", "sick", "housing_risk", "debt_pressure", "for_child", "unknown_focus_finance", "unknown_focus_work", "current_financial_pressure"],
+    "showWhenAnyFlags": ["income_loss", "sick", "housing_risk", "debt_pressure", "for_child", "young_first_contact", "unknown_focus_finance", "unknown_focus_work", "current_financial_pressure"],
     "options": [
       {
         "id": "live_alone",
@@ -892,6 +1048,69 @@
     ]
   },
   {
+    "id": "household_extra_factors",
+    "title": "Er det andre forhold i husholdningen som kan påvirke hva som passer best?",
+    "description": "Du kan velge flere. Dette brukes for å fange opp delt omsorg, partner med ytelser, ekstra behov hos barn eller en husholdning som flytter mellom flere steder.",
+    "selectionMode": "multi",
+    "showWhenAnyFlags": ["single_with_children", "household_with_children", "shared_household", "shared_custody", "temporary_household", "caregiver_rights", "for_child", "young_first_contact"],
+    "options": [
+      {
+        "id": "partner_has_income_or_benefits",
+        "label": "En partner eller annen voksen i husholdningen har egen inntekt eller ytelser",
+        "effects": {
+          "flags": ["partner_income_or_benefits"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "partner_also_needs_support",
+        "label": "En partner eller annen voksen i husholdningen trenger også støtte eller har lav inntekt",
+        "effects": {
+          "flags": ["partner_needs_support"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1, "okonomi_gjeld": 1 },
+          "rationaleIds": ["shared_household_shortfall"]
+        }
+      },
+      {
+        "id": "child_has_extra_needs_or_costs",
+        "label": "Barnet har ekstra behov eller utgifter som påvirker økonomi eller oppfølging",
+        "effects": {
+          "flags": ["child_extra_needs_costs"],
+          "scores": { "grunnstonad": 2, "hjelpestonad": 2, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["extra_expenses_condition"]
+        }
+      },
+      {
+        "id": "shared_custody_changes_costs",
+        "label": "Delt omsorg eller samvær påvirker utgifter, bolig eller oppfølging",
+        "effects": {
+          "flags": ["shared_custody"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1, "hjelpestonad": 1 },
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "moving_between_homes",
+        "label": "Husholdningen eller barnet flytter mellom flere steder eller løsninger",
+        "effects": {
+          "flags": ["temporary_household"],
+          "scores": { "midlertidig_botilbud": 1, "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": ["temporary_household"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
     "id": "housing_now",
     "title": "Hva passer best om boligsituasjonen din?",
     "description": "Dette brukes til å vurdere både akutt hjelp og mer stabil støtte til boutgifter.",
@@ -1008,7 +1227,7 @@
     "title": "Hva er allerede avklart eller i gang?",
     "description": "Dette brukes for å se om du trenger en ny kontakt, tydeligere dokumentasjon eller hjelp til å forstå noe som allerede finnes.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "sick", "needs_work_support", "unknown_focus_health", "unknown_focus_support", "unknown_focus_legal"],
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "sick", "needs_work_support", "young_first_contact", "letter_start", "unknown_focus_health", "unknown_focus_support", "unknown_focus_legal"],
     "options": [
       {
         "id": "have_doctor_or_specialist",
@@ -1086,7 +1305,7 @@
     "title": "Hva passer best om brev, vedtak eller frister akkurat nå?",
     "description": "Dette spørsmålet brukes når saken handler om brev, vedtak, klage eller noe du trenger å forstå videre. Det gjør veiviseren mer konkret om hva som bør tas først.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["unknown_focus_legal", "has_existing_decision", "needs_help_with_forms"],
+    "showWhenAnyFlags": ["letter_start", "unknown_focus_legal", "has_existing_decision", "needs_help_with_forms", "decision_context_known"],
     "options": [
       {
         "id": "deadline_soon",
