@@ -2,81 +2,98 @@
   {
     "id": "okonomisk_sosialhjelp",
     "title": "Økonomisk sosialhjelp",
+    "owner": "NAV-kontoret og kommunen",
     "category": "ytelse",
     "priority": 10,
     "minScore": 3,
     "summary": "Kan være relevant hvis du mangler penger til nødvendige utgifter og trenger en rask vurdering av grunnleggende økonomisk hjelp.",
-    "documentListIds": ["identity_and_bank", "income_and_expenses", "housing_docs"],
+    "documentListIds": ["identity_and_bank", "income_and_expenses", "housing_docs", "household_docs"],
     "phraseTemplateId": "social_assistance_contact",
-    "officialLinkIds": ["okonomisk_sosialhjelp"],
+    "officialLinkIds": ["kontakt_oss", "okonomisk_sosialhjelp"],
     "rationaleMap": {
       "income_shortfall": "Du har oppgitt at økonomien ikke strekker til for nødvendige utgifter.",
       "urgent_basic_needs": "Noe i situasjonen ser ut til å haste de neste dagene.",
       "no_income": "Du har oppgitt at du står uten inntekt akkurat nå.",
       "low_income": "Du har oppgitt at inntekten ikke dekker grunnleggende behov.",
       "needs_money_first": "Du har oppgitt at det viktigste akkurat nå er å få oversikt over økonomisk hjelp.",
-      "housing_notice": "Boligsituasjonen og boutgiftene ser ut til å skape akutt eller nær-akutt press."
+      "housing_notice": "Boligsituasjonen og boutgiftene ser ut til å skape akutt eller nær-akutt press.",
+      "single_with_children": "Du har oppgitt at du er alene med forsørgeransvar for barn i husholdningen.",
+      "household_with_children": "Du har oppgitt at det er barn i husholdningen, noe som kan gjøre grunnleggende utgifter mer sårbare.",
+      "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten eller støtten din.",
+      "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter.",
+      "unclear_household_economy": "Du har oppgitt at husholdningens økonomi er sammensatt eller vanskelig å beskrive kort.",
+      "temporary_household": "Du har oppgitt at du bor midlertidig hos andre og har en ustabil hverdag rundt økonomi og bolig."
     }
   },
   {
     "id": "midlertidig_botilbud",
     "title": "Midlertidig botilbud ved akutt behov",
+    "owner": "NAV-kontoret og kommunen",
     "category": "hjelpetiltak",
     "priority": 11,
     "minScore": 4,
     "summary": "Kan være relevant hvis du står uten et sted å sove eller ikke kan bli boende trygt de nærmeste dagene.",
-    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses"],
+    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses", "household_docs"],
     "phraseTemplateId": "housing_contact",
-    "officialLinkIds": ["midlertidig_botilbud"],
+    "officialLinkIds": ["kontakt_oss", "midlertidig_botilbud", "okonomisk_sosialhjelp"],
     "rationaleMap": {
       "urgent_housing": "Du har oppgitt at boligsituasjonen haster umiddelbart.",
       "no_stable_home": "Du har oppgitt at du mangler stabil bolig eller bor midlertidig.",
-      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen."
+      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen.",
+      "temporary_household": "Du har oppgitt at du bor midlertidig hos andre og mangler en stabil løsning.",
+      "single_with_children": "Du har oppgitt at du står med barn i husholdningen i en utsatt bosituasjon.",
+      "household_with_children": "Du har oppgitt at barn i husholdningen gjør bosituasjonen ekstra sårbar."
     }
   },
   {
     "id": "dagpenger",
     "title": "Dagpenger",
+    "owner": "NAV",
     "category": "ytelse",
     "priority": 20,
     "minScore": 4,
     "summary": "Kan være relevant hvis du nylig har mistet jobb, blitt permittert eller har fått arbeidstiden betydelig redusert.",
     "documentListIds": ["identity_and_bank", "employment_loss", "income_and_expenses"],
     "phraseTemplateId": "dagpenger_contact",
-    "officialLinkIds": ["dagpenger", "arbeidsledig_permittert"],
+    "officialLinkIds": ["kontakt_oss", "dagpenger", "arbeidsledig_permittert"],
     "rationaleMap": {
       "job_loss": "Du startet veiviseren med at du har mistet jobben eller er permittert.",
       "permittert": "Du har oppgitt at du er permittert.",
       "unemployed_after_job": "Du har oppgitt at du nylig har blitt arbeidsledig etter jobb.",
-      "reduced_hours": "Du har oppgitt redusert arbeidstid eller mindre inntekt fra jobb."
+      "reduced_hours": "Du har oppgitt redusert arbeidstid eller mindre inntekt fra jobb.",
+      "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten din, noe som gjør rask avklaring viktig."
     }
   },
   {
     "id": "aap",
     "title": "Arbeidsavklaringspenger (AAP)",
+    "owner": "NAV og helsetjenesten",
     "category": "ytelse",
     "priority": 21,
     "minScore": 4,
     "summary": "Kan være relevant hvis helse begrenser arbeidsevnen din over tid og du trenger et avklart løp mot arbeid eller aktivitet.",
     "documentListIds": ["identity_and_bank", "health_docs", "income_and_expenses"],
     "phraseTemplateId": "aap_contact",
-    "officialLinkIds": ["aap"],
+    "officialLinkIds": ["kontakt_oss", "aap", "helse_og_arbeid"],
     "rationaleMap": {
       "health_limits_work": "Du startet veiviseren med at sykdom eller helse er en hovedutfordring.",
       "health_blocks_work": "Du har oppgitt at helsen gjør at du ikke kan jobbe nå.",
-      "partial_work_capacity": "Du har oppgitt at du kan jobbe noe, men ikke som før."
+      "partial_work_capacity": "Du har oppgitt at du kan jobbe noe, men ikke som før.",
+      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang.",
+      "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten eller støtten din, noe som gjør avklaring viktig."
     }
   },
   {
     "id": "kvalifiseringsprogram",
     "title": "Kvalifiseringsprogram",
+    "owner": "NAV-kontoret",
     "category": "tjeneste",
     "priority": 30,
     "minScore": 4,
     "summary": "Kan være relevant hvis du står langt fra arbeid og trenger tettere, mer helhetlig oppfølging over tid.",
     "documentListIds": ["identity_and_bank", "follow_up_docs", "income_and_expenses"],
     "phraseTemplateId": "kvalifiseringsprogram_contact",
-    "officialLinkIds": ["kvalifiseringsprogrammet", "arbeid"],
+    "officialLinkIds": ["kontakt_oss", "kvalifiseringsprogrammet", "arbeid"],
     "rationaleMap": {
       "long_term_out_of_work": "Du har oppgitt at du har stått lenge utenfor arbeid.",
       "needs_close_follow_up": "Du har oppgitt behov for tett oppfølging for å komme videre.",
@@ -86,52 +103,201 @@
   {
     "id": "arbeid_oppfolging",
     "title": "Hjelp til å komme i arbeid",
+    "owner": "NAV",
     "category": "tjeneste",
     "priority": 31,
     "minScore": 3,
     "summary": "Kan være relevant hvis du trenger veiledning, arbeidsrettet oppfølging eller et mer strukturert løp mot jobb.",
     "documentListIds": ["identity_and_bank", "follow_up_docs"],
     "phraseTemplateId": "work_followup_contact",
-    "officialLinkIds": ["arbeid"],
+    "officialLinkIds": ["kontakt_oss", "arbeid"],
     "rationaleMap": {
       "needs_work_support": "Du har oppgitt at du trenger hjelp til å komme i arbeid.",
       "long_term_out_of_work": "Du har oppgitt lang tid utenfor arbeid eller aktivitet.",
-      "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå neste steg og komme i kontakt med riktig del av NAV.",
-      "reduced_hours": "Du har oppgitt redusert arbeid eller behov for ny retning."
+      "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå neste steg og komme i kontakt med riktig instans.",
+      "reduced_hours": "Du har oppgitt redusert arbeid eller behov for ny retning.",
+      "nothing_started": "Du har oppgitt at lite er satt i gang ennå og at du trenger en tydelig første retning.",
+      "has_nav_or_service_dialogue": "Du har oppgitt at du allerede er i dialog med NAV eller en annen tjeneste, men fortsatt trenger en tydeligere retning.",
+      "work_or_study_adaptation": "Du har oppgitt behov for tilrettelegging i arbeid, utdanning eller annen aktivitet."
     }
   },
   {
     "id": "okonomi_gjeld",
     "title": "Økonomi- og gjeldsrådgivning",
+    "owner": "NAV-kontoret",
     "category": "tjeneste",
     "priority": 32,
     "minScore": 3,
     "summary": "Kan være relevant hvis regninger hoper seg opp, du har inkasso eller trenger hjelp til å få oversikt og prioritering.",
     "documentListIds": ["identity_and_bank", "debt_docs", "income_and_expenses"],
     "phraseTemplateId": "debt_contact",
-    "officialLinkIds": ["okonomi_gjeld"],
+    "officialLinkIds": ["kontakt_oss", "okonomi_gjeld"],
     "rationaleMap": {
       "debt_pressure": "Du startet veiviseren med at gjeld eller økonomisk press er et hovedproblem.",
       "severe_debt_pressure": "Du har oppgitt inkasso, namsmann eller annet alvorlig betalingspress.",
       "mounting_debt": "Du har oppgitt at regninger og gjeld vokser.",
-      "low_income": "Du har oppgitt at inntekten ikke strekker til og at betalingsproblemer bygger seg opp."
+      "low_income": "Du har oppgitt at inntekten ikke strekker til og at betalingsproblemer bygger seg opp.",
+      "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter."
     }
   },
   {
     "id": "bostotte",
     "title": "Bostøtte",
+    "owner": "Husbanken og kommunen",
     "category": "ytelse",
     "priority": 33,
     "minScore": 3,
     "summary": "Kan være relevant hvis du har lav inntekt og høye boutgifter, og boligen i utgangspunktet er stabil nok til at støtte kan hjelpe.",
-    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses"],
+    "documentListIds": ["identity_and_bank", "housing_docs", "income_and_expenses", "household_docs"],
     "phraseTemplateId": "housing_contact",
-    "officialLinkIds": ["bostotte"],
+    "officialLinkIds": ["bostotte", "startlan"],
     "rationaleMap": {
       "housing_risk": "Du startet veiviseren med at bolig er en viktig del av situasjonen.",
       "housing_cost_pressure": "Du har oppgitt at boutgiftene er tunge å bære.",
       "low_income": "Du har oppgitt lav inntekt i forhold til nødvendige utgifter.",
-      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen og at støtte til boutgifter kan være relevant å undersøke."
+      "housing_notice": "Du har oppgitt at du står i fare for å miste boligen og at støtte til boutgifter kan være relevant å undersøke.",
+      "single_household_costs": "Du har oppgitt at du bor alene, noe som kan gjøre boutgiftene mer krevende å bære alene.",
+      "single_with_children": "Du har oppgitt at du er alene med barn i husholdningen, noe som kan gjøre boligstøtte mer relevant å undersøke.",
+      "household_with_children": "Du har oppgitt at det er barn i husholdningen og at boutgiftene må bæres for flere.",
+      "household_depends_on_me": "Du har oppgitt at husholdningen er avhengig av inntekten eller støtten din.",
+      "shared_household_shortfall": "Du har oppgitt at husholdningens samlede økonomi fortsatt ikke dekker nødvendige utgifter.",
+      "unclear_household_economy": "Du har oppgitt at husholdningens økonomi er sammensatt eller uoversiktlig."
+    }
+  },
+  {
+    "id": "hjelpemidler_tilrettelegging",
+    "title": "Hjelpemidler og tilrettelegging",
+    "owner": "NAV, kommunen og eventuell barnehage eller skole",
+    "category": "hjelpetiltak",
+    "priority": 34,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du eller barnet ditt trenger hjelpemidler, praktisk tilrettelegging eller tydeligere koordinering i hverdagen.",
+    "documentListIds": ["assistive_docs", "health_docs", "school_docs", "decision_docs"],
+    "phraseTemplateId": "assistive_support_contact",
+    "officialLinkIds": ["kontakt_oss", "hjelpemidler", "tilrettelegging_barnehage_skole"],
+    "rationaleMap": {
+      "needs_disability_support": "Du startet veiviseren med at hjelpemidler eller tilrettelegging ser ut til å være en viktig del av situasjonen.",
+      "caregiver_rights": "Du startet veiviseren med at du trenger oversikt som foresatt eller omsorgsperson.",
+      "child_needs_help": "Du har oppgitt at dette gjelder barn eller ungdom du har ansvar for.",
+      "care_for_other": "Du har oppgitt at dette gjelder noen du har omsorg for, og at du trenger hjelp til å finne riktig første kontakt.",
+      "assistive_need": "Du har oppgitt behov for hjelpemidler eller støtte i dagligliv, skole eller arbeid.",
+      "school_adaptation_need": "Du har oppgitt behov for tilrettelegging i barnehage eller skole.",
+      "work_or_study_adaptation": "Du har oppgitt behov for tilrettelegging i arbeid, utdanning eller annen aktivitet.",
+      "needs_service_coordination": "Du har oppgitt at du trenger hjelp til å koordinere mellom flere tjenester eller instanser.",
+      "has_school_or_municipal_dialogue": "Du har oppgitt at skole, barnehage eller kommune allerede er inne i bildet.",
+      "unclear_support_rights": "Du har oppgitt at du ikke vet hvilke støtte- og tilretteleggingsspor som passer best."
+    }
+  },
+  {
+    "id": "grunnstonad",
+    "title": "Grunnstønad",
+    "owner": "NAV",
+    "category": "ytelse",
+    "priority": 35,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du eller barnet ditt har varige ekstrautgifter på grunn av sykdom, skade eller funksjonsnedsettelse.",
+    "documentListIds": ["extra_expense_docs", "health_docs", "decision_docs"],
+    "phraseTemplateId": "grunnstonad_contact",
+    "officialLinkIds": ["kontakt_oss", "grunnstonad"],
+    "rationaleMap": {
+      "needs_disability_support": "Du startet veiviseren med at funksjonsnedsettelse eller langvarig behov kan være en viktig del av situasjonen.",
+      "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
+      "extra_expenses_condition": "Du har oppgitt løpende ekstrautgifter på grunn av sykdom eller funksjonsnedsettelse.",
+      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
+    }
+  },
+  {
+    "id": "hjelpestonad",
+    "title": "Hjelpestønad",
+    "owner": "NAV",
+    "category": "ytelse",
+    "priority": 36,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du eller barnet ditt trenger langvarig privat pleie, tilsyn eller særskilt omsorg over tid.",
+    "documentListIds": ["care_docs", "health_docs", "household_docs", "decision_docs"],
+    "phraseTemplateId": "hjelpestonad_contact",
+    "officialLinkIds": ["kontakt_oss", "hjelpestonad"],
+    "rationaleMap": {
+      "caregiver_rights": "Du startet veiviseren med at du trenger hjelp til å forstå rettigheter i en omsorgssituasjon.",
+      "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
+      "care_for_other": "Du har oppgitt at dette gjelder en person du har omsorg for.",
+      "ongoing_care_need": "Du har oppgitt et langvarig behov for pleie, tilsyn eller særskilt oppfølging.",
+      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
+    }
+  },
+  {
+    "id": "pleiepenger_barn",
+    "title": "Pleiepenger for sykt barn",
+    "owner": "NAV og helsetjenesten",
+    "category": "ytelse",
+    "priority": 37,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du må være borte fra arbeid eller aktivitet for å ta hånd om et sykt barn med stort omsorgsbehov.",
+    "documentListIds": ["care_absence_docs", "health_docs", "household_docs"],
+    "phraseTemplateId": "pleiepenger_contact",
+    "officialLinkIds": ["kontakt_oss", "pleiepenger_barn"],
+    "rationaleMap": {
+      "caregiver_rights": "Du startet veiviseren med at du trenger oversikt over rettigheter som foresatt eller omsorgsperson.",
+      "child_needs_help": "Du har oppgitt at dette gjelder barn eller ungdom du har ansvar for.",
+      "absence_for_care": "Du har oppgitt at omsorgsbehovet påvirker om du kan være i arbeid eller aktivitet.",
+      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
+    }
+  },
+  {
+    "id": "opplaeringspenger",
+    "title": "Opplæringspenger",
+    "owner": "NAV og helsetjenesten",
+    "category": "ytelse",
+    "priority": 38,
+    "minScore": 4,
+    "summary": "Kan være relevant hvis du trenger nødvendig opplæring for å kunne ta vare på barnet ditt eller en person du har omsorg for.",
+    "documentListIds": ["care_absence_docs", "health_docs", "school_docs", "decision_docs"],
+    "phraseTemplateId": "opplaeringspenger_contact",
+    "officialLinkIds": ["kontakt_oss", "opplaeringspenger"],
+    "rationaleMap": {
+      "caregiver_rights": "Du startet veiviseren med at du trenger oversikt over rettigheter i en omsorgssituasjon.",
+      "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
+      "care_for_other": "Du har oppgitt at dette gjelder en person du har omsorg for.",
+      "absence_for_care": "Du har oppgitt at omsorgsoppgaven krever opplæring eller tid borte fra arbeid eller aktivitet.",
+      "needs_service_coordination": "Du har oppgitt behov for koordinering mellom flere tjenester eller instanser."
+    }
+  },
+  {
+    "id": "helsehjelp_oppfolging",
+    "title": "Helseoppfølging og dokumentasjon",
+    "owner": "Fastlege, kommune eller annen helsetjeneste",
+    "category": "tjeneste",
+    "priority": 39,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis helse, belastning eller funksjon må avklares bedre før andre ordninger eller hjelpetiltak kan vurderes godt nok.",
+    "documentListIds": ["health_docs", "decision_docs"],
+    "phraseTemplateId": "health_support_contact",
+    "officialLinkIds": ["helse_og_arbeid", "psykolog", "legevakt"],
+    "rationaleMap": {
+      "health_limits_work": "Du startet veiviseren med at helse er en viktig del av situasjonen din.",
+      "health_blocks_work": "Du har oppgitt at helsen gjør at arbeid eller aktivitet er vanskelig akkurat nå.",
+      "partial_work_capacity": "Du har oppgitt at funksjon eller helse bare tillater noe aktivitet eller arbeid.",
+      "urgent_health_or_safety": "Du har oppgitt at helse eller trygghet kan haste og bør avklares før annet.",
+      "needs_health_support": "Du har oppgitt at du trenger hjelp til å få på plass dokumentasjon eller helsefaglig vurdering.",
+      "needs_service_coordination": "Du har oppgitt behov for koordinering mellom helse, NAV og andre tjenester."
+    }
+  },
+  {
+    "id": "juridisk_veiledning",
+    "title": "Klage og juridisk veiledning",
+    "owner": "NAV klage, statsforvalteren eller rettshjelp",
+    "category": "tjeneste",
+    "priority": 40,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du er uenig i et vedtak, ikke forstår brev eller trenger hjelp til å gripe tak i klagefrister og videre rettigheter.",
+    "documentListIds": ["decision_docs", "legal_docs", "identity_and_bank"],
+    "phraseTemplateId": "legal_guidance_contact",
+    "officialLinkIds": ["klage_nav", "fri_rettshjelp", "kontakt_oss"],
+    "rationaleMap": {
+      "unclear_rights": "Du startet veiviseren med at du ikke vet hvilke rettigheter som kan være aktuelle.",
+      "has_existing_decision": "Du har oppgitt at det allerede finnes vedtak, avslag eller brev som må forstås eller følges opp.",
+      "needs_help_with_forms": "Du har oppgitt at du trenger hjelp til å forstå brev, skjema eller hva som må sendes inn.",
+      "needs_legal_guidance": "Du har oppgitt at du trenger hjelp til klage, rettigheter eller neste steg i en sak."
     }
   }
 ]

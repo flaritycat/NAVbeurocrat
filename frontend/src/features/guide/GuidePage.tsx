@@ -150,7 +150,7 @@ export function GuidePage() {
         <section className="card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Foreløpig hovedløp</p>
+              <p className="eyebrow">Foreløpig hovedspor</p>
               <h2>{result.primaryRecommendation.recommendation.title}</h2>
             </div>
             <StatusBadge tone="fact">{result.primaryRecommendation.recommendation.category}</StatusBadge>
@@ -206,7 +206,7 @@ export function GuidePage() {
             handleContinue();
           }}
         >
-          <fieldset className="choices" role="radiogroup">
+          <fieldset className="choices" role={activeQuestion.selectionMode === "multi" ? "group" : "radiogroup"}>
             <legend className="sr-only">{activeQuestion.title}</legend>
             {activeQuestion.options.map((option) => {
               const checked =

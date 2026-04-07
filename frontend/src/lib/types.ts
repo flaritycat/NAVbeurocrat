@@ -25,6 +25,7 @@ export type Question = {
 export type Recommendation = {
   id: string;
   title: string;
+  owner: string;
   category: "ytelse" | "tjeneste" | "hjelpetiltak";
   priority: number;
   minScore: number;
@@ -64,8 +65,12 @@ export type OfficialLink = {
   id: string;
   title: string;
   publisher: string;
+  group: "NAV" | "kommune" | "Husbanken" | "helse" | "rettshjelp";
   url: string;
+  actionLabel: string;
   description: string;
+  whenRelevant?: string;
+  priority?: number;
 };
 
 export type Disclaimer = {
@@ -122,6 +127,9 @@ export type GuideResult = {
   acuteItems: MatchedAcuteItem[];
   documentSections: ResultDocumentSection[];
   officialLinks: OfficialLink[];
+  nextSteps: string[];
+  askForList: string[];
+  riskNotes: string[];
   contactDraft: string;
   summaryText: string;
   disclaimers: Disclaimer[];

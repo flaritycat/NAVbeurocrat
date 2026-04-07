@@ -1,65 +1,244 @@
 [
   {
+    "id": "kontakt_oss",
+    "title": "Kontakt oss",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/kontaktoss",
+    "actionLabel": "Kontakt NAV for anonym chat eller riktig telefonspor",
+    "description": "NAVs kontaktside med chat, telefon og forklaring på hvem du bør kontakte først.",
+    "whenRelevant": "Bruk denne når du trenger første kontakt, anonym chat eller hjelp til å finne riktig del av NAV.",
+    "priority": 1
+  },
+  {
     "id": "dagpenger",
     "title": "Dagpenger",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/dagpenger",
-    "description": "Offisiell oversikt over dagpenger, vilkår og hvordan du søker."
+    "actionLabel": "Les vilkår for dagpenger",
+    "description": "Offisiell oversikt over dagpenger, vilkår og hvordan du søker.",
+    "whenRelevant": "Bruk denne hvis arbeid eller inntekt nylig har falt bort.",
+    "priority": 4
   },
   {
     "id": "arbeidsledig_permittert",
     "title": "Arbeidsledig eller permittert",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/arbeidsledig-permittert",
-    "description": "Samleside for deg som står uten jobb eller er permittert."
+    "actionLabel": "Se samlet informasjon for arbeidsledig eller permittert",
+    "description": "Samleside for deg som står uten jobb eller er permittert.",
+    "whenRelevant": "Bruk denne hvis du trenger oversikt før du går videre til søknad eller kontakt.",
+    "priority": 5
   },
   {
     "id": "okonomisk_sosialhjelp",
     "title": "Økonomisk sosialhjelp",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/okonomisk-sosialhjelp",
-    "description": "Offisiell informasjon om økonomisk sosialhjelp og søknad via NAV-kontoret."
+    "actionLabel": "Be NAV-kontoret vurdere økonomisk sosialhjelp",
+    "description": "Offisiell informasjon om økonomisk sosialhjelp og søknad via NAV-kontoret.",
+    "whenRelevant": "Bruk denne hvis du ikke får dekket nødvendige utgifter.",
+    "priority": 2
   },
   {
     "id": "aap",
     "title": "Arbeidsavklaringspenger (AAP)",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/aap",
-    "description": "Offisiell side om AAP, vilkår og dokumentasjon."
+    "actionLabel": "Les om AAP og hva NAV trenger av dokumentasjon",
+    "description": "Offisiell side om AAP, vilkår og dokumentasjon.",
+    "whenRelevant": "Bruk denne hvis helse eller funksjon gjør arbeid vanskelig over tid.",
+    "priority": 4
   },
   {
     "id": "kvalifiseringsprogrammet",
     "title": "Kvalifiseringsprogrammet",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/kvalifiseringsprogrammet",
-    "description": "Offisiell informasjon om kvalifiseringsprogram og kvalifiseringsstønad."
+    "actionLabel": "Avklar om kvalifiseringsprogram kan passe",
+    "description": "Offisiell informasjon om kvalifiseringsprogram og kvalifiseringsstønad.",
+    "whenRelevant": "Bruk denne hvis du trenger tett og helhetlig oppfølging over tid.",
+    "priority": 5
   },
   {
     "id": "okonomi_gjeld",
     "title": "Råd om økonomi og gjeld",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/okonomi-gjeld",
-    "description": "Offisiell side om økonomi- og gjeldsrådgivning via NAV."
+    "actionLabel": "Be om økonomi- og gjeldsrådgivning",
+    "description": "Offisiell side om økonomi- og gjeldsrådgivning via NAV.",
+    "whenRelevant": "Bruk denne hvis inkasso, gjeld eller betalingspress bygger seg opp.",
+    "priority": 3
   },
   {
     "id": "arbeid",
     "title": "Arbeid og oppfølging",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/arbeid",
-    "description": "Offisiell oversikt over arbeidsrettet oppfølging og hjelp til å komme i jobb."
+    "actionLabel": "Se hvilke arbeids- og oppfølgingstiltak som finnes",
+    "description": "Offisiell oversikt over arbeidsrettet oppfølging og hjelp til å komme i jobb.",
+    "whenRelevant": "Bruk denne hvis du trenger hjelp til å finne riktig oppfølgingsløp.",
+    "priority": 5
   },
   {
     "id": "midlertidig_botilbud",
     "title": "Midlertidig botilbud",
     "publisher": "NAV",
+    "group": "NAV",
     "url": "https://www.nav.no/midlertidig-botilbud",
-    "description": "Offisiell informasjon om hjelp ved akutt mangel på bolig eller et sted å sove."
+    "actionLabel": "Be om vurdering av akutt bolighjelp",
+    "description": "Offisiell informasjon om hjelp ved akutt mangel på bolig eller et sted å sove.",
+    "whenRelevant": "Bruk denne hvis du mangler et trygt sted å være nå eller svært snart.",
+    "priority": 2
   },
   {
     "id": "bostotte",
     "title": "Bostøtte",
     "publisher": "Husbanken",
+    "group": "Husbanken",
     "url": "https://www.husbanken.no/person/bostotte/",
-    "description": "Offisiell informasjon om bostøtte fra Husbanken."
+    "actionLabel": "Undersøk om bostøtte kan hjelpe med boutgiftene",
+    "description": "Offisiell informasjon om bostøtte fra Husbanken.",
+    "whenRelevant": "Bruk denne hvis du har lav inntekt og høye boutgifter.",
+    "priority": 4
+  },
+  {
+    "id": "startlan",
+    "title": "Startlån og tilskudd",
+    "publisher": "Husbanken",
+    "group": "Husbanken",
+    "url": "https://www.husbanken.no/person/startlaan/soke-startlaan-og-tilskudd/",
+    "actionLabel": "Se om kommunen og Husbanken har andre boligspor",
+    "description": "Offisiell oversikt over startlån og boligrelaterte støtteordninger via kommunen og Husbanken.",
+    "whenRelevant": "Bruk denne hvis boligspørsmålet er mer varig enn helt akutt.",
+    "priority": 6
+  },
+  {
+    "id": "hjelpemidler",
+    "title": "Informasjon om hjelpemidler og tilrettelegging",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/om-hjelpemidler",
+    "actionLabel": "Avklar hjelpemidler og hvem som har ansvar",
+    "description": "Offisiell informasjon om hjelpemidler og hvordan ansvar kan ligge hos kommunen eller NAV.",
+    "whenRelevant": "Bruk denne hvis du trenger hjelpemidler hjemme, i arbeid, i utdanning eller i dagliglivet.",
+    "priority": 2
+  },
+  {
+    "id": "tilrettelegging_barnehage_skole",
+    "title": "Tilrettelegging i barnehage og skole",
+    "publisher": "NAV",
+    "group": "kommune",
+    "url": "https://www.nav.no/tilrettelegge-barnehage-skole",
+    "actionLabel": "Se hvordan barnehage, skole, kommune og NAV kan samarbeide",
+    "description": "Offisiell veiledning om tilrettelegging, rettigheter og hjelpemidler for barn og unge.",
+    "whenRelevant": "Bruk denne når behovet gjelder barn, skole eller barnehage.",
+    "priority": 3
+  },
+  {
+    "id": "grunnstonad",
+    "title": "Grunnstønad",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/grunnstonad",
+    "actionLabel": "Undersøk om ekstrautgifter kan gi rett til grunnstønad",
+    "description": "Offisiell side om grunnstønad ved varige ekstrautgifter på grunn av sykdom eller funksjonsnedsettelse.",
+    "whenRelevant": "Bruk denne hvis du eller barnet ditt har dokumenterbare, løpende ekstrautgifter.",
+    "priority": 3
+  },
+  {
+    "id": "hjelpestonad",
+    "title": "Hjelpestønad",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/hjelpestonad",
+    "actionLabel": "Undersøk om omsorgsbelastning kan gi rett til hjelpestønad",
+    "description": "Offisiell side om hjelpestønad ved langvarig pleie, tilsyn eller særskilt omsorg.",
+    "whenRelevant": "Bruk denne hvis omsorgsoppgavene er store og varer over tid.",
+    "priority": 3
+  },
+  {
+    "id": "pleiepenger_barn",
+    "title": "Pleiepenger for sykt barn",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/pleiepenger-barn",
+    "actionLabel": "Avklar om fravær for å ta hånd om sykt barn kan gi rett til pleiepenger",
+    "description": "Offisiell side om pleiepenger når barnets omsorgsbehov påvirker arbeid eller aktivitet.",
+    "whenRelevant": "Bruk denne når omsorg for sykt barn går ut over jobb eller aktivitet.",
+    "priority": 3
+  },
+  {
+    "id": "opplaeringspenger",
+    "title": "Opplæringspenger",
+    "publisher": "NAV",
+    "group": "NAV",
+    "url": "https://www.nav.no/opplaringspenger",
+    "actionLabel": "Avklar om nødvendig opplæring i omsorgssituasjonen kan gi rett til opplæringspenger",
+    "description": "Offisiell side om opplæringspenger når du må få opplæring for å kunne ta deg av den du har omsorg for.",
+    "whenRelevant": "Bruk denne hvis du trenger opplæring og må være borte fra arbeid eller aktivitet.",
+    "priority": 4
+  },
+  {
+    "id": "helse_og_arbeid",
+    "title": "Helse og arbeid",
+    "publisher": "Helsenorge",
+    "group": "helse",
+    "url": "https://www.helsenorge.no/helse-og-arbeid/",
+    "actionLabel": "Bruk helsevesenet når helse må avklares før rettigheter kan vurderes",
+    "description": "Offisiell informasjon om sammenhengen mellom helse, arbeid og videre oppfølging.",
+    "whenRelevant": "Bruk denne hvis helse, funksjon eller dokumentasjon må avklares bedre først.",
+    "priority": 2
+  },
+  {
+    "id": "psykolog",
+    "title": "Psykolog",
+    "publisher": "Helsenorge",
+    "group": "helse",
+    "url": "https://www.helsenorge.no/psykisk-helse/psykolog/",
+    "actionLabel": "Finn veien til psykisk helsehjelp hvis belastningen er stor",
+    "description": "Offisiell informasjon om psykisk helsehjelp, fastlege og videre henvisning.",
+    "whenRelevant": "Bruk denne hvis psykisk helse er en del av situasjonen eller gjør hverdagen vanskelig å håndtere.",
+    "priority": 5
+  },
+  {
+    "id": "legevakt",
+    "title": "Legevakt",
+    "publisher": "Helsenorge",
+    "group": "helse",
+    "url": "https://www.helsenorge.no/hjelpetilbud-i-kommunene/legevakt/",
+    "actionLabel": "Bruk legevakt hvis helse eller trygghet ikke kan vente",
+    "description": "Offisiell informasjon om legevakt og når du bør bruke 116 117 eller 113.",
+    "whenRelevant": "Bruk denne ved akutt eller raskt forverret helse- eller trygghetssituasjon.",
+    "priority": 1
+  },
+  {
+    "id": "klage_nav",
+    "title": "Klage og anke",
+    "publisher": "NAV",
+    "group": "rettshjelp",
+    "url": "https://www.nav.no/klage",
+    "actionLabel": "Se hvordan du kan klage eller be om ny vurdering",
+    "description": "Offisiell informasjon om klage, anke og hvordan vedtak kan følges opp videre.",
+    "whenRelevant": "Bruk denne hvis du er uenig i et vedtak eller må forstå klageveien.",
+    "priority": 2
+  },
+  {
+    "id": "fri_rettshjelp",
+    "title": "Fri rettshjelp",
+    "publisher": "Statsforvalteren",
+    "group": "rettshjelp",
+    "url": "https://www.statsforvalteren.no/portal/Folk-og-samfunn/Fri-rettshjelp/",
+    "actionLabel": "Undersøk om fri rettshjelp eller juridisk bistand kan være aktuelt",
+    "description": "Offisiell informasjon om fri rettshjelp og hvordan ordningen fungerer.",
+    "whenRelevant": "Bruk denne hvis du trenger juridisk bistand og er usikker på om du kan få hjelp med kostnadene.",
+    "priority": 3
   }
 ]

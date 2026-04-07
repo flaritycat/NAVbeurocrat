@@ -1,6 +1,6 @@
 # nav
 
-`nav` er en personvernvennlig veiviser for privatpersoner i Norge som trenger hjelp til å orientere seg i NAV-systemet. Løsningen viderefører designretningen fra `kommune`, men er bygget som en frontend-only modul uten innlogging og uten serverlagring av brukersvar.
+`nav` er en personvernvennlig hjelpeveiviser for privatpersoner i Norge som trenger hjelp til å orientere seg i støtteordninger, rettigheter og riktige første kontaktpunkter. Løsningen viderefører designretningen fra `kommune`, men er bygget som en frontend-only modul uten innlogging og uten serverlagring av brukersvar.
 
 Offentlig base path er `https://dev.raoul.no/nav`.
 
@@ -8,11 +8,12 @@ Offentlig base path er `https://dev.raoul.no/nav`.
 
 - leder brukeren gjennom ett spørsmål om gangen
 - starter i situasjonen brukeren står i, ikke i navnet på en ytelse
-- prioriterer akutte forhold tydelig
-- foreslår relevante ordninger, tjenester og hjelpetiltak
+- prioriterer akutte forhold tydelig, også når helse eller trygghet haster
+- foreslår relevante ordninger, tjenester og hjelpetiltak hos NAV, kommunen, Husbanken eller helsetjenesten
 - viser vanlig dokumentasjon som bør samles
-- genererer saklig forslag til formulering mot NAV
-- peker videre til offisielle kilder på `nav.no` og `husbanken.no`
+- viser hva brukeren kan be om i kontakt med hjelpeapparatet
+- genererer saklig forslag til formulering for kontakt, melding eller forberedelse
+- peker videre til offisielle kilder på `nav.no`, `husbanken.no`, `helsenorge.no` og `statsforvalteren.no`
 - lar brukeren kopiere tekst og eksportere resultatet til PDF
 
 ## Personvernmodell
@@ -118,6 +119,13 @@ Modulen følger samme enkle containerstrategi som `kommune`, men uten backend:
 - Bostøtte
 - Midlertidig botilbud ved akutt behov
 - Hjelp til å komme i arbeid
+- Hjelpemidler og tilrettelegging
+- Grunnstønad
+- Hjelpestønad
+- Pleiepenger for sykt barn
+- Opplæringspenger
+- Helseoppfølging og dokumentasjon
+- Klage og juridisk veiledning
 
 ## Dokumentasjon
 

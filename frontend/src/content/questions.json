@@ -31,7 +31,7 @@
         "description": "Helseplager gjør at arbeid eller aktivitet er vanskelig å stå i nå.",
         "effects": {
           "flags": ["sick", "reduced_work_capacity"],
-          "scores": { "aap": 5, "arbeid_oppfolging": 1, "okonomisk_sosialhjelp": 1 },
+          "scores": { "aap": 5, "helsehjelp_oppfolging": 2, "arbeid_oppfolging": 1, "okonomisk_sosialhjelp": 1 },
           "rationaleIds": ["health_limits_work"]
         }
       },
@@ -66,12 +66,39 @@
         }
       },
       {
+        "id": "disability_support",
+        "label": "Jeg eller barnet mitt trenger hjelpemidler, tilrettelegging eller støtte i hverdagen",
+        "description": "Behovet gjelder funksjon, praktisk støtte, tilrettelegging eller ekstra belastning i hverdagen.",
+        "effects": {
+          "flags": ["needs_disability_support"],
+          "scores": { "hjelpemidler_tilrettelegging": 5, "grunnstonad": 3, "hjelpestonad": 2 },
+          "rationaleIds": ["needs_disability_support"]
+        }
+      },
+      {
+        "id": "caregiver_rights",
+        "label": "Jeg er foresatt eller omsorgsperson og trenger å forstå hvilke rettigheter som kan være aktuelle",
+        "description": "Du trenger hjelp til å sortere støtte, omsorgsordninger eller hva du bør be om videre.",
+        "effects": {
+          "flags": ["caregiver_rights"],
+          "scores": { "hjelpestonad": 4, "opplaeringspenger": 4, "pleiepenger_barn": 3, "hjelpemidler_tilrettelegging": 2 },
+          "rationaleIds": ["caregiver_rights"]
+        }
+      },
+      {
         "id": "dont_know",
         "label": "Jeg vet ikke hva jeg kan ha rett på",
         "description": "Du trenger først og fremst hjelp til å sortere mulighetene.",
         "effects": {
           "flags": ["unclear_rights"],
-          "scores": { "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1, "bostotte": 1, "okonomi_gjeld": 1 },
+          "scores": {
+            "arbeid_oppfolging": 2,
+            "okonomisk_sosialhjelp": 1,
+            "bostotte": 1,
+            "okonomi_gjeld": 1,
+            "hjelpemidler_tilrettelegging": 1,
+            "juridisk_veiledning": 1
+          },
           "rationaleIds": ["unclear_rights"]
         }
       }
@@ -99,6 +126,15 @@
           "flags": ["urgent_housing"],
           "scores": { "midlertidig_botilbud": 6, "okonomisk_sosialhjelp": 3 },
           "rationaleIds": ["urgent_housing"]
+        }
+      },
+      {
+        "id": "health_or_safety",
+        "label": "Helse eller trygghet kan ikke vente",
+        "effects": {
+          "flags": ["urgent_health_or_safety"],
+          "scores": { "helsehjelp_oppfolging": 5 },
+          "rationaleIds": ["urgent_health_or_safety"]
         }
       },
       {
@@ -140,11 +176,128 @@
     ]
   },
   {
+    "id": "unclear_focus",
+    "title": "Hva trenger du mest hjelp til å sortere akkurat nå?",
+    "description": "Dette spørsmålet brukes bare når du startet med at du ikke vet hva som kan være aktuelt. Det gjør veiviseren mer presis videre.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["unclear_rights"],
+    "options": [
+      {
+        "id": "unclear_work_income",
+        "label": "Arbeid, inntekt eller hva jeg kan få mens jeg står uten jobb",
+        "effects": {
+          "flags": ["unknown_focus_work", "needs_work_support", "income_loss"],
+          "scores": { "arbeid_oppfolging": 2, "dagpenger": 2, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "unclear_money_housing",
+        "label": "Økonomi, regninger, bolig eller hva som haster mest praktisk",
+        "effects": {
+          "flags": ["unknown_focus_finance", "income_loss", "housing_risk", "debt_pressure"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 1, "okonomi_gjeld": 1 },
+          "rationaleIds": ["income_shortfall"]
+        }
+      },
+      {
+        "id": "unclear_health",
+        "label": "Helse, funksjon eller hvordan dette påvirker arbeidsevnen min",
+        "effects": {
+          "flags": ["unknown_focus_health", "sick"],
+          "scores": { "helsehjelp_oppfolging": 2, "aap": 2 },
+          "rationaleIds": ["health_limits_work"]
+        }
+      },
+      {
+        "id": "unclear_support",
+        "label": "Hjelpemidler, tilrettelegging, barn eller omsorgsrelaterte rettigheter",
+        "effects": {
+          "flags": ["unknown_focus_support", "needs_disability_support", "caregiver_rights"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 2, "opplaeringspenger": 1 },
+          "rationaleIds": ["unclear_support_rights"]
+        }
+      },
+      {
+        "id": "unclear_letters",
+        "label": "Brev, vedtak, klage eller hva jeg egentlig skal be om",
+        "effects": {
+          "flags": ["unknown_focus_legal", "needs_legal_guidance"],
+          "scores": { "juridisk_veiledning": 3 },
+          "rationaleIds": ["needs_legal_guidance"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet fortsatt ikke",
+        "effects": {
+          "flags": ["unknown_still_broad"],
+          "scores": { "arbeid_oppfolging": 1, "juridisk_veiledning": 1 },
+          "rationaleIds": ["unclear_rights"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "help_applies_to",
+    "title": "Hvem gjelder situasjonen først og fremst?",
+    "description": "Dette brukes bare når situasjonen handler om støtte, tilrettelegging eller omsorg, slik at veiviseren kan skille mellom egne behov og behov hos barn eller andre du har ansvar for.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "unknown_focus_support"],
+    "options": [
+      {
+        "id": "for_self",
+        "label": "Det gjelder meg",
+        "effects": {
+          "flags": ["for_self"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "for_child",
+        "label": "Det gjelder barn eller ungdom jeg har ansvar for",
+        "effects": {
+          "flags": ["for_child"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 2, "pleiepenger_barn": 1, "opplaeringspenger": 1 },
+          "rationaleIds": ["child_needs_help"]
+        }
+      },
+      {
+        "id": "for_other_person",
+        "label": "Det gjelder en voksen eller annen person jeg har omsorg for",
+        "effects": {
+          "flags": ["for_other_care"],
+          "scores": { "hjelpestonad": 1, "opplaeringspenger": 1, "helsehjelp_oppfolging": 1 },
+          "rationaleIds": ["care_for_other"]
+        }
+      },
+      {
+        "id": "for_self_and_child",
+        "label": "Det gjelder både meg og barnet mitt / familien min",
+        "effects": {
+          "flags": ["for_self", "for_child"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 2, "pleiepenger_barn": 1, "opplaeringspenger": 1 },
+          "rationaleIds": ["child_needs_help"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
     "id": "work_relation",
     "title": "Hva stemmer best om arbeidssituasjonen din?",
     "description": "Dette brukes til å skille mellom inntektssikring, oppfølging og mer langsiktige løp.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["job_loss", "needs_work_support", "unclear_rights", "income_loss"],
+    "showWhenAnyFlags": ["job_loss", "needs_work_support", "unknown_focus_work"],
     "options": [
       {
         "id": "permittert",
@@ -195,27 +348,42 @@
   },
   {
     "id": "health_capacity",
-    "title": "Hvordan påvirker helse arbeidsevnen din nå?",
-    "description": "Spørsmålet vises når helse kan være en viktig del av situasjonen.",
+    "title": "Hvordan påvirker helse arbeidsevnen eller hverdagen din nå?",
+    "description": "Dette spørsmålet brukes når du selv har oppgitt at helse er en viktig del av situasjonen din.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["sick", "unclear_rights", "needs_work_support"],
+    "showWhenAnyFlags": ["sick", "unknown_focus_health"],
     "options": [
       {
         "id": "cannot_work_now",
-        "label": "Helse gjør at jeg ikke kan jobbe nå",
+        "label": "Helse gjør at jeg ikke kan jobbe eller fungere som før akkurat nå",
         "effects": {
           "flags": ["health_blocks_work"],
-          "scores": { "aap": 5, "okonomisk_sosialhjelp": 1 },
+          "scores": { "aap": 5, "helsehjelp_oppfolging": 2, "okonomisk_sosialhjelp": 1 },
           "rationaleIds": ["health_blocks_work"]
         }
       },
       {
         "id": "can_work_some",
-        "label": "Jeg kan jobbe noe, men ikke fullt eller ikke som før",
+        "label": "Jeg kan noe, men ikke fullt eller ikke på samme måte som før",
         "effects": {
           "flags": ["partial_work_capacity"],
-          "scores": { "aap": 3, "arbeid_oppfolging": 2, "kvalifiseringsprogram": 1 },
+          "scores": { "aap": 3, "arbeid_oppfolging": 2, "kvalifiseringsprogram": 1, "helsehjelp_oppfolging": 2 },
           "rationaleIds": ["partial_work_capacity"]
+        }
+      },
+      {
+        "id": "need_health_documentation",
+        "label": "Jeg trenger mest hjelp til å få på plass helseoppfølging eller dokumentasjon",
+        "effects": {
+          "flags": ["needs_health_support"],
+          "scores": {
+            "helsehjelp_oppfolging": 4,
+            "aap": 1,
+            "grunnstonad": 1,
+            "hjelpestonad": 1,
+            "hjelpemidler_tilrettelegging": 1
+          },
+          "rationaleIds": ["needs_health_support"]
         }
       },
       {
@@ -239,16 +407,98 @@
     ]
   },
   {
+    "id": "support_needs",
+    "title": "Hvilke behov kjenner du deg mest igjen i?",
+    "description": "Du kan velge flere. Dette brukes for å finne støtte, hjelpemidler og rettigheter som ofte er mindre synlige.",
+    "selectionMode": "multi",
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "for_child", "for_other_care", "unknown_focus_support"],
+    "options": [
+      {
+        "id": "assistive_devices_daily_life",
+        "label": "Vi trenger hjelpemidler eller praktisk støtte i dagliglivet",
+        "effects": {
+          "flags": ["assistive_need"],
+          "scores": { "hjelpemidler_tilrettelegging": 5 },
+          "rationaleIds": ["assistive_need"]
+        }
+      },
+      {
+        "id": "school_kindergarten_adaptation",
+        "label": "Det er behov for tilrettelegging i barnehage eller skole",
+        "effects": {
+          "flags": ["school_adaptation_need"],
+          "scores": { "hjelpemidler_tilrettelegging": 4, "opplaeringspenger": 1 },
+          "rationaleIds": ["school_adaptation_need"]
+        }
+      },
+      {
+        "id": "work_or_study_adaptation",
+        "label": "Det er behov for tilrettelegging i arbeid, utdanning eller annen aktivitet",
+        "effects": {
+          "flags": ["work_or_study_adaptation"],
+          "scores": { "hjelpemidler_tilrettelegging": 4, "arbeid_oppfolging": 1 },
+          "rationaleIds": ["work_or_study_adaptation"]
+        }
+      },
+      {
+        "id": "extra_expenses_due_to_condition",
+        "label": "Sykdom eller funksjonsnedsettelse gir løpende ekstrautgifter",
+        "effects": {
+          "flags": ["extra_expenses_condition"],
+          "scores": { "grunnstonad": 5 },
+          "rationaleIds": ["extra_expenses_condition"]
+        }
+      },
+      {
+        "id": "care_supervision_over_time",
+        "label": "Det går mye tid til tilsyn, pleie eller særskilt omsorg over tid",
+        "effects": {
+          "flags": ["ongoing_care_need"],
+          "scores": { "hjelpestonad": 5, "opplaeringspenger": 1, "pleiepenger_barn": 1 },
+          "rationaleIds": ["ongoing_care_need"]
+        }
+      },
+      {
+        "id": "time_off_for_care",
+        "label": "Omsorgsbehovet gjør at jeg må være borte fra jobb eller aktivitet",
+        "effects": {
+          "flags": ["absence_for_care"],
+          "scores": { "pleiepenger_barn": 5, "opplaeringspenger": 4 },
+          "rationaleIds": ["absence_for_care"]
+        }
+      },
+      {
+        "id": "coordination_between_services",
+        "label": "Jeg trenger hjelp til å koordinere mellom flere tjenester eller instanser",
+        "effects": {
+          "flags": ["needs_service_coordination"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "helsehjelp_oppfolging": 2, "juridisk_veiledning": 1 },
+          "rationaleIds": ["needs_service_coordination"]
+        }
+      },
+      {
+        "id": "dont_know_support",
+        "label": "Jeg vet ikke hvilke av disse som passer best",
+        "effects": {
+          "flags": ["unclear_support_rights"],
+          "scores": { "hjelpemidler_tilrettelegging": 1, "grunnstonad": 1, "hjelpestonad": 1 },
+          "rationaleIds": ["unclear_support_rights"]
+        }
+      }
+    ]
+  },
+  {
     "id": "income_level",
     "title": "Hvordan ser økonomien din ut denne måneden?",
     "description": "Spørsmålet hjelper veiviseren å prioritere mellom akutt hjelp og mer langsiktige ordninger.",
     "selectionMode": "single",
+    "showWhenAnyFlags": ["income_loss", "sick", "needs_work_support", "housing_risk", "debt_pressure", "unknown_focus_work", "unknown_focus_finance", "unknown_focus_health"],
     "options": [
       {
         "id": "no_income",
         "label": "Jeg står uten inntekt akkurat nå",
         "effects": {
-          "flags": ["no_income"],
+          "flags": ["no_income", "financial_status_known", "current_financial_pressure"],
           "scores": { "okonomisk_sosialhjelp": 4, "dagpenger": 1, "aap": 1, "kvalifiseringsprogram": 1 },
           "rationaleIds": ["no_income"]
         }
@@ -257,7 +507,7 @@
         "id": "low_income",
         "label": "Jeg har noe inntekt, men den dekker ikke nødvendige utgifter",
         "effects": {
-          "flags": ["low_income"],
+          "flags": ["low_income", "financial_status_known", "current_financial_pressure"],
           "scores": { "okonomisk_sosialhjelp": 4, "bostotte": 2, "okonomi_gjeld": 1 },
           "rationaleIds": ["low_income"]
         }
@@ -266,7 +516,7 @@
         "id": "temporary_buffer",
         "label": "Jeg klarer meg kortsiktig, men trenger rask avklaring videre",
         "effects": {
-          "flags": ["temporary_buffer"],
+          "flags": ["temporary_buffer", "financial_status_known", "current_financial_pressure"],
           "scores": { "dagpenger": 1, "arbeid_oppfolging": 1 },
           "rationaleIds": []
         }
@@ -275,9 +525,128 @@
         "id": "stable_enough",
         "label": "Jeg får dekket det nødvendigste akkurat nå",
         "effects": {
-          "flags": ["can_cover_basics"],
+          "flags": ["can_cover_basics", "financial_status_known"],
           "scores": {},
           "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["financial_status_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "household_situation",
+    "title": "Hvordan ser husholdningen din ut akkurat nå?",
+    "description": "Dette brukes til å vurdere om forsørgeransvar, barn i husholdningen eller en ustabil bosituasjon kan gjøre enkelte løp mer aktuelle.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["income_loss", "sick", "housing_risk", "debt_pressure", "for_child", "unknown_focus_finance", "unknown_focus_work", "current_financial_pressure"],
+    "options": [
+      {
+        "id": "live_alone",
+        "label": "Jeg bor alene",
+        "effects": {
+          "flags": ["single_household", "household_context_known"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": ["single_household_costs"]
+        }
+      },
+      {
+        "id": "single_with_children",
+        "label": "Jeg bor alene og forsørger barn",
+        "effects": {
+          "flags": ["single_household", "household_with_children", "single_with_children", "household_context_known"],
+          "scores": { "okonomisk_sosialhjelp": 3, "bostotte": 3 },
+          "rationaleIds": ["single_with_children"]
+        }
+      },
+      {
+        "id": "shared_with_children",
+        "label": "Jeg bor med andre, og det er barn i husholdningen",
+        "effects": {
+          "flags": ["household_with_children", "household_context_known"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 2 },
+          "rationaleIds": ["household_with_children"]
+        }
+      },
+      {
+        "id": "shared_no_children",
+        "label": "Jeg bor med andre voksne uten barn i husholdningen",
+        "effects": {
+          "flags": ["shared_household", "household_context_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "temporary_with_others",
+        "label": "Jeg bor midlertidig hos familie, venner eller andre",
+        "effects": {
+          "flags": ["temporary_household", "household_context_known"],
+          "scores": { "midlertidig_botilbud": 3, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["temporary_household"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["household_context_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "household_finances",
+    "title": "Hvordan påvirker husholdningen behovet ditt for støtte akkurat nå?",
+    "description": "Spørsmålet brukes til å fange opp om andre i husholdningen er avhengige av inntekten din, eller om husholdningens økonomi samlet sett ikke strekker til.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["income_loss", "sick", "housing_risk", "debt_pressure", "unknown_focus_finance", "unknown_focus_work", "unknown_focus_health", "current_financial_pressure"],
+    "showWhenAllFlags": ["household_context_known", "financial_status_known"],
+    "showWhenNoFlags": ["can_cover_basics"],
+    "options": [
+      {
+        "id": "household_depends_on_me",
+        "label": "Husholdningen er i stor grad avhengig av min inntekt eller min støtte",
+        "effects": {
+          "flags": ["household_depends_on_me"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 2, "dagpenger": 1, "aap": 1 },
+          "rationaleIds": ["household_depends_on_me"]
+        }
+      },
+      {
+        "id": "shared_finances_not_enough",
+        "label": "Vi er flere i husholdningen, men økonomien dekker likevel ikke nødvendige utgifter",
+        "effects": {
+          "flags": ["shared_household_shortfall"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 2, "okonomi_gjeld": 1 },
+          "rationaleIds": ["shared_household_shortfall"]
+        }
+      },
+      {
+        "id": "other_income_in_household",
+        "label": "Det finnes annen inntekt eller andre ressurser i husholdningen",
+        "effects": {
+          "flags": ["other_household_income"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "situation_varies",
+        "label": "Situasjonen varierer eller er vanskelig å beskrive kort",
+        "effects": {
+          "flags": ["unclear_household_economy"],
+          "scores": { "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": ["unclear_household_economy"]
         }
       },
       {
@@ -296,7 +665,8 @@
     "title": "Hva passer best om boligsituasjonen din?",
     "description": "Dette brukes til å vurdere både akutt hjelp og mer stabil støtte til boutgifter.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["housing_risk", "income_loss", "unclear_rights"],
+    "showWhenAnyFlags": ["housing_risk", "debt_pressure", "unknown_focus_finance", "current_financial_pressure"],
+    "showWhenAllFlags": ["financial_status_known"],
     "options": [
       {
         "id": "no_home_or_temporary",
@@ -350,14 +720,15 @@
     "title": "Hvordan ser gjelds- og betalingspresset ut?",
     "description": "Dette brukes til å vurdere om økonomi- og gjeldsrådgivning bør løftes høyere.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["debt_pressure", "income_loss", "unclear_rights"],
+    "showWhenAnyFlags": ["debt_pressure", "housing_risk", "unknown_focus_finance", "current_financial_pressure"],
+    "showWhenAllFlags": ["financial_status_known"],
     "options": [
       {
         "id": "inkasso_or_bailiff",
         "label": "Jeg har inkasso, trekk eller press fra namsmann / kreditorer",
         "effects": {
           "flags": ["severe_debt_pressure"],
-          "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1 },
+          "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1, "juridisk_veiledning": 1 },
           "rationaleIds": ["severe_debt_pressure"]
         }
       },
@@ -400,9 +771,87 @@
     ]
   },
   {
+    "id": "existing_followup",
+    "title": "Hva er allerede avklart eller i gang?",
+    "description": "Dette brukes for å se om du trenger en ny kontakt, tydeligere dokumentasjon eller hjelp til å forstå noe som allerede finnes.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "sick", "needs_work_support", "unknown_focus_health", "unknown_focus_support", "unknown_focus_legal"],
+    "options": [
+      {
+        "id": "have_doctor_or_specialist",
+        "label": "Fastlege, behandler eller annen fagperson er allerede inne i bildet",
+        "effects": {
+          "flags": ["has_medical_followup"],
+          "scores": {
+            "aap": 1,
+            "grunnstonad": 1,
+            "hjelpestonad": 1,
+            "pleiepenger_barn": 1,
+            "hjelpemidler_tilrettelegging": 1
+          },
+          "rationaleIds": ["has_medical_followup"]
+        }
+      },
+      {
+        "id": "have_school_or_municipality_dialogue",
+        "label": "Skole, barnehage eller kommunen er allerede inne i saken",
+        "effects": {
+          "flags": ["has_school_or_municipal_dialogue"],
+          "scores": { "hjelpemidler_tilrettelegging": 2 },
+          "rationaleIds": ["has_school_or_municipal_dialogue"]
+        }
+      },
+      {
+        "id": "have_nav_or_service_dialogue",
+        "label": "Jeg er allerede i kontakt med NAV eller annen tjeneste om arbeid, aktivitet eller økonomi",
+        "effects": {
+          "flags": ["has_nav_or_service_dialogue"],
+          "scores": { "arbeid_oppfolging": 2, "okonomi_gjeld": 1, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["has_nav_or_service_dialogue"]
+        }
+      },
+      {
+        "id": "have_decision_or_rejection",
+        "label": "Det finnes allerede vedtak, avslag eller brev jeg trenger å forstå eller følge opp",
+        "effects": {
+          "flags": ["has_existing_decision"],
+          "scores": { "juridisk_veiledning": 4 },
+          "rationaleIds": ["has_existing_decision"]
+        }
+      },
+      {
+        "id": "need_help_with_forms_or_letters",
+        "label": "Jeg trenger hjelp til å forstå skjema, brev eller hva som skal sendes inn",
+        "effects": {
+          "flags": ["needs_help_with_forms"],
+          "scores": { "juridisk_veiledning": 3, "arbeid_oppfolging": 1 },
+          "rationaleIds": ["needs_help_with_forms"]
+        }
+      },
+      {
+        "id": "nothing_started",
+        "label": "Lite eller ingenting er satt i gang ennå",
+        "effects": {
+          "flags": ["nothing_started"],
+          "scores": { "arbeid_oppfolging": 1 },
+          "rationaleIds": ["nothing_started"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
     "id": "follow_up_need",
-    "title": "Hvilken type hjelp tror du at du trenger mest videre?",
-    "description": "Dette brukes til å prioritere mellom økonomisk støtte, oppfølging og mer helhetlige løp.",
+    "title": "Hva slags hjelp trenger du mest videre?",
+    "description": "Dette brukes til å prioritere mellom økonomisk støtte, oppfølging, helseavklaring og hjelp til å forstå rettigheter.",
     "selectionMode": "single",
     "options": [
       {
@@ -415,11 +864,11 @@
         }
       },
       {
-        "id": "guidance_to_contact_nav",
-        "label": "Jeg trenger hjelp til å forstå NAV og ta neste steg",
+        "id": "guidance_to_contact_services",
+        "label": "Jeg trenger hjelp til å forstå hvem jeg bør kontakte og i hvilken rekkefølge",
         "effects": {
           "flags": ["needs_guidance"],
-          "scores": { "arbeid_oppfolging": 2, "okonomisk_sosialhjelp": 1 },
+          "scores": { "arbeid_oppfolging": 2, "hjelpemidler_tilrettelegging": 1, "juridisk_veiledning": 1 },
           "rationaleIds": ["needs_guidance"]
         }
       },
@@ -433,11 +882,36 @@
         }
       },
       {
-        "id": "already_in_dialogue",
-        "label": "Jeg er allerede i dialog med NAV og trenger bedre oversikt",
+        "id": "understand_decision_or_complaint",
+        "label": "Jeg trenger hjelp til å forstå et vedtak, en klage eller et brev",
         "effects": {
-          "flags": ["already_in_nav_dialogue"],
-          "scores": { "arbeid_oppfolging": 1 },
+          "flags": ["needs_legal_guidance"],
+          "scores": { "juridisk_veiledning": 5 },
+          "rationaleIds": ["needs_legal_guidance"]
+        }
+      },
+      {
+        "id": "health_and_documentation",
+        "label": "Jeg trenger å få på plass helseoppfølging eller bedre dokumentasjon først",
+        "effects": {
+          "flags": ["needs_health_support"],
+          "scores": {
+            "helsehjelp_oppfolging": 4,
+            "aap": 1,
+            "grunnstonad": 1,
+            "hjelpestonad": 1,
+            "pleiepenger_barn": 1,
+            "opplaeringspenger": 1
+          },
+          "rationaleIds": ["needs_health_support"]
+        }
+      },
+      {
+        "id": "already_in_dialogue",
+        "label": "Jeg er allerede i dialog med noen, men trenger bedre oversikt",
+        "effects": {
+          "flags": ["already_in_dialogue"],
+          "scores": { "arbeid_oppfolging": 1, "juridisk_veiledning": 1 },
           "rationaleIds": []
         }
       },

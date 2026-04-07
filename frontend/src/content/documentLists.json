@@ -5,7 +5,7 @@
     "items": [
       "Gyldig legitimasjon eller annen sikker identifikasjon",
       "Kontonummer du vil bruke ved søknad eller utbetaling",
-      "Eventuelle tidligere vedtak eller meldinger du allerede har fra NAV"
+      "Eventuelle tidligere vedtak eller meldinger du allerede har fra NAV eller kommunen"
     ]
   },
   {
@@ -19,11 +19,11 @@
   },
   {
     "id": "health_docs",
-    "title": "Helse og arbeidsevne",
+    "title": "Helse, funksjon og arbeidsevne",
     "items": [
       "Sykmelding, legeerklæring eller annen medisinsk dokumentasjon hvis helse er en viktig del av situasjonen",
-      "Kort oversikt over hvordan helsen påvirker arbeidsevnen din i praksis",
-      "Eventuelle vedtak eller planer du allerede har fra NAV eller helsetjenesten"
+      "Kort oversikt over hvordan helsen eller funksjonen påvirker hverdagen eller arbeidsevnen i praksis",
+      "Eventuelle vurderinger, epikriser, rapporter eller planer du allerede har fra helsevesen, kommune eller NAV"
     ]
   },
   {
@@ -45,6 +45,15 @@
     ]
   },
   {
+    "id": "household_docs",
+    "title": "Husholdning og forsørgeransvar",
+    "items": [
+      "Kort oversikt over hvem som bor i husholdningen og om du forsørger barn eller andre",
+      "Dokumentasjon som viser samværsordning, barneomsorg eller annet forsørgeransvar hvis det påvirker vurderingen",
+      "Oversikt over husholdningens samlede inntekter og faste utgifter hvis det er relevant"
+    ]
+  },
+  {
     "id": "debt_docs",
     "title": "Gjeld og betalingspress",
     "items": [
@@ -58,8 +67,71 @@
     "title": "Oppfølging og arbeid",
     "items": [
       "CV eller en enkel oversikt over arbeidserfaring og utdanning",
-      "Notater om hvilke hindringer som gjør det vanskelig å komme i jobb akkurat nå",
+      "Notater om hvilke hindringer som gjør det vanskelig å komme i jobb eller aktivitet akkurat nå",
       "Tidligere tiltaksplaner, aktivitetsplaner eller annen oppfølging du allerede har fått"
+    ]
+  },
+  {
+    "id": "assistive_docs",
+    "title": "Hjelpemidler og tilrettelegging",
+    "items": [
+      "En kort beskrivelse av hva som er vanskelig i hverdagen, på skolen, i barnehagen eller i arbeid",
+      "Eventuelle notater eller vurderinger fra ergoterapeut, fysioterapeut, skole, barnehage eller andre fagpersoner",
+      "Oversikt over hjelpemidler eller tilrettelegging som allerede er prøvd, og hva som fortsatt mangler"
+    ]
+  },
+  {
+    "id": "extra_expense_docs",
+    "title": "Ekstrautgifter over tid",
+    "items": [
+      "En enkel oversikt over ekstrautgifter som skyldes sykdom, skade eller funksjonsnedsettelse",
+      "Kvitteringer, fakturaer eller annen dokumentasjon som viser at utgiftene faktisk løper over tid",
+      "Kort forklaring på hvorfor utgiftene ikke er vanlige utgifter som andre også har"
+    ]
+  },
+  {
+    "id": "care_docs",
+    "title": "Pleie, tilsyn og omsorg",
+    "items": [
+      "Kort beskrivelse av hvor mye tilsyn, pleie eller særskilt oppfølging som faktisk trengs i hverdagen",
+      "Notater om hva du eller andre i familien må gjøre ekstra, og hvor ofte det skjer",
+      "Eventuelle faglige vurderinger som beskriver hjelpebehovet over tid"
+    ]
+  },
+  {
+    "id": "care_absence_docs",
+    "title": "Omsorg og fravær fra arbeid eller aktivitet",
+    "items": [
+      "Kort oversikt over hvordan omsorgsoppgaven påvirker arbeid, skole eller aktivitet",
+      "Bekreftelse på opplæring, behandling eller oppfølging hvis det er relevant for fraværet",
+      "Dokumentasjon som viser hvilket omsorgsbehov som gjør fraværet nødvendig"
+    ]
+  },
+  {
+    "id": "school_docs",
+    "title": "Barnehage, skole og kommunal dialog",
+    "items": [
+      "Notater eller referat fra møter med barnehage, skole, PPT eller andre kommunale tjenester",
+      "Kort beskrivelse av hva barnet eller den du hjelper trenger i lærings- eller hverdagsmiljøet",
+      "Eventuelle planer, vedtak eller bekymringsmeldinger som allerede finnes"
+    ]
+  },
+  {
+    "id": "decision_docs",
+    "title": "Vedtak, brev og tidligere avklaringer",
+    "items": [
+      "Vedtak, avslagsbrev eller annen skriftlig informasjon du allerede har fått",
+      "Dato for når du mottok brevet eller vedtaket, og eventuelle frister som løper",
+      "Notater om hva du ikke forstår eller er uenig i"
+    ]
+  },
+  {
+    "id": "legal_docs",
+    "title": "Klage og juridisk oppfølging",
+    "items": [
+      "Skriftlige vedtak eller brev du vurderer å klage på",
+      "Kort begrunnelse for hva du mener er uklart, uriktig eller mangelfullt",
+      "Notater om frister, muntlige beskjeder eller kontakt du allerede har hatt"
     ]
   }
 ]

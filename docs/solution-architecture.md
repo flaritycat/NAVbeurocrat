@@ -1,4 +1,4 @@
-# NAV-veiviser: løsning og arkitektur
+# NAV hjelpeveiviser: løsning og arkitektur
 
 ## 1. Informasjonsarkitektur
 
@@ -11,13 +11,16 @@ Hovednivåer i produktet:
 
 Informasjonsstruktur i resultatet:
 
-- anbefalt hovedløp
-- alternative muligheter
+- anbefalt hovedspor
+- andre spor som også kan være relevante
 - hva som haster
+- hvem som kan hjelpe videre
+- hva brukeren kan be om
 - hvorfor dette foreslås
+- risiko og avgrensninger
 - vanlig dokumentasjon
 - forslag til formulering
-- offisielle lenker
+- kontaktpunkter og offisielle lenker
 - forbehold
 
 ## 2. Komponentstruktur
@@ -73,6 +76,7 @@ Anbefaling:
 
 - `id`
 - `title`
+- `owner`
 - `category`
 - `priority`
 - `minScore`
@@ -127,16 +131,23 @@ Start:
 - fare for å miste bolig / uten bolig
 - gjeld og trenger hjelp
 - hjelp til å komme i arbeid
+- hjelpemidler / tilrettelegging / støtte i hverdagen
+- foresatt eller omsorgsperson som trenger oversikt
 - vet ikke hva som kan være aktuelt
 
 Deretter:
 
 - hva haster de neste 24 til 72 timene
+- hvem situasjonen gjelder
 - arbeidssituasjon
 - helse og arbeidsevne
+- støttebehov knyttet til hjelpemidler, tilrettelegging, pleie eller ekstrautgifter
 - inntekt denne måneden
+- husholdning og forsørgeransvar
+- husholdningens økonomiske belastning
 - boligsituasjon
 - gjeldspress
+- hva som allerede er avklart eller i gang
 - type oppfølging brukeren trenger mest
 
 ## 6. Eksportfunksjon til PDF
@@ -178,6 +189,11 @@ Innholdet dekker minst disse situasjonsløpene:
 5. Gjeld og inkasso -> økonomi- og gjeldsrådgivning
 6. Fare for å miste bolig -> bostøtte og/eller midlertidig botilbud
 7. Generell hjelp til å komme i arbeid -> arbeidsrettet oppfølging
+8. Hjelpemidler eller tilrettelegging hjemme, i skole eller arbeid -> hjelpemidler og tilrettelegging
+9. Varige ekstrautgifter på grunn av tilstand -> grunnstønad
+10. Langvarig pleie- og tilsynsbehov -> hjelpestønad
+11. Omsorg for sykt barn eller behov for nødvendig opplæring -> pleiepenger og/eller opplæringspenger
+12. Uklare vedtak, brev eller klagebehov -> juridisk veiledning og klagespor
 
 ## 9. Plan for videre utvidelse
 
@@ -186,6 +202,7 @@ Kort sikt:
 - mer presis regelmodell for sammensatte situasjoner
 - bedre forklaring av hvorfor anbefalinger havner høyt eller lavt
 - mer granulære dokumentlister per løp
+- finere vekting av husholdning, forsørgeransvar, barn og omsorgsbelastning
 - flere offisielle lenker og lokale hjelpespor per kommune
 
 Mellomlang sikt:

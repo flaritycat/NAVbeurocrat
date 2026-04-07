@@ -4,7 +4,7 @@ import { PublicNotice } from "../../components/PublicNotice";
 import { SafeExternalLink } from "../../components/SafeExternalLink";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
-import { exportTextToPdf } from "../../lib/pdf";
+import { exportGuideResultToPdf } from "../../lib/pdf";
 import { buildGuideResult, evaluateWizard } from "../../lib/ruleEngine";
 import { clearWizardSession, readWizardSession } from "../../lib/sessionState";
 
@@ -49,6 +49,7 @@ export function ResultPage() {
   }
 
   const result = buildGuideResult(bundle, session.answers);
+  const firstContact = result.officialLinks[0];
 
   function handleRestart() {
     const confirmed = window.confirm("Vil du slette veivisersvarene i denne økten og starte på nytt?");
@@ -61,7 +62,7 @@ export function ResultPage() {
   }
 
   function handlePdfExport() {
-    exportTextToPdf("NAV-veiviser", result.summaryText);
+    exportGuideResultToPdf(result);
   }
 
   return (
@@ -78,14 +79,15 @@ export function ResultPage() {
             <ul className="plain-list">
               {(result.primaryRecommendation.reasons.length
                 ? result.primaryRecommendation.reasons
-                : ["Veiviseren anbefaler at du starter med en generell avklaring hos NAV."]).map((reason) => (
+                : ["Veiviseren anbefaler at du starter med en generell avklaring hos riktig hjelpeinstans."]).map((reason) => (
                 <li key={reason}>{reason}</li>
               ))}
             </ul>
           </div>
           <div className="signal-card">
-            <h3>Neste handling</h3>
-            <p>Bruk dokumentlisten, formuleringen og de offisielle lenkene nedenfor når du skal videre.</p>
+            <h3>Første kontakt</h3>
+            <p>{firstContact ? firstContact.actionLabel : "Bruk dokumentlisten, formuleringen og lenkene nedenfor når du skal videre."}</p>
+            {firstContact ? <p>{firstContact.publisher}</p> : null}
           </div>
         </div>
       </section>
@@ -129,12 +131,64 @@ export function ResultPage() {
         </section>
       ) : null}
 
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Videre steg</p>
+            <h2>Hva som kan være lurt å gjøre videre</h2>
+          </div>
+        </div>
+
+        <div className="process-grid">
+          {result.nextSteps.map((step, index) => (
+            <article className="process-step" key={`${index + 1}-${step}`}>
+              <p className="eyebrow">Steg {index + 1}</p>
+              <p>{step}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Det kan være lurt å be om dette</p>
+            <h2>Gjør samtalen mer konkret</h2>
+          </div>
+        </div>
+
+        <div className="stack">
+          {result.askForList.map((item) => (
+            <article className="note-box note-box--fact" key={item}>
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Risiko og avgrensninger</p>
+            <h2>Forhold som kan endre vurderingen</h2>
+          </div>
+        </div>
+
+        <div className="stack">
+          {result.riskNotes.map((risk) => (
+            <article className="note-box note-box--missing" key={risk}>
+              <p>{risk}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <div className="dashboard-grid">
         <section className="stack">
           <section className="card">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Anbefalt hovedløp</p>
+                <p className="eyebrow">Anbefalt hovedspor</p>
                 <h2>{result.primaryRecommendation.recommendation.title}</h2>
               </div>
               <StatusBadge tone="fact">{result.primaryRecommendation.recommendation.category}</StatusBadge>
@@ -143,7 +197,7 @@ export function ResultPage() {
             <ul className="plain-list plain-list--spaced">
               {(result.primaryRecommendation.reasons.length
                 ? result.primaryRecommendation.reasons
-                : ["Veiviseren anbefaler at du starter med en generell avklaring hos NAV."]).map((reason) => (
+                : ["Veiviseren anbefaler at du starter med en generell avklaring hos riktig hjelpeinstans."]).map((reason) => (
                 <li key={reason}>{reason}</li>
               ))}
             </ul>
@@ -152,7 +206,7 @@ export function ResultPage() {
           <section className="card">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Alternative muligheter</p>
+                <p className="eyebrow">Andre spor</p>
                 <h2>Kan også være relevant</h2>
               </div>
             </div>
@@ -197,16 +251,22 @@ export function ResultPage() {
           <section className="card">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Offisielle kilder</p>
-                <h2>Lenker videre</h2>
+                <p className="eyebrow">Hvem som kan hjelpe</p>
+                <h2>Kontaktpunkter videre</h2>
               </div>
             </div>
 
             <div className="stack stack--tight">
               {result.officialLinks.map((link) => (
                 <SafeExternalLink className="source-suggestion" href={link.url} key={link.id}>
-                  <strong>{link.title}</strong>
-                  <span>{link.description}</span>
+                  <div className="source-suggestion__body">
+                    <div className="section-heading">
+                      <strong>{link.actionLabel}</strong>
+                      <StatusBadge>{link.publisher}</StatusBadge>
+                    </div>
+                    <span>{link.description}</span>
+                    {link.whenRelevant ? <span className="source-suggestion__meta">{link.whenRelevant}</span> : null}
+                  </div>
                 </SafeExternalLink>
               ))}
             </div>
@@ -214,7 +274,7 @@ export function ResultPage() {
         </section>
       </div>
 
-      <CopyBlock content={result.contactDraft} title="Forslag til formulering" />
+      <CopyBlock content={result.contactDraft} title="Forslag til melding eller forberedelse til kontakt" />
       <CopyBlock content={result.summaryText} title="Kopierbar oppsummering" />
 
       <section className="card">

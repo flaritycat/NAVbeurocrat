@@ -14,7 +14,10 @@ export function Layout({ children }: LayoutProps) {
           <Link className="brand" to="/">
             nav
           </Link>
-          <p className="brand__subtitle">Rolig, stegvis veiledning for å finne hvilke NAV-ordninger, tjenester og hjelpetiltak som kan være relevante.</p>
+          <p className="brand__subtitle">
+            Rolig, stegvis veiledning for å finne støtte, rettigheter og riktige første kontaktpunkter hos NAV,
+            kommunen, Husbanken, helse eller andre offentlige hjelpespor.
+          </p>
           <PublicNotice compact />
         </div>
 
