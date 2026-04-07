@@ -38,5 +38,15 @@
     "documentListIds": ["debt_docs", "income_and_expenses"],
     "officialLinkIds": ["kontakt_oss", "okonomi_gjeld"],
     "recommendedIds": ["okonomi_gjeld"]
+  },
+  {
+    "id": "urgent_support_breakdown",
+    "priority": 5,
+    "title": "Støtte og tilrettelegging bør avklares raskt",
+    "summary": "Hvis manglende hjelp, hjelpemidler eller tilrettelegging gjør at hverdagen, omsorgen, skolen eller aktiviteten ikke fungerer forsvarlig nå, bør du raskt be riktig instans avklare ansvar og neste steg.",
+    "whenAnyFlags": ["urgent_support_breakdown", "needs_quick_support_clarification"],
+    "documentListIds": ["assistive_docs", "health_docs", "school_docs"],
+    "officialLinkIds": ["kontakt_oss", "hjelpemidler", "tilrettelegging_barnehage_skole"],
+    "recommendedIds": ["hjelpemidler_tilrettelegging", "helsehjelp_oppfolging"]
   }
 ]

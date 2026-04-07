@@ -183,6 +183,8 @@
       "assistive_need": "Du har oppgitt behov for hjelpemidler eller støtte i dagligliv, skole eller arbeid.",
       "school_adaptation_need": "Du har oppgitt behov for tilrettelegging i barnehage eller skole.",
       "work_or_study_adaptation": "Du har oppgitt behov for tilrettelegging i arbeid, utdanning eller annen aktivitet.",
+      "urgent_support_breakdown": "Du har oppgitt at manglende hjelp eller tilrettelegging gjør situasjonen vanskelig å håndtere forsvarlig akkurat nå.",
+      "needs_quick_support_clarification": "Du har oppgitt at støtte- eller omsorgssituasjonen bør avklares raskt de neste dagene.",
       "needs_service_coordination": "Du har oppgitt at du trenger hjelp til å koordinere mellom flere tjenester eller instanser.",
       "has_school_or_municipal_dialogue": "Du har oppgitt at skole, barnehage eller kommune allerede er inne i bildet.",
       "unclear_support_rights": "Du har oppgitt at du ikke vet hvilke støtte- og tilretteleggingsspor som passer best."
@@ -222,6 +224,7 @@
       "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom du har ansvar for.",
       "care_for_other": "Du har oppgitt at dette gjelder en person du har omsorg for.",
       "ongoing_care_need": "Du har oppgitt et langvarig behov for pleie, tilsyn eller særskilt oppfølging.",
+      "needs_quick_support_clarification": "Du har oppgitt at omsorgs- eller støttesituasjonen bør avklares raskt de neste dagene.",
       "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
     }
   },
@@ -278,6 +281,7 @@
       "health_blocks_work": "Du har oppgitt at helsen gjør at arbeid eller aktivitet er vanskelig akkurat nå.",
       "partial_work_capacity": "Du har oppgitt at funksjon eller helse bare tillater noe aktivitet eller arbeid.",
       "urgent_health_or_safety": "Du har oppgitt at helse eller trygghet kan haste og bør avklares før annet.",
+      "urgent_support_breakdown": "Du har oppgitt at manglende hjelp eller tilrettelegging gjør situasjonen så krevende at rask avklaring kan være nødvendig.",
       "needs_health_support": "Du har oppgitt at du trenger hjelp til å få på plass dokumentasjon eller helsefaglig vurdering.",
       "needs_service_coordination": "Du har oppgitt behov for koordinering mellom helse, NAV og andre tjenester."
     }

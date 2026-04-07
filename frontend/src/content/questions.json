@@ -109,12 +109,13 @@
     "title": "Hva haster mest de neste 24 til 72 timene?",
     "description": "Hvis noe haster, prioriterer veiviseren det foran mer langsiktige løp.",
     "selectionMode": "single",
+    "showWhenNoFlags": ["needs_disability_support", "caregiver_rights"],
     "options": [
       {
         "id": "food_or_power",
         "label": "Jeg mangler penger til mat, strøm eller andre helt nødvendige utgifter",
         "effects": {
-          "flags": ["urgent_basic_needs"],
+          "flags": ["urgent_basic_needs", "acute_checked"],
           "scores": { "okonomisk_sosialhjelp": 5 },
           "rationaleIds": ["urgent_basic_needs"]
         }
@@ -123,7 +124,7 @@
         "id": "no_place_tonight",
         "label": "Jeg har ikke et trygt sted å bo eller sove",
         "effects": {
-          "flags": ["urgent_housing"],
+          "flags": ["urgent_housing", "acute_checked"],
           "scores": { "midlertidig_botilbud": 6, "okonomisk_sosialhjelp": 3 },
           "rationaleIds": ["urgent_housing"]
         }
@@ -132,7 +133,7 @@
         "id": "health_or_safety",
         "label": "Helse eller trygghet kan ikke vente",
         "effects": {
-          "flags": ["urgent_health_or_safety"],
+          "flags": ["urgent_health_or_safety", "acute_checked"],
           "scores": { "helsehjelp_oppfolging": 5 },
           "rationaleIds": ["urgent_health_or_safety"]
         }
@@ -141,7 +142,7 @@
         "id": "cutoff_or_notice",
         "label": "Jeg står i fare for å miste strøm, bolig eller en annen grunnleggende nødvendighet veldig snart",
         "effects": {
-          "flags": ["urgent_basic_needs"],
+          "flags": ["urgent_basic_needs", "acute_checked"],
           "scores": { "okonomisk_sosialhjelp": 4, "bostotte": 1 },
           "rationaleIds": ["urgent_basic_needs"]
         }
@@ -150,7 +151,7 @@
         "id": "multiple_acute",
         "label": "Flere ting haster samtidig",
         "effects": {
-          "flags": ["urgent_basic_needs", "urgent_housing"],
+          "flags": ["urgent_basic_needs", "urgent_housing", "acute_checked"],
           "scores": { "okonomisk_sosialhjelp": 5, "midlertidig_botilbud": 4 },
           "rationaleIds": ["urgent_basic_needs", "urgent_housing"]
         }
@@ -159,7 +160,7 @@
         "id": "nothing_acute",
         "label": "Ingenting er helt akutt akkurat nå",
         "effects": {
-          "flags": ["stable_now"],
+          "flags": ["stable_now", "acute_checked"],
           "scores": {},
           "rationaleIds": []
         }
@@ -168,7 +169,7 @@
         "id": "dont_know",
         "label": "Vet ikke",
         "effects": {
-          "flags": [],
+          "flags": ["acute_checked"],
           "scores": {},
           "rationaleIds": []
         }
@@ -417,7 +418,7 @@
         "id": "assistive_devices_daily_life",
         "label": "Vi trenger hjelpemidler eller praktisk støtte i dagliglivet",
         "effects": {
-          "flags": ["assistive_need"],
+          "flags": ["assistive_need", "support_needs_answered"],
           "scores": { "hjelpemidler_tilrettelegging": 5 },
           "rationaleIds": ["assistive_need"]
         }
@@ -426,7 +427,7 @@
         "id": "school_kindergarten_adaptation",
         "label": "Det er behov for tilrettelegging i barnehage eller skole",
         "effects": {
-          "flags": ["school_adaptation_need"],
+          "flags": ["school_adaptation_need", "support_needs_answered"],
           "scores": { "hjelpemidler_tilrettelegging": 4, "opplaeringspenger": 1 },
           "rationaleIds": ["school_adaptation_need"]
         }
@@ -435,7 +436,7 @@
         "id": "work_or_study_adaptation",
         "label": "Det er behov for tilrettelegging i arbeid, utdanning eller annen aktivitet",
         "effects": {
-          "flags": ["work_or_study_adaptation"],
+          "flags": ["work_or_study_adaptation", "support_needs_answered"],
           "scores": { "hjelpemidler_tilrettelegging": 4, "arbeid_oppfolging": 1 },
           "rationaleIds": ["work_or_study_adaptation"]
         }
@@ -444,7 +445,7 @@
         "id": "extra_expenses_due_to_condition",
         "label": "Sykdom eller funksjonsnedsettelse gir løpende ekstrautgifter",
         "effects": {
-          "flags": ["extra_expenses_condition"],
+          "flags": ["extra_expenses_condition", "support_needs_answered"],
           "scores": { "grunnstonad": 5 },
           "rationaleIds": ["extra_expenses_condition"]
         }
@@ -453,7 +454,7 @@
         "id": "care_supervision_over_time",
         "label": "Det går mye tid til tilsyn, pleie eller særskilt omsorg over tid",
         "effects": {
-          "flags": ["ongoing_care_need"],
+          "flags": ["ongoing_care_need", "support_needs_answered"],
           "scores": { "hjelpestonad": 5, "opplaeringspenger": 1, "pleiepenger_barn": 1 },
           "rationaleIds": ["ongoing_care_need"]
         }
@@ -462,7 +463,7 @@
         "id": "time_off_for_care",
         "label": "Omsorgsbehovet gjør at jeg må være borte fra jobb eller aktivitet",
         "effects": {
-          "flags": ["absence_for_care"],
+          "flags": ["absence_for_care", "support_needs_answered"],
           "scores": { "pleiepenger_barn": 5, "opplaeringspenger": 4 },
           "rationaleIds": ["absence_for_care"]
         }
@@ -471,7 +472,7 @@
         "id": "coordination_between_services",
         "label": "Jeg trenger hjelp til å koordinere mellom flere tjenester eller instanser",
         "effects": {
-          "flags": ["needs_service_coordination"],
+          "flags": ["needs_service_coordination", "support_needs_answered"],
           "scores": { "hjelpemidler_tilrettelegging": 2, "helsehjelp_oppfolging": 2, "juridisk_veiledning": 1 },
           "rationaleIds": ["needs_service_coordination"]
         }
@@ -480,9 +481,65 @@
         "id": "dont_know_support",
         "label": "Jeg vet ikke hvilke av disse som passer best",
         "effects": {
-          "flags": ["unclear_support_rights"],
+          "flags": ["unclear_support_rights", "support_needs_answered"],
           "scores": { "hjelpemidler_tilrettelegging": 1, "grunnstonad": 1, "hjelpestonad": 1 },
           "rationaleIds": ["unclear_support_rights"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "support_acute_now",
+    "title": "Er noe i situasjonen så alvorlig at du trenger rask hjelp de neste dagene?",
+    "description": "Dette spørsmålet brukes bare i løp som handler om hjelpemidler, tilrettelegging eller omsorg. Det skal fange opp om helse, trygghet eller manglende støtte må avklares raskt.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "unknown_focus_support"],
+    "showWhenAllFlags": ["support_needs_answered"],
+    "showWhenNoFlags": ["acute_checked"],
+    "options": [
+      {
+        "id": "support_health_or_safety",
+        "label": "Ja. Helse, trygghet eller omsorgssituasjonen kan ikke vente",
+        "effects": {
+          "flags": ["urgent_health_or_safety", "acute_checked"],
+          "scores": { "helsehjelp_oppfolging": 5, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["urgent_health_or_safety"]
+        }
+      },
+      {
+        "id": "support_breakdown",
+        "label": "Ja. Manglende hjelp eller tilrettelegging gjør at hverdagen, omsorgen, skolen eller aktiviteten ikke fungerer forsvarlig nå",
+        "effects": {
+          "flags": ["urgent_support_breakdown", "acute_checked"],
+          "scores": { "hjelpemidler_tilrettelegging": 3, "helsehjelp_oppfolging": 2 },
+          "rationaleIds": ["urgent_support_breakdown"]
+        }
+      },
+      {
+        "id": "support_needs_quick_clarification",
+        "label": "Det er ikke akutt fare, men vi trenger rask avklaring de neste dagene",
+        "effects": {
+          "flags": ["needs_quick_support_clarification", "acute_checked"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 1, "opplaeringspenger": 1 },
+          "rationaleIds": ["needs_quick_support_clarification"]
+        }
+      },
+      {
+        "id": "support_not_acute",
+        "label": "Nei, dette haster ikke de neste dagene",
+        "effects": {
+          "flags": ["stable_now", "acute_checked"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["acute_checked"],
+          "scores": {},
+          "rationaleIds": []
         }
       }
     ]
