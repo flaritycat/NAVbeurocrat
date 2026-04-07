@@ -40,7 +40,7 @@
         "label": "Jeg står i fare for å miste bolig / har ikke bolig",
         "description": "Boligsituasjonen er ustabil eller akutt.",
         "effects": {
-          "flags": ["housing_risk"],
+          "flags": ["housing_risk", "housing_start"],
           "scores": { "midlertidig_botilbud": 4, "bostotte": 4, "okonomisk_sosialhjelp": 2 },
           "rationaleIds": ["housing_risk"]
         }
@@ -50,7 +50,7 @@
         "label": "Jeg har gjeld og trenger hjelp",
         "description": "Regninger, inkasso eller annen gjeld gjør økonomien vanskelig å håndtere.",
         "effects": {
-          "flags": ["debt_pressure"],
+          "flags": ["debt_pressure", "debt_start"],
           "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1 },
           "rationaleIds": ["debt_pressure"]
         }
@@ -105,10 +105,85 @@
     ]
   },
   {
+    "id": "unclear_focus",
+    "title": "Hva trenger du mest hjelp til å sortere akkurat nå?",
+    "description": "Dette spørsmålet brukes bare når du startet med at du ikke vet hva som kan være aktuelt. Det gjør veiviseren mer presis videre.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["unclear_rights"],
+    "options": [
+      {
+        "id": "unclear_work_income",
+        "label": "Arbeid, inntekt eller hva jeg kan få mens jeg står uten jobb",
+        "effects": {
+          "flags": ["unknown_focus_work", "needs_work_support", "income_loss"],
+          "scores": { "arbeid_oppfolging": 2, "dagpenger": 2, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["needs_guidance"]
+        }
+      },
+      {
+        "id": "unclear_money_housing",
+        "label": "Økonomi, regninger, bolig eller hva som haster mest praktisk",
+        "effects": {
+          "flags": ["unknown_focus_finance", "income_loss", "housing_risk", "debt_pressure"],
+          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 1, "okonomi_gjeld": 1 },
+          "rationaleIds": ["income_shortfall"]
+        }
+      },
+      {
+        "id": "unclear_health",
+        "label": "Helse, funksjon eller hvordan dette påvirker arbeidsevnen min",
+        "effects": {
+          "flags": ["unknown_focus_health", "sick"],
+          "scores": { "helsehjelp_oppfolging": 2, "aap": 2 },
+          "rationaleIds": ["health_limits_work"]
+        }
+      },
+      {
+        "id": "unclear_support",
+        "label": "Hjelpemidler, tilrettelegging, barn eller omsorgsrelaterte rettigheter",
+        "effects": {
+          "flags": ["unknown_focus_support", "needs_disability_support", "caregiver_rights"],
+          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 2, "opplaeringspenger": 1 },
+          "rationaleIds": ["unclear_support_rights"]
+        }
+      },
+      {
+        "id": "unclear_letters",
+        "label": "Brev, vedtak, klage eller hva jeg egentlig skal be om",
+        "effects": {
+          "flags": ["unknown_focus_legal", "needs_legal_guidance"],
+          "scores": { "juridisk_veiledning": 3 },
+          "rationaleIds": ["needs_legal_guidance"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet fortsatt ikke",
+        "effects": {
+          "flags": ["unknown_still_broad"],
+          "scores": { "arbeid_oppfolging": 1, "juridisk_veiledning": 1 },
+          "rationaleIds": ["unclear_rights"]
+        }
+      }
+    ]
+  },
+  {
     "id": "acute_now",
     "title": "Hva haster mest de neste 24 til 72 timene?",
     "description": "Hvis noe haster, prioriterer veiviseren det foran mer langsiktige løp.",
     "selectionMode": "single",
+    "showWhenAnyFlags": [
+      "job_loss",
+      "income_loss",
+      "sick",
+      "housing_risk",
+      "debt_pressure",
+      "needs_work_support",
+      "unknown_focus_work",
+      "unknown_focus_finance",
+      "unknown_focus_health",
+      "unknown_still_broad"
+    ],
     "showWhenNoFlags": ["needs_disability_support", "caregiver_rights"],
     "options": [
       {
@@ -177,64 +252,109 @@
     ]
   },
   {
-    "id": "unclear_focus",
-    "title": "Hva trenger du mest hjelp til å sortere akkurat nå?",
-    "description": "Dette spørsmålet brukes bare når du startet med at du ikke vet hva som kan være aktuelt. Det gjør veiviseren mer presis videre.",
+    "id": "housing_context_first",
+    "title": "Hva passer best om boligsituasjonen din akkurat nå?",
+    "description": "Siden du startet med bolig, brukes dette spørsmålet tidlig for å skille mellom akutt bostedsløshet, fare for å miste bolig og mer langvarig press på boutgifter.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["unclear_rights"],
+    "showWhenAnyFlags": ["housing_start"],
     "options": [
       {
-        "id": "unclear_work_income",
-        "label": "Arbeid, inntekt eller hva jeg kan få mens jeg står uten jobb",
+        "id": "no_home_or_temporary",
+        "label": "Jeg har ikke fast bolig eller bor veldig midlertidig",
         "effects": {
-          "flags": ["unknown_focus_work", "needs_work_support", "income_loss"],
-          "scores": { "arbeid_oppfolging": 2, "dagpenger": 2, "okonomisk_sosialhjelp": 1 },
-          "rationaleIds": ["needs_guidance"]
+          "flags": ["no_stable_home", "housing_context_known"],
+          "scores": { "midlertidig_botilbud": 5, "okonomisk_sosialhjelp": 2, "bostotte": 1 },
+          "rationaleIds": ["no_stable_home"]
         }
       },
       {
-        "id": "unclear_money_housing",
-        "label": "Økonomi, regninger, bolig eller hva som haster mest praktisk",
+        "id": "can_lose_home",
+        "label": "Jeg kan miste boligen snart",
         "effects": {
-          "flags": ["unknown_focus_finance", "income_loss", "housing_risk", "debt_pressure"],
-          "scores": { "okonomisk_sosialhjelp": 2, "bostotte": 1, "okonomi_gjeld": 1 },
-          "rationaleIds": ["income_shortfall"]
+          "flags": ["housing_notice", "housing_context_known"],
+          "scores": { "midlertidig_botilbud": 3, "bostotte": 4, "okonomisk_sosialhjelp": 3 },
+          "rationaleIds": ["housing_notice"]
         }
       },
       {
-        "id": "unclear_health",
-        "label": "Helse, funksjon eller hvordan dette påvirker arbeidsevnen min",
+        "id": "hard_to_pay_housing",
+        "label": "Boligen er stabil, men det er vanskelig å betale boutgiftene",
         "effects": {
-          "flags": ["unknown_focus_health", "sick"],
-          "scores": { "helsehjelp_oppfolging": 2, "aap": 2 },
-          "rationaleIds": ["health_limits_work"]
+          "flags": ["housing_cost_pressure", "housing_context_known"],
+          "scores": { "bostotte": 4, "okonomisk_sosialhjelp": 2, "okonomi_gjeld": 1 },
+          "rationaleIds": ["housing_cost_pressure"]
         }
       },
       {
-        "id": "unclear_support",
-        "label": "Hjelpemidler, tilrettelegging, barn eller omsorgsrelaterte rettigheter",
+        "id": "housing_stable",
+        "label": "Boligsituasjonen er usikker, men ikke akutt akkurat nå",
         "effects": {
-          "flags": ["unknown_focus_support", "needs_disability_support", "caregiver_rights"],
-          "scores": { "hjelpemidler_tilrettelegging": 2, "hjelpestonad": 2, "opplaeringspenger": 1 },
-          "rationaleIds": ["unclear_support_rights"]
-        }
-      },
-      {
-        "id": "unclear_letters",
-        "label": "Brev, vedtak, klage eller hva jeg egentlig skal be om",
-        "effects": {
-          "flags": ["unknown_focus_legal", "needs_legal_guidance"],
-          "scores": { "juridisk_veiledning": 3 },
-          "rationaleIds": ["needs_legal_guidance"]
+          "flags": ["housing_stable", "housing_context_known"],
+          "scores": {},
+          "rationaleIds": []
         }
       },
       {
         "id": "dont_know",
-        "label": "Vet fortsatt ikke",
+        "label": "Vet ikke",
         "effects": {
-          "flags": ["unknown_still_broad"],
-          "scores": { "arbeid_oppfolging": 1, "juridisk_veiledning": 1 },
-          "rationaleIds": ["unclear_rights"]
+          "flags": ["housing_context_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "debt_context_first",
+    "title": "Hvordan ser gjelds- og betalingspresset ut akkurat nå?",
+    "description": "Siden du startet med gjeld, brukes dette spørsmålet tidlig for å skille mellom akutt betalingspress og mer håndterbare problemer.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["debt_start"],
+    "options": [
+      {
+        "id": "inkasso_or_bailiff",
+        "label": "Jeg har inkasso, trekk eller press fra namsmann / kreditorer",
+        "effects": {
+          "flags": ["severe_debt_pressure", "debt_context_known"],
+          "scores": { "okonomi_gjeld": 5, "okonomisk_sosialhjelp": 1, "juridisk_veiledning": 1 },
+          "rationaleIds": ["severe_debt_pressure"]
+        }
+      },
+      {
+        "id": "overdue_bills",
+        "label": "Regninger hoper seg opp og jeg mister oversikten",
+        "effects": {
+          "flags": ["mounting_debt", "debt_context_known"],
+          "scores": { "okonomi_gjeld": 4, "okonomisk_sosialhjelp": 1, "bostotte": 1 },
+          "rationaleIds": ["mounting_debt"]
+        }
+      },
+      {
+        "id": "under_control",
+        "label": "Jeg har gjeld, men den er ganske under kontroll",
+        "effects": {
+          "flags": ["debt_under_control", "debt_context_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "no_debt_issue",
+        "label": "Gjeld er ikke hovedproblemet mitt nå",
+        "effects": {
+          "flags": ["no_debt_issue", "debt_context_known"],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["debt_context_known"],
+          "scores": {},
+          "rationaleIds": []
         }
       }
     ]
@@ -724,6 +844,7 @@
     "selectionMode": "single",
     "showWhenAnyFlags": ["housing_risk", "debt_pressure", "unknown_focus_finance", "current_financial_pressure"],
     "showWhenAllFlags": ["financial_status_known"],
+    "showWhenNoFlags": ["housing_context_known"],
     "options": [
       {
         "id": "no_home_or_temporary",
@@ -779,6 +900,7 @@
     "selectionMode": "single",
     "showWhenAnyFlags": ["debt_pressure", "housing_risk", "unknown_focus_finance", "current_financial_pressure"],
     "showWhenAllFlags": ["financial_status_known"],
+    "showWhenNoFlags": ["debt_context_known"],
     "options": [
       {
         "id": "inkasso_or_bailiff",
