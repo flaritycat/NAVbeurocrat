@@ -127,4 +127,55 @@ describe("ruleEngine flows", () => {
     expect(result.helpModeCards.length).toBeGreaterThan(0);
     expect(result.alternativeAssessments.every((item) => item.whyNotHigher.length > 0)).toBe(true);
   });
+
+  it("lifts coordinated child follow-up when several services and unclear ownership are involved", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "caregiver_rights",
+      help_applies_to: "for_child",
+      support_needs: ["school_kindergarten_adaptation", "coordination_between_services"],
+      child_complex_needs_context: ["child_many_services", "child_no_clear_owner"],
+      support_acute_now: "support_not_acute",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.primaryRecommendation.recommendation.id).toBe("samordnet_barneoppfolging");
+  });
+
+  it("builds do-not-assume guidance for legal flows with deadlines", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "letter_or_decision",
+      letter_decision_context: "rejection_or_stop",
+      decision_timeline: "deadline_soon",
+      existing_followup: "have_decision_or_rejection",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.doNotAssumeList.some((item) => item.includes("frist"))).toBe(true);
+  });
+
+  it("includes local session history when provided", () => {
+    const result = buildGuideResult(
+      defaultContentBundle,
+      {
+        start_situation: "young_or_first_contact",
+        young_first_contact_context: "need_help_understanding_roles",
+        follow_up_need: "guidance_to_contact_services",
+      },
+      {
+        history: [
+          {
+            id: "x1",
+            questionId: "young_first_contact_context",
+            questionTitle: "Hva passer best om hvorfor du trenger en første avklaring?",
+            answerSummary: "Hva passer best om hvorfor du trenger en første avklaring?: Jeg trenger mest å forstå hvem som gjør hva og hva jeg bør be om først",
+            recommendationTitle: "Hjelp til å komme i arbeid",
+            recordedAt: "2026-04-07T10:00:00.000Z",
+          },
+        ],
+      },
+    );
+
+    expect(result.sessionHistory).toHaveLength(1);
+    expect(result.summaryText).toContain("Hvordan retningen endret seg i denne økten");
+  });
 });

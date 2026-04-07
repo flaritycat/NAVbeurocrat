@@ -704,7 +704,7 @@
         "label": "Det er behov for tilrettelegging i barnehage eller skole",
         "effects": {
           "flags": ["school_adaptation_need", "support_needs_answered"],
-          "scores": { "hjelpemidler_tilrettelegging": 4, "opplaeringspenger": 1 },
+          "scores": { "hjelpemidler_tilrettelegging": 4, "samordnet_barneoppfolging": 1, "opplaeringspenger": 1 },
           "rationaleIds": ["school_adaptation_need"]
         }
       },
@@ -749,7 +749,7 @@
         "label": "Jeg trenger hjelp til å koordinere mellom flere tjenester eller instanser",
         "effects": {
           "flags": ["needs_service_coordination", "support_needs_answered"],
-          "scores": { "hjelpemidler_tilrettelegging": 2, "helsehjelp_oppfolging": 2, "juridisk_veiledning": 1 },
+          "scores": { "samordnet_barneoppfolging": 3, "hjelpemidler_tilrettelegging": 2, "helsehjelp_oppfolging": 2, "juridisk_veiledning": 1 },
           "rationaleIds": ["needs_service_coordination"]
         }
       },
@@ -974,6 +974,69 @@
       {
         "id": "not_daily_responsibility",
         "label": "Barn er en del av saken, men bor ikke fast hos meg i det daglige",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "child_complex_needs_context",
+    "title": "Gjelder saken barn med sammensatte behov på tvers av hjem, skole, helse eller offentlige tjenester?",
+    "description": "Du kan velge flere. Dette brukes når barnets behov ikke bare handler om én ordning, men om flere instanser som må forstå situasjonen samtidig.",
+    "selectionMode": "multi",
+    "showWhenAnyFlags": ["for_child", "caregiver_rights", "child_extra_needs_costs", "school_adaptation_need", "needs_service_coordination"],
+    "options": [
+      {
+        "id": "child_many_services",
+        "label": "Barnet trenger oppfølging fra flere tjenester samtidig",
+        "effects": {
+          "flags": ["child_multiple_services"],
+          "scores": { "samordnet_barneoppfolging": 5, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["child_multiple_services"]
+        }
+      },
+      {
+        "id": "child_home_school_health",
+        "label": "Behovet merkes både hjemme, i skole eller barnehage og i helseoppfølging",
+        "effects": {
+          "flags": ["child_home_school_health"],
+          "scores": { "samordnet_barneoppfolging": 5, "hjelpemidler_tilrettelegging": 1, "helsehjelp_oppfolging": 1 },
+          "rationaleIds": ["child_home_school_health"]
+        }
+      },
+      {
+        "id": "child_no_clear_owner",
+        "label": "Det er uklart hvem som egentlig har ansvar for å starte eller følge opp",
+        "effects": {
+          "flags": ["child_needs_coordinated_plan"],
+          "scores": { "samordnet_barneoppfolging": 6, "juridisk_veiledning": 1 },
+          "rationaleIds": ["child_needs_coordinated_plan"]
+        }
+      },
+      {
+        "id": "family_coordination_overload",
+        "label": "Familien bruker mye tid på å koordinere møter, dokumentasjon og beskjeder mellom instanser",
+        "effects": {
+          "flags": ["family_coordination_overload"],
+          "scores": { "samordnet_barneoppfolging": 5, "hjelpestonad": 1 },
+          "rationaleIds": ["family_coordination_overload"]
+        }
+      },
+      {
+        "id": "child_need_is_single_track",
+        "label": "Nei, dette handler mest om ett tydelig spor",
         "effects": {
           "flags": [],
           "scores": {},

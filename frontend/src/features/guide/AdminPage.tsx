@@ -5,10 +5,23 @@ import { PublicNotice } from "../../components/PublicNotice";
 import { defaultContentBundle } from "../../lib/contentBundle";
 import { exportContentBundleJson, hasLocalContentDraft, resetContentBundleDraft, saveContentBundleDraft, useContentBundle } from "../../lib/contentDrafts";
 import { isGuideContentBundle } from "../../lib/contentBundle";
+import type { GuideContentBundle } from "../../lib/types";
+
+const sectionLabels: Record<keyof GuideContentBundle, string> = {
+  questions: "Spørsmål",
+  recommendations: "Anbefalinger",
+  acuteRules: "Akuttregler",
+  documentLists: "Dokumentlister",
+  phraseTemplates: "Formuleringstekster",
+  officialLinks: "Offisielle lenker",
+  disclaimers: "Forbehold",
+};
 
 export function AdminPage() {
   const bundle = useContentBundle();
   const [draftText, setDraftText] = useState(() => exportContentBundleJson(bundle));
+  const [selectedSection, setSelectedSection] = useState<keyof GuideContentBundle>("questions");
+  const [sectionDraftText, setSectionDraftText] = useState(() => JSON.stringify(bundle.questions, null, 2));
   const [notice, setNotice] = useState<{ tone: "warning" | "error"; message: string } | null>(null);
 
   const stats = useMemo(
@@ -20,6 +33,20 @@ export function AdminPage() {
     ],
     [bundle],
   );
+  const sectionStats = useMemo(
+    () =>
+      (Object.keys(sectionLabels) as Array<keyof GuideContentBundle>).map((key) => ({
+        key,
+        label: sectionLabels[key],
+        size: Array.isArray(bundle[key]) ? bundle[key].length : 1,
+      })),
+    [bundle],
+  );
+
+  function syncSectionDraft(nextSection: keyof GuideContentBundle) {
+    setSelectedSection(nextSection);
+    setSectionDraftText(JSON.stringify(bundle[nextSection], null, 2));
+  }
 
   function handleSave() {
     setNotice(null);
@@ -43,6 +70,38 @@ export function AdminPage() {
       setNotice({
         tone: "error",
         message: error instanceof Error ? error.message : "Kunne ikke lese JSON-utkastet.",
+      });
+    }
+  }
+
+  function handleSectionSave() {
+    setNotice(null);
+
+    try {
+      const parsedSection = JSON.parse(sectionDraftText) as unknown;
+      const nextBundle = {
+        ...bundle,
+        [selectedSection]: parsedSection,
+      } as GuideContentBundle;
+
+      if (!isGuideContentBundle(nextBundle)) {
+        setNotice({
+          tone: "error",
+          message: `Seksjonen ${sectionLabels[selectedSection].toLowerCase()} kunne ikke lagres fordi den brøt innholdsstrukturen.`,
+        });
+        return;
+      }
+
+      saveContentBundleDraft(nextBundle);
+      setDraftText(exportContentBundleJson(nextBundle));
+      setNotice({
+        tone: "warning",
+        message: `${sectionLabels[selectedSection]} er lagret lokalt. Den aktive konfigurasjonen i denne nettleseren er oppdatert.`,
+      });
+    } catch (error) {
+      setNotice({
+        tone: "error",
+        message: error instanceof Error ? error.message : "Kunne ikke lese seksjonsutkastet.",
       });
     }
   }
@@ -98,6 +157,43 @@ export function AdminPage() {
         {hasLocalContentDraft() ? (
           <InlineNotice tone="warning">Det finnes en lokal innholdsdraft i denne nettleseren som overstyrer standardinnholdet.</InlineNotice>
         ) : null}
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Seksjonsredigering</p>
+            <h2>Rediger en del av innholdet om gangen</h2>
+          </div>
+        </div>
+
+        <div className="stats-row">
+          {sectionStats.map((section) => (
+            <button
+              className={selectedSection === section.key ? "signal-card signal-card--selected" : "signal-card"}
+              key={section.key}
+              onClick={() => syncSectionDraft(section.key)}
+              type="button"
+            >
+              <strong>{section.label}</strong>
+              <span>{`${section.size} element`}</span>
+            </button>
+          ))}
+        </div>
+
+        <label className="field">
+          <span>{`${sectionLabels[selectedSection]} i aktiv konfigurasjon`}</span>
+          <textarea className="admin-textarea" rows={18} value={sectionDraftText} onChange={(event) => setSectionDraftText(event.target.value)} />
+        </label>
+
+        <div className="action-row">
+          <button className="primary-button" onClick={handleSectionSave} type="button">
+            Lagre valgt seksjon
+          </button>
+          <button className="ghost-button" onClick={() => setSectionDraftText(JSON.stringify(bundle[selectedSection], null, 2))} type="button">
+            Last inn valgt seksjon på nytt
+          </button>
+        </div>
       </section>
 
       <section className="card">

@@ -46,7 +46,7 @@ export function BriefPage() {
     );
   }
 
-  const result = buildGuideResult(bundle, session.answers);
+  const result = buildGuideResult(bundle, session.answers, session);
 
   function handleRestart() {
     const confirmed = window.confirm("Vil du slette veivisersvarene i denne økten og starte på nytt?");

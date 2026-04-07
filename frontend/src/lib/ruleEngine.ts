@@ -16,6 +16,7 @@ import type {
   RankedRecommendation,
   Recommendation,
   ResultDocumentSection,
+  WizardSession,
   WizardEvaluation,
 } from "./types";
 
@@ -320,6 +321,8 @@ function recommendationNeedsMoreDocumentation(recommendationId: string, evaluati
       return !flags.has("has_medical_followup");
     case "bostotte":
       return !flags.has("housing_cost_pressure") && !flags.has("housing_notice");
+    case "samordnet_barneoppfolging":
+      return !flags.has("child_multiple_services") && !flags.has("child_home_school_health") && !flags.has("child_needs_coordinated_plan");
     case "grunnstonad":
     case "hjelpestonad":
     case "pleiepenger_barn":
@@ -516,6 +519,10 @@ function buildAskForList(
     case "hjelpemidler_tilrettelegging":
       askForList.push("Be om å få vite hvem som bør starte saken: kommune, barnehage, skole eller NAV hjelpemiddelsentral.");
       askForList.push("Be om kartlegging av hva som er vanskelig i hverdagen, og hvilke hjelpemidler eller tilretteleggingstiltak som kan prøves.");
+      break;
+    case "samordnet_barneoppfolging":
+      askForList.push("Be om en tydelig forklaring på hvem som skal koordinere videre og hva som bør tas opp først mellom skole, helse, kommune og NAV.");
+      askForList.push("Be om at behovene til barnet blir oppsummert i en konkret liste som kan brukes på tvers av instansene.");
       break;
     case "grunnstonad":
       askForList.push("Be om avklaring på om de løpende ekstrautgiftene dine kan være relevante for grunnstønad.");
@@ -986,6 +993,11 @@ function buildRiskNotes(
         "Ansvarsdelingen mellom kommune, barnehage, skole og NAV kan variere etter hva slags hjelpemiddel eller tilrettelegging du trenger. Derfor kan første kontaktpunkt være et annet enn veiviseren antyder.",
       );
       break;
+    case "samordnet_barneoppfolging":
+      riskNotes.push(
+        "Når barnets behov går på tvers av flere tjenester, er det vanlig at saken blir mer avhengig av god koordinering og tydelig dokumentasjon enn av én enkelt ordning alene.",
+      );
+      break;
     case "grunnstonad":
       riskNotes.push(
         "Grunnstønad bygger på nødvendige, løpende ekstrautgifter over tid. Hvis utgiftene ikke er store nok, ikke er varige nok eller er svakt dokumentert, kan dette sporet falle ut.",
@@ -1029,6 +1041,42 @@ function buildRiskNotes(
   return uniqueStrings(riskNotes);
 }
 
+function buildDoNotAssumeList(
+  evaluation: WizardEvaluation,
+  primaryRecommendation: RankedRecommendation,
+  acuteItems: MatchedAcuteItem[],
+) {
+  const notes = [
+    "Ikke anta at veiviseren har avgjort at du har rett på noe. Offentlig instans må fortsatt vurdere saken konkret.",
+    acuteItems.length > 0
+      ? "Ikke anta at et mer langsiktig spor blir vurdert før det som haster mest er avklart."
+      : "",
+    evaluation.flags.includes("deadline_running")
+      ? "Ikke anta at en frist stopper fordi du ber om hjelp. Noter datoer og følg opp brevet konkret."
+      : "",
+    evaluation.flags.includes("has_existing_decision")
+      ? "Ikke anta at muntlige forklaringer er nok hvis et brev eller vedtak allerede finnes. Du bør forholde deg til hva som står skriftlig."
+      : "",
+    evaluation.flags.includes("shared_household") ||
+    evaluation.flags.includes("shared_household_shortfall") ||
+    evaluation.flags.includes("partner_income_or_benefits")
+      ? "Ikke anta at saken vurderes bare ut fra din egen økonomi når flere voksne eller flere inntekter er en del av husholdningen."
+      : "",
+    evaluation.flags.includes("for_child") || evaluation.flags.includes("caregiver_rights")
+      ? "Ikke anta at skole, helse, kommune og NAV automatisk deler all informasjon eller avklarer ansvar seg imellom uten at behovet beskrives tydelig."
+      : "",
+    primaryRecommendation.recommendation.id === "hjelpemidler_tilrettelegging" ||
+    primaryRecommendation.recommendation.id === "samordnet_barneoppfolging"
+      ? "Ikke anta at én instans har ansvar for hele saken. Hjelpemidler, tilrettelegging og koordinering kan ligge hos ulike deler av hjelpeapparatet."
+      : "",
+    primaryRecommendation.recommendation.id === "juridisk_veiledning"
+      ? "Ikke anta at klage eller juridisk veiledning automatisk endrer vedtaket. Det er fortsatt frister, vilkår og dokumentasjon som styrer videre behandling."
+      : "",
+  ];
+
+  return uniqueStrings(notes);
+}
+
 function buildSummaryText(
   primaryRecommendation: RankedRecommendation,
   alternativeAssessments: AlternativeAssessment[],
@@ -1045,7 +1093,9 @@ function buildSummaryText(
   nextSteps: string[],
   askForList: string[],
   riskNotes: string[],
+  doNotAssumeList: string[],
   consistencyNotes: ConsistencyNote[],
+  sessionHistory: WizardSession["history"],
   contactDraft: string,
   disclaimers: GuideContentBundle["disclaimers"],
 ) {
@@ -1133,6 +1183,11 @@ function buildSummaryText(
     askForList.forEach((item) => lines.push(`- ${item}`));
   }
 
+  if (doNotAssumeList.length) {
+    lines.push("", "Hva du ikke bør anta:");
+    doNotAssumeList.forEach((item) => lines.push(`- ${item}`));
+  }
+
   if (consistencyNotes.length) {
     lines.push("", "Ting som bør dobbeltsjekkes:");
     consistencyNotes.forEach((note) => lines.push(`- ${note.title}: ${note.description}`));
@@ -1150,6 +1205,11 @@ function buildSummaryText(
     officialLinks.forEach((link) => lines.push(`- ${link.actionLabel} (${link.publisher}): ${link.url}`));
   }
 
+  if (sessionHistory.length) {
+    lines.push("", "Hvordan retningen endret seg i denne økten:");
+    sessionHistory.slice(-6).forEach((entry) => lines.push(`- ${entry.answerSummary} -> ${entry.recommendationTitle}`));
+  }
+
   if (disclaimers.length) {
     lines.push("", "Forbehold:");
     disclaimers.forEach((disclaimer) => lines.push(`- ${disclaimer.title}: ${disclaimer.text}`));
@@ -1158,7 +1218,11 @@ function buildSummaryText(
   return lines.join("\n");
 }
 
-export function buildGuideResult(bundle: GuideContentBundle, answers: Record<string, AnswerValue>) {
+export function buildGuideResult(
+  bundle: GuideContentBundle,
+  answers: Record<string, AnswerValue>,
+  session?: Pick<WizardSession, "history">,
+) {
   const evaluation = evaluateWizard(bundle, answers);
   const rankedRecommendations = rankRecommendations(bundle, evaluation);
   const primaryRecommendation = rankedRecommendations[0];
@@ -1227,6 +1291,8 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     acuteItems,
     documentSections,
   );
+  const doNotAssumeList = buildDoNotAssumeList(evaluation, primaryRecommendation, acuteItems);
+  const sessionHistory = session?.history ?? [];
   const summaryText = buildSummaryText(
     primaryRecommendation,
     alternativeAssessments,
@@ -1243,7 +1309,9 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     nextSteps,
     askForList,
     riskNotes,
+    doNotAssumeList,
     consistencyNotes,
+    sessionHistory,
     contactDraft,
     bundle.disclaimers,
   );
@@ -1267,8 +1335,10 @@ export function buildGuideResult(bundle: GuideContentBundle, answers: Record<str
     nextSteps,
     askForList,
     riskNotes,
+    doNotAssumeList,
     contactDraft,
     summaryText,
+    sessionHistory,
     disclaimers: bundle.disclaimers,
   } satisfies GuideResult;
 }

@@ -6,7 +6,7 @@ import { PublicNotice } from "../../components/PublicNotice";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
 import { buildConsistencyNotes, buildGuideResult, buildQuestionReason, evaluateWizard } from "../../lib/ruleEngine";
-import { clearWizardSession, pruneWizardAnswers, readWizardSession, setWizardAnswer, writeWizardSession } from "../../lib/sessionState";
+import { addWizardCheckpoint, clearWizardSession, pruneWizardAnswers, readWizardSession, setWizardAnswer, writeWizardSession } from "../../lib/sessionState";
 import type { AnswerValue, Question, WizardSession } from "../../lib/types";
 
 function toSelectionState(question: Question, value: AnswerValue | undefined) {
@@ -32,6 +32,7 @@ export function GuidePage() {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [selection, setSelection] = useState<string | string[]>([]);
   const [notice, setNotice] = useState<{ tone: "warning" | "error"; message: string } | null>(null);
+  const goal = searchParams.get("goal");
 
   const evaluation = useMemo(() => evaluateWizard(bundle, session.answers), [bundle, session.answers]);
   const activeQuestion =
@@ -89,7 +90,22 @@ export function GuidePage() {
     const updatedSession = setWizardAnswer(session, activeQuestion.id, selection as AnswerValue);
     const previewEvaluation = evaluateWizard(bundle, updatedSession.answers);
     const prunedSession = pruneWizardAnswers(updatedSession, previewEvaluation.visibleQuestions);
-    const persistedSession = writeWizardSession(prunedSession);
+    const previewResult = buildGuideResult(bundle, prunedSession.answers, prunedSession);
+    const answerSummary = activeQuestion.options
+      .filter((option) =>
+        activeQuestion.selectionMode === "multi"
+          ? Array.isArray(selection) && selection.includes(option.id)
+          : selection === option.id,
+      )
+      .map((option) => option.label)
+      .join(", ");
+    const sessionWithHistory = addWizardCheckpoint(prunedSession, {
+      questionId: activeQuestion.id,
+      questionTitle: activeQuestion.title,
+      answerSummary: `${activeQuestion.title}: ${answerSummary}`,
+      recommendationTitle: previewResult.primaryRecommendation.recommendation.title,
+    });
+    const persistedSession = writeWizardSession(sessionWithHistory);
     const finalEvaluation = evaluateWizard(bundle, persistedSession.answers);
     const nextQuestion = nextQuestionAfter(activeQuestion.id, finalEvaluation.visibleQuestions, persistedSession.answers);
 
@@ -150,11 +166,11 @@ export function GuidePage() {
       return null;
     }
 
-    return buildGuideResult(bundle, previewAnswers);
-  }, [bundle, hasSelection, previewAnswers]);
+    return buildGuideResult(bundle, previewAnswers, session);
+  }, [bundle, hasSelection, previewAnswers, session]);
 
   if (!activeQuestion && evaluation.visibleQuestions.length > 0) {
-    const result = buildGuideResult(bundle, session.answers);
+    const result = buildGuideResult(bundle, session.answers, session);
 
     return (
       <div className="page stack">
@@ -208,6 +224,14 @@ export function GuidePage() {
   const questionReasons = buildQuestionReason(activeQuestion, evaluation);
   const consistencyNotes = buildConsistencyNotes(evaluation);
   const firstConsistencyNote = consistencyNotes[0];
+  const goalText =
+    goal === "urgency"
+      ? "Du kom hit via hurtigveien for hva som haster mest. Veiviseren vil fortsatt be om noen få opplysninger for å prioritere mer presist."
+      : goal === "contact"
+        ? "Du kom hit via hurtigveien for hvem du bør kontakte. Veiviseren vil vektlegge første kontaktpunkt, formulering og rekkefølge."
+        : goal === "documents"
+          ? "Du kom hit via hurtigveien for hva du bør samle. Veiviseren vil bruke svarene dine til å løfte dokumentasjon, sjekkliste og før-kontakt-notat."
+          : null;
 
   return (
     <div className="page stack">
@@ -234,6 +258,7 @@ export function GuidePage() {
           </article>
         ) : null}
         <PublicNotice />
+        {goalText ? <InlineNotice tone="warning">{goalText}</InlineNotice> : null}
         {firstConsistencyNote ? (
           <InlineNotice tone={firstConsistencyNote.tone === "warning" ? "warning" : "error"}>
             <strong>{firstConsistencyNote.title}.</strong> {firstConsistencyNote.description}

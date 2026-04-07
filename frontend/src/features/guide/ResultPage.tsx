@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ChecklistPanel } from "../../components/ChecklistPanel";
 import { CopyBlock } from "../../components/CopyBlock";
 import { PublicNotice } from "../../components/PublicNotice";
 import { SafeExternalLink } from "../../components/SafeExternalLink";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
 import { buildGuideResult, evaluateWizard } from "../../lib/ruleEngine";
-import { clearWizardSession, readWizardSession } from "../../lib/sessionState";
+import { clearChecklistState, clearWizardSession, readWizardSession, setChecklistItem, writeWizardSession } from "../../lib/sessionState";
 
 function badgeTone(tone: "warning" | "fact" | "neutral") {
   if (tone === "warning") {
@@ -24,8 +25,8 @@ export function ResultPage() {
   const bundle = useContentBundle();
   const navigate = useNavigate();
   const [isExportingPdf, setIsExportingPdf] = useState(false);
-  const session = readWizardSession();
-  const evaluation = evaluateWizard(bundle, session.answers);
+  const [session, setSession] = useState(() => readWizardSession());
+  const evaluation = useMemo(() => evaluateWizard(bundle, session.answers), [bundle, session.answers]);
 
   if (evaluation.visibleQuestions.length === 0) {
     return (
@@ -61,9 +62,25 @@ export function ResultPage() {
     );
   }
 
-  const result = buildGuideResult(bundle, session.answers);
+  const result = buildGuideResult(bundle, session.answers, session);
   const firstContact = result.officialLinks[0];
   const firstActionBucket = result.actionBuckets[0];
+  const checklistItems = useMemo(
+    () =>
+      [
+        ...result.actionBuckets.flatMap((bucket) =>
+          bucket.items.map((item) => ({
+            id: `action-${bucket.id}-${item}`,
+            label: item,
+          })),
+        ),
+        ...result.beforeContact.haveReady.slice(0, 3).map((item) => ({
+          id: `ready-${item}`,
+          label: `Ha klart: ${item}`,
+        })),
+      ].slice(0, 10),
+    [result.actionBuckets, result.beforeContact.haveReady],
+  );
 
   function handleRestart() {
     const confirmed = window.confirm("Vil du slette veivisersvarene i denne økten og starte på nytt?");
@@ -73,6 +90,16 @@ export function ResultPage() {
 
     clearWizardSession();
     navigate("/");
+  }
+
+  function handleChecklistToggle(id: string, checked: boolean) {
+    const nextSession = writeWizardSession(setChecklistItem(session, id, checked));
+    setSession(nextSession);
+  }
+
+  function handleChecklistReset() {
+    const nextSession = writeWizardSession(clearChecklistState(session));
+    setSession(nextSession);
   }
 
   async function handlePdfExport() {
@@ -139,6 +166,17 @@ export function ResultPage() {
           </Link>
         </div>
       </section>
+
+      <ChecklistPanel
+        intro="Marker det du allerede har gjort. Sjekklisten holdes bare lokalt i denne nettlesersesjonen og hjelper deg å holde oversikt."
+        items={checklistItems.map((item) => ({
+          ...item,
+          checked: Boolean(session.checklistState[item.id]),
+        }))}
+        onReset={handleChecklistReset}
+        onToggle={handleChecklistToggle}
+        title="Dette kan du krysse av lokalt"
+      />
 
       {result.consistencyNotes.length ? (
         <section className="card">
@@ -207,6 +245,28 @@ export function ResultPage() {
           ))}
         </div>
       </section>
+
+      {result.sessionHistory.length ? (
+        <section className="card">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Historikk i økten</p>
+              <h2>Slik endret retningen seg mens du svarte</h2>
+            </div>
+          </div>
+          <div className="stack">
+            {result.sessionHistory.slice(-8).map((entry) => (
+              <article className="policy-card" key={entry.id}>
+                <div className="section-heading">
+                  <strong>{entry.recommendationTitle}</strong>
+                  <StatusBadge>{new Intl.DateTimeFormat("nb-NO", { hour: "2-digit", minute: "2-digit" }).format(new Date(entry.recordedAt))}</StatusBadge>
+                </div>
+                <p>{entry.answerSummary}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="card">
         <div className="section-heading">
@@ -459,6 +519,23 @@ export function ResultPage() {
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Ikke anta</p>
+                <h2>Dette bør du ikke legge til grunn uten videre</h2>
+              </div>
+            </div>
+
+            <div className="stack">
+              {result.doNotAssumeList.map((item) => (
+                <article className="note-box note-box--warning" key={item}>
+                  <p>{item}</p>
                 </article>
               ))}
             </div>

@@ -585,6 +585,12 @@ function buildPdfFilename(title: string) {
 
 export function exportGuideResultToPdf(result: GuideResult) {
   const state = createPdfState(result);
+  const firstPageSteps = [
+    `Kontakt først: ${result.beforeContact.contactFirst}`,
+    result.actionBuckets[0]?.items[0] ?? "Start med første kontakt og be om konkret veiledning.",
+    result.actionBuckets[1]?.items[0] ?? "Samle først den viktigste dokumentasjonen du faktisk har tilgjengelig.",
+    result.actionBuckets[2]?.items[0] ?? "Les de offisielle lenkene når det viktigste først er avklart.",
+  ];
 
   drawHero(state, result);
   drawCallout(
@@ -619,6 +625,9 @@ export function exportGuideResultToPdf(result: GuideResult) {
     "Dokumentasjon, spørsmål og kontaktpunkter",
     "Forbehold og offisielle lenker",
   ]);
+  drawChecklistCard(state, "Førsteside", "Dette er de viktigste neste stegene", firstPageSteps, "warning");
+  addPage(state);
+  drawSectionHeading(state, "Detaljert oversikt", "Dette bygger veiviseren videre på");
 
   if (result.acuteItems.length) {
     result.acuteItems.forEach((item) => {
@@ -705,6 +714,11 @@ export function exportGuideResultToPdf(result: GuideResult) {
     drawBulletList(state, result.askForList);
   }
 
+  if (result.doNotAssumeList.length) {
+    drawSectionHeading(state, "Ikke anta", "Dette bør du ikke legge til grunn uten videre");
+    drawBulletList(state, result.doNotAssumeList);
+  }
+
   if (result.riskNotes.length) {
     drawSectionHeading(state, "Risiko og avgrensninger", "Forhold som kan endre vurderingen");
     drawCallout(
@@ -740,6 +754,24 @@ export function exportGuideResultToPdf(result: GuideResult) {
         `${link.actionLabel} · ${link.publisher}`,
         link.whenRelevant ? `${link.description} ${link.whenRelevant}` : link.description,
         link.url,
+      );
+    });
+  }
+
+  if (result.sessionHistory.length) {
+    drawSectionHeading(state, "Arbeidslogg", "Hvordan retningen endret seg i denne økten");
+    result.sessionHistory.slice(-6).forEach((entry) => {
+      drawCallout(
+        state,
+        "Historikk",
+        entry.recommendationTitle,
+        `${entry.answerSummary}. Registrert ${new Intl.DateTimeFormat("nb-NO", {
+          day: "2-digit",
+          month: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(new Date(entry.recordedAt))}.`,
+        "neutral",
       );
     });
   }

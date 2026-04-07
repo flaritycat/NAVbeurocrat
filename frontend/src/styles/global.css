@@ -196,6 +196,16 @@ select:focus {
   border: 1px solid rgba(23, 32, 38, 0.08);
 }
 
+button.signal-card {
+  text-align: left;
+  border: 1px solid rgba(23, 32, 38, 0.08);
+}
+
+.signal-card--selected {
+  background: linear-gradient(180deg, rgba(220, 233, 236, 0.92), rgba(247, 252, 253, 0.94));
+  border-color: rgba(31, 91, 108, 0.28);
+}
+
 .process-step {
   border-radius: 22px;
   border: 1px solid rgba(23, 32, 38, 0.08);
@@ -498,6 +508,11 @@ h3 {
 .inline-notice--error {
   background: var(--danger-soft);
   color: #7d3f3f;
+}
+
+.checklist-progress {
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .admin-textarea {

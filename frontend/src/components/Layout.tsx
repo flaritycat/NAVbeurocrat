@@ -26,6 +26,7 @@ export function Layout({ children }: LayoutProps) {
             Forside
           </NavLink>
           <NavLink to="/guide">Veiviser</NavLink>
+          <NavLink to="/letterscan">Brevscanner</NavLink>
           <NavLink to="/result">Resultat</NavLink>
           <NavLink to="/admin">Innhold</NavLink>
         </nav>

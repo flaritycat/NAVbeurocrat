@@ -69,6 +69,30 @@ export function DashboardPage() {
       <section className="card">
         <div className="section-heading">
           <div>
+            <p className="eyebrow">Hurtigveier</p>
+            <h2>Hvis du bare trenger ett raskt svar</h2>
+          </div>
+        </div>
+
+        <div className="process-grid">
+          <Link className="process-step" to="/guide?start=dont_know&goal=urgency">
+            <h3>Hva haster mest?</h3>
+            <p>Start i en kort avklaringsflyt som prioriterer akutte forhold og det som må tas først.</p>
+          </Link>
+          <Link className="process-step" to="/guide?start=young_or_first_contact&goal=contact">
+            <h3>Hvem kontakter jeg?</h3>
+            <p>Start i et spor som er laget for førstegangskontakt og rask sortering av riktig hjelpeinstans.</p>
+          </Link>
+          <Link className="process-step" to="/guide?start=dont_know&goal=documents">
+            <h3>Hva bør jeg samle?</h3>
+            <p>Start i en flyt som gjør det lettere å komme fram til dokumentasjon, spørsmål og før-kontakt-notat.</p>
+          </Link>
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
             <p className="eyebrow">Slik fungerer det</p>
             <h2>Pedagogisk arbeidsflyt</h2>
           </div>
@@ -95,6 +119,12 @@ export function DashboardPage() {
           <PublicNotice />
 
           <div className="stack">
+            <Link className="list-card" to="/letterscan">
+              <div className="list-card__meta">
+                <strong>Brevscanner</strong>
+                <span>Fire korte spørsmål for å sortere brev, vedtak, frister og klage-/oppfølgingsbehov.</span>
+              </div>
+            </Link>
             {startQuestion?.options.map((option) => (
               <Link className="list-card" key={option.id} to={`/guide?start=${option.id}`}>
                 <div className="list-card__meta">

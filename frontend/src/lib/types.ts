@@ -94,6 +94,17 @@ export type WizardSession = {
   answers: Record<string, AnswerValue>;
   startedAt: string;
   updatedAt: string;
+  history: WizardCheckpoint[];
+  checklistState: Record<string, boolean>;
+};
+
+export type WizardCheckpoint = {
+  id: string;
+  questionId: string;
+  questionTitle: string;
+  answerSummary: string;
+  recommendationTitle: string;
+  recordedAt: string;
 };
 
 export type WizardEvaluation = {
@@ -184,7 +195,9 @@ export type GuideResult = {
   nextSteps: string[];
   askForList: string[];
   riskNotes: string[];
+  doNotAssumeList: string[];
   contactDraft: string;
   summaryText: string;
+  sessionHistory: WizardCheckpoint[];
   disclaimers: Disclaimer[];
 };

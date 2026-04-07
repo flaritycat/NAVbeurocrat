@@ -200,6 +200,27 @@
     }
   },
   {
+    "id": "samordnet_barneoppfolging",
+    "title": "Samordnet oppfølging for barn med sammensatte behov",
+    "owner": "kommune, helse og NAV",
+    "category": "tjeneste",
+    "priority": 34,
+    "minScore": 4,
+    "summary": "Kan være relevant når barnets behov går på tvers av hjem, skole, helse og offentlige tjenester, og familien trenger en tydeligere koordinert retning.",
+    "documentListIds": ["school_docs", "health_docs", "decision_docs", "household_docs"],
+    "phraseTemplateId": "child_coordination_contact",
+    "officialLinkIds": ["tilrettelegging_barnehage_skole", "hjelpemidler", "kontakt_oss"],
+    "rationaleMap": {
+      "caregiver_rights": "Du startet veiviseren med at du trenger oversikt som foresatt eller omsorgsperson.",
+      "child_needs_help": "Du har oppgitt at dette gjelder barn eller ungdom du har ansvar for.",
+      "child_multiple_services": "Du har oppgitt at flere tjenester må forstå barnets situasjon samtidig.",
+      "child_home_school_health": "Du har oppgitt at behovet merkes både hjemme, i skole eller barnehage og i helseoppfølging.",
+      "child_needs_coordinated_plan": "Du har oppgitt at det er uklart hvem som faktisk har ansvar for å starte eller følge opp.",
+      "family_coordination_overload": "Du har oppgitt at familien bruker mye tid på å koordinere mellom instanser.",
+      "needs_service_coordination": "Du har oppgitt at koordinering mellom tjenester er en viktig del av situasjonen."
+    }
+  },
+  {
     "id": "grunnstonad",
     "title": "Grunnstønad",
     "owner": "NAV",
