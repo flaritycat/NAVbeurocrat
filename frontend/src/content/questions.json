@@ -86,6 +86,16 @@
         }
       },
       {
+        "id": "municipal_support",
+        "label": "Jeg trenger kommunal hjelp, praktisk støtte eller lavterskel oppfølging i hverdagen",
+        "description": "Du trenger hjelp til å sortere kommunale tjenester som praktisk bistand, avlastning eller lavterskel helse- og oppfølgingstilbud.",
+        "effects": {
+          "flags": ["municipal_support_start", "needs_guidance"],
+          "scores": { "kommunal_stotte_oppfolging": 5, "helsehjelp_oppfolging": 1 },
+          "rationaleIds": ["municipal_support_start"]
+        }
+      },
+      {
         "id": "letter_or_decision",
         "label": "Jeg har fått brev, vedtak eller avslag og trenger hjelp til neste steg",
         "description": "Du trenger hjelp til å forstå brevet, frister, klage eller hva du bør be om videre.",
@@ -246,6 +256,60 @@
           "flags": ["needs_guidance"],
           "scores": { "arbeid_oppfolging": 1 },
           "rationaleIds": ["needs_guidance"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "municipal_support_focus",
+    "title": "Hva passer best om den kommunale hjelpen du trenger?",
+    "description": "Dette spørsmålet brukes når du trenger kommunal støtte, praktisk hjelp eller lavterskel oppfølging. Det gjør det lettere å skille mellom praktisk bistand, avlastning, helse og koordinering.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["municipal_support_start"],
+    "options": [
+      {
+        "id": "practical_help_home",
+        "label": "Jeg trenger praktisk hjelp hjemme eller støtte for å få hverdagen til å fungere",
+        "effects": {
+          "flags": ["municipal_practical_help", "home_assistive_need"],
+          "scores": { "kommunal_stotte_oppfolging": 4, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["municipal_practical_help"]
+        }
+      },
+      {
+        "id": "relief_or_caregiver_support",
+        "label": "Jeg trenger avlastning eller mer støtte rundt omsorgsoppgaver",
+        "effects": {
+          "flags": ["needs_relief_support", "ongoing_care_need"],
+          "scores": { "kommunal_stotte_oppfolging": 4, "samordnet_barneoppfolging": 2, "hjelpestonad": 1 },
+          "rationaleIds": ["needs_relief_support"]
+        }
+      },
+      {
+        "id": "low_threshold_health_support",
+        "label": "Jeg trenger noen å snakke med eller lavterskel helse- og oppfølgingstilbud i kommunen",
+        "effects": {
+          "flags": ["municipal_low_threshold_health", "needs_health_support"],
+          "scores": { "kommunal_stotte_oppfolging": 4, "helsehjelp_oppfolging": 3 },
+          "rationaleIds": ["municipal_low_threshold_health"]
+        }
+      },
+      {
+        "id": "child_school_coordination",
+        "label": "Det gjelder barn, skole eller behov for bedre koordinering mellom tjenester",
+        "effects": {
+          "flags": ["child_needs_help", "school_adaptation_need", "needs_service_coordination", "has_school_or_municipal_dialogue"],
+          "scores": { "kommunal_stotte_oppfolging": 3, "samordnet_barneoppfolging": 3, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["needs_service_coordination"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["needs_guidance"],
+          "scores": { "kommunal_stotte_oppfolging": 2 },
+          "rationaleIds": ["municipal_support_start"]
         }
       }
     ]
@@ -974,6 +1038,77 @@
       {
         "id": "not_daily_responsibility",
         "label": "Barn er en del av saken, men bor ikke fast hos meg i det daglige",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": [],
+          "scores": {},
+          "rationaleIds": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "child_support_focus",
+    "title": "Hvilke deler av barnets situasjon bør løftes tydeligst videre?",
+    "description": "Du kan velge flere. Dette brukes for å skille mellom skolefravær, avlastning, hjelp hjemme og langvarig omsorgsbelastning.",
+    "selectionMode": "multi",
+    "showWhenAnyFlags": [
+      "for_child",
+      "caregiver_rights",
+      "school_adaptation_need",
+      "assistive_need",
+      "ongoing_care_need",
+      "needs_service_coordination",
+      "child_extra_needs_costs"
+    ],
+    "options": [
+      {
+        "id": "school_absence_or_dropoff",
+        "label": "Fravær, skolevegring eller skolebelastning er en viktig del av situasjonen",
+        "effects": {
+          "flags": ["school_absence_concern"],
+          "scores": { "samordnet_barneoppfolging": 4, "helsehjelp_oppfolging": 1, "hjelpemidler_tilrettelegging": 1 },
+          "rationaleIds": ["school_absence_concern"]
+        }
+      },
+      {
+        "id": "needs_relief_for_family",
+        "label": "Familien trenger avlastning eller mer støtte rundt omsorgsoppgaven",
+        "effects": {
+          "flags": ["needs_relief_support"],
+          "scores": { "hjelpestonad": 3, "samordnet_barneoppfolging": 2 },
+          "rationaleIds": ["needs_relief_support"]
+        }
+      },
+      {
+        "id": "need_help_at_home",
+        "label": "Det trengs hjelpemidler eller mer praktisk støtte hjemme i hverdagen",
+        "effects": {
+          "flags": ["home_assistive_need"],
+          "scores": { "hjelpemidler_tilrettelegging": 4, "samordnet_barneoppfolging": 1 },
+          "rationaleIds": ["home_assistive_need"]
+        }
+      },
+      {
+        "id": "long_term_care_child",
+        "label": "Omsorgsbehovet er omfattende og ser ut til å vare over tid",
+        "effects": {
+          "flags": ["long_term_care_child"],
+          "scores": { "hjelpestonad": 3, "pleiepenger_barn": 2, "samordnet_barneoppfolging": 1 },
+          "rationaleIds": ["long_term_care_child"]
+        }
+      },
+      {
+        "id": "none_of_these",
+        "label": "Ingen av disse passer særlig godt",
         "effects": {
           "flags": [],
           "scores": {},

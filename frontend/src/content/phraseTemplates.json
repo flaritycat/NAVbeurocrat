@@ -35,6 +35,11 @@
     "content": "Hei. Jeg ønsker hjelp til å komme i arbeid eller aktivitet og trenger veiledning om hvilket oppfølgingsløp som kan passe best for meg. Jeg ønsker en tydelig oversikt over neste steg, hvilke tilbud som kan være relevante, og hva jeg bør forberede før videre kontakt."
   },
   {
+    "id": "municipal_support_contact",
+    "title": "Forslag til formulering om kommunal støtte og oppfølging",
+    "content": "Hei. Jeg trenger hjelp til å forstå hvilke kommunale tjenester eller oppfølgingstilbud som kan passe i situasjonen min. Jeg ønsker en konkret vurdering av hva som bør tas først, hvem i kommunen som er riktig kontaktpunkt, og hvilken dokumentasjon eller beskrivelse som gjør behovet mitt tydeligere."
+  },
+  {
     "id": "assistive_support_contact",
     "title": "Forslag til formulering om hjelpemidler og tilrettelegging",
     "content": "Hei. Jeg trenger hjelp til å avklare om hjelpemidler eller tilrettelegging kan være aktuelt, og hvem som bør være første kontakt videre. Jeg ønsker en konkret vurdering av behovet, hva som bør kartlegges og hvilken dokumentasjon som vil være nyttig å samle."

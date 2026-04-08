@@ -5,9 +5,9 @@
     "publisher": "NAV",
     "group": "NAV",
     "url": "https://www.nav.no/kontaktoss",
-    "actionLabel": "Kontakt NAV for anonym chat eller riktig telefonspor",
-    "description": "NAVs kontaktside med chat, telefon og forklaring på hvem du bør kontakte først.",
-    "whenRelevant": "Bruk denne når du trenger første kontakt, anonym chat eller hjelp til å finne riktig del av NAV.",
+    "actionLabel": "Bruk NAVs kontaktside for chat eller telefon",
+    "description": "NAVs kontaktside viser hvordan du kan ta første kontakt, enten via chat eller telefon.",
+    "whenRelevant": "Bruk denne når du trenger å komme i kontakt med NAV og vil finne riktig måte å starte på.",
     "priority": 1
   },
   {
@@ -135,12 +135,67 @@
     "id": "tilrettelegging_barnehage_skole",
     "title": "Tilrettelegging i barnehage og skole",
     "publisher": "NAV",
-    "group": "kommune",
+    "group": "skole",
     "url": "https://www.nav.no/tilrettelegge-barnehage-skole",
     "actionLabel": "Se hvordan barnehage, skole, kommune og NAV kan samarbeide",
     "description": "Offisiell veiledning om tilrettelegging, rettigheter og hjelpemidler for barn og unge.",
     "whenRelevant": "Bruk denne når behovet gjelder barn, skole eller barnehage.",
     "priority": 3
+  },
+  {
+    "id": "avlastning",
+    "title": "Avlastningstiltak og pårørendestøtte",
+    "publisher": "Helsenorge",
+    "group": "kommune",
+    "url": "https://www.helsenorge.no/hjelpetilbud-i-kommunene/avlastningstiltak/",
+    "actionLabel": "Undersøk om kommunen bør vurdere avlastning eller annen pårørendestøtte",
+    "description": "Offisiell informasjon om kommunal avlastning, opplæring, veiledning og pårørendestøtte ved tyngende omsorgsoppgaver.",
+    "whenRelevant": "Bruk denne når omsorgsoppgavene er så omfattende at familien trenger avlastning eller mer støtte rundt seg.",
+    "priority": 4
+  },
+  {
+    "id": "praktisk_bistand",
+    "title": "Praktisk bistand og opplæring",
+    "publisher": "Helsenorge",
+    "group": "kommune",
+    "url": "https://www.helsenorge.no/hjelpetilbud-i-kommunene/personlig-assistanse-praktisk-bistand-og-opplering/",
+    "actionLabel": "Undersøk om kommunen bør vurdere praktisk bistand",
+    "description": "Offisiell informasjon om praktisk bistand, opplæring og hvordan du søker kommunen om hjelp i hverdagen.",
+    "whenRelevant": "Bruk denne hvis du trenger hjelp til daglige oppgaver, personlig stell eller støtte for å mestre hverdagen bedre.",
+    "priority": 4
+  },
+  {
+    "id": "kommunal_psykisk_helse",
+    "title": "Psykisk helsehjelp for voksne",
+    "publisher": "Helsenorge",
+    "group": "helse",
+    "url": "https://www.helsenorge.no/psykisk-helse/psykisk-helsehjelp-for-voksne/",
+    "actionLabel": "Se hvilke lavterskel helse- og samtaletilbud kommunen kan ha",
+    "description": "Offisiell informasjon om psykisk helsehjelp, kommunale lavterskeltilbud og hvordan du kan starte kontakten.",
+    "whenRelevant": "Bruk denne hvis du trenger lavterskel støtte, samtaler eller psykisk helsehjelp i kommunen før andre løp blir tydelige.",
+    "priority": 4
+  },
+  {
+    "id": "skolehelsetjeneste",
+    "title": "Skolehelsetjenesten og helsestasjon for ungdom",
+    "publisher": "Helsenorge",
+    "group": "skole",
+    "url": "https://www.helsenorge.no/helsestasjonstjenester",
+    "actionLabel": "Kontakt skolehelsetjenesten eller helsestasjon for ungdom ved behov for lavterskel avklaring",
+    "description": "Offisiell informasjon om skolehelsetjenesten og hvordan barn, unge og foresatte kan bruke kommunale helsekontakter.",
+    "whenRelevant": "Bruk denne når fravær, trivsel, belastning, funksjon eller behov for koordinering rundt skole må beskrives bedre.",
+    "priority": 4
+  },
+  {
+    "id": "skolefravar",
+    "title": "Barn som ikke møter på skolen",
+    "publisher": "Udir",
+    "group": "skole",
+    "url": "https://www.udir.no/regelverk-og-tilsyn/skole-og-opplaring/barn-som-ikke-moter-pa-skolen/",
+    "actionLabel": "Se hvordan skole og kommune skal følge opp bekymringsfullt fravær",
+    "description": "Offisiell veiledning om skolens og kommunens plikt til å følge opp barn som ikke møter på skolen.",
+    "whenRelevant": "Bruk denne når barnet ikke møter på skolen, eller når fravær og oppfølging er en viktig del av situasjonen.",
+    "priority": 5
   },
   {
     "id": "grunnstonad",

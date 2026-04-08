@@ -48,6 +48,9 @@ export function DashboardPage() {
             <Link className="primary-button" to="/guide">
               Start veiviseren
             </Link>
+            <Link className="ghost-button" to="/letterscan">
+              Har du fått brev eller vedtak?
+            </Link>
             <Link className="ghost-button" to="/admin">
               Lokal innholdsredigering
             </Link>
@@ -75,6 +78,10 @@ export function DashboardPage() {
         </div>
 
         <div className="process-grid">
+          <Link className="process-step" to="/letterscan">
+            <h3>Brev eller vedtak</h3>
+            <p>Gå direkte til en kort brevscanner som sorterer frist, klage, begrunnelse og tryggeste neste steg.</p>
+          </Link>
           <Link className="process-step" to="/guide?start=dont_know&goal=urgency">
             <h3>Hva haster mest?</h3>
             <p>Start i en kort avklaringsflyt som prioriterer akutte forhold og det som må tas først.</p>
@@ -83,9 +90,17 @@ export function DashboardPage() {
             <h3>Hvem kontakter jeg?</h3>
             <p>Start i et spor som er laget for førstegangskontakt og rask sortering av riktig hjelpeinstans.</p>
           </Link>
+          <Link className="process-step" to="/guide?start=young_or_first_contact">
+            <h3>For unge</h3>
+            <p>Start i en enklere flyt med tryggere språk og tydeligere hjelp til hvem som gjør hva.</p>
+          </Link>
           <Link className="process-step" to="/guide?start=dont_know&goal=documents">
             <h3>Hva bør jeg samle?</h3>
             <p>Start i en flyt som gjør det lettere å komme fram til dokumentasjon, spørsmål og før-kontakt-notat.</p>
+          </Link>
+          <Link className="process-step" to="/guide?start=municipal_support">
+            <h3>Kommunal hjelp</h3>
+            <p>Start i et spor for praktisk bistand, avlastning, lavterskel oppfølging og annen kommunal støtte.</p>
           </Link>
         </div>
       </section>

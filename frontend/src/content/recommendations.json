@@ -128,6 +128,26 @@
     }
   },
   {
+    "id": "kommunal_stotte_oppfolging",
+    "title": "Kommunal støtte og oppfølging i hverdagen",
+    "owner": "kommunen og kommunale hjelpetjenester",
+    "category": "tjeneste",
+    "priority": 32,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du trenger praktisk hjelp, lavterskel helse- og oppfølgingstilbud eller tydeligere kommunal koordinering i hverdagen.",
+    "documentListIds": ["household_docs", "health_docs", "assistive_docs", "school_docs"],
+    "phraseTemplateId": "municipal_support_contact",
+    "officialLinkIds": ["praktisk_bistand", "kommunal_psykisk_helse", "avlastning"],
+    "rationaleMap": {
+      "municipal_support_start": "Du startet veiviseren med at du trenger kommunal hjelp, praktisk støtte eller lavterskel oppfølging i hverdagen.",
+      "municipal_practical_help": "Du har oppgitt at du trenger praktisk hjelp hjemme eller støtte for å få hverdagen til å fungere.",
+      "needs_relief_support": "Du har oppgitt at omsorgsbelastningen er så stor at kommunen eller andre tjenester bør vurderes tidlig.",
+      "municipal_low_threshold_health": "Du har oppgitt behov for lavterskel helse- eller oppfølgingstilbud i kommunen.",
+      "needs_service_coordination": "Du har oppgitt behov for bedre koordinering mellom kommunale tjenester, skole, helse eller andre instanser.",
+      "has_school_or_municipal_dialogue": "Du har oppgitt at kommune, skole eller barnehage allerede er inne i bildet."
+    }
+  },
+  {
     "id": "okonomi_gjeld",
     "title": "Økonomi- og gjeldsrådgivning",
     "owner": "NAV-kontoret",
@@ -196,7 +216,9 @@
       "needs_service_coordination": "Du har oppgitt at du trenger hjelp til å koordinere mellom flere tjenester eller instanser.",
       "has_school_or_municipal_dialogue": "Du har oppgitt at skole, barnehage eller kommune allerede er inne i bildet.",
       "child_extra_needs_costs": "Du har oppgitt at barnet har ekstra behov eller utgifter som gjør støtte- og tilretteleggingssporet mer aktuelt.",
-      "unclear_support_rights": "Du har oppgitt at du ikke vet hvilke støtte- og tilretteleggingsspor som passer best."
+      "unclear_support_rights": "Du har oppgitt at du ikke vet hvilke støtte- og tilretteleggingsspor som passer best.",
+      "home_assistive_need": "Du har oppgitt at barnet eller familien trenger mer praktisk støtte eller hjelpemidler hjemme i hverdagen.",
+      "school_absence_concern": "Du har oppgitt at fravær eller skolebelastning er en viktig del av situasjonen."
     }
   },
   {
@@ -217,7 +239,10 @@
       "child_home_school_health": "Du har oppgitt at behovet merkes både hjemme, i skole eller barnehage og i helseoppfølging.",
       "child_needs_coordinated_plan": "Du har oppgitt at det er uklart hvem som faktisk har ansvar for å starte eller følge opp.",
       "family_coordination_overload": "Du har oppgitt at familien bruker mye tid på å koordinere mellom instanser.",
-      "needs_service_coordination": "Du har oppgitt at koordinering mellom tjenester er en viktig del av situasjonen."
+      "needs_service_coordination": "Du har oppgitt at koordinering mellom tjenester er en viktig del av situasjonen.",
+      "school_absence_concern": "Du har oppgitt at fravær eller skolebelastning er en viktig del av situasjonen og må ses sammen med resten.",
+      "needs_relief_support": "Du har oppgitt at familien trenger mer avlastning eller støtte rundt omsorgsoppgaven.",
+      "long_term_care_child": "Du har oppgitt et omfattende omsorgsbehov hos barnet over tid."
     }
   },
   {
@@ -257,7 +282,9 @@
       "ongoing_care_need": "Du har oppgitt et langvarig behov for pleie, tilsyn eller særskilt oppfølging.",
       "child_extra_needs_costs": "Du har oppgitt ekstra behov hos barn som kan gjøre omsorgsbelastningen mer omfattende.",
       "needs_quick_support_clarification": "Du har oppgitt at omsorgs- eller støttesituasjonen bør avklares raskt de neste dagene.",
-      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang."
+      "has_medical_followup": "Du har oppgitt at helseoppfølging eller faglige vurderinger allerede er i gang.",
+      "needs_relief_support": "Du har oppgitt at familien trenger mer avlastning eller støtte rundt omsorgsoppgaven.",
+      "long_term_care_child": "Du har oppgitt et omfattende omsorgsbehov hos barnet over tid."
     }
   },
   {
@@ -315,7 +342,8 @@
       "urgent_health_or_safety": "Du har oppgitt at helse eller trygghet kan haste og bør avklares før annet.",
       "urgent_support_breakdown": "Du har oppgitt at manglende hjelp eller tilrettelegging gjør situasjonen så krevende at rask avklaring kan være nødvendig.",
       "needs_health_support": "Du har oppgitt at du trenger hjelp til å få på plass dokumentasjon eller helsefaglig vurdering.",
-      "needs_service_coordination": "Du har oppgitt behov for koordinering mellom helse, NAV og andre tjenester."
+      "needs_service_coordination": "Du har oppgitt behov for koordinering mellom helse, NAV og andre tjenester.",
+      "school_absence_concern": "Du har oppgitt fravær eller skolebelastning som kan trenge helsefaglig eller tverrfaglig avklaring."
     }
   },
   {

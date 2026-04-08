@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { CopyBlock } from "../../components/CopyBlock";
-import { PublicNotice } from "../../components/PublicNotice";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
 import { buildGuideResult, evaluateWizard } from "../../lib/ruleEngine";
@@ -70,14 +69,14 @@ export function BriefPage() {
           <Link className="primary-button" to="/result">
             Til full oversikt
           </Link>
+          <Link className="ghost-button" to="/call">
+            Ringekort
+          </Link>
           <button className="ghost-button" onClick={handleRestart} type="button">
             Start på nytt
           </button>
         </div>
       </section>
-
-      <PublicNotice />
-
       <div className="dashboard-grid">
         <section className="card stack">
           <div className="section-heading">

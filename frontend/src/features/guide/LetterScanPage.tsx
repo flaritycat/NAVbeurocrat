@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CopyBlock } from "../../components/CopyBlock";
 import { InlineNotice } from "../../components/InlineNotice";
 import { ProgressBar } from "../../components/ProgressBar";
-import { PublicNotice } from "../../components/PublicNotice";
+import { SafeExternalLink } from "../../components/SafeExternalLink";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
 import { buildGuideResult } from "../../lib/ruleEngine";
@@ -10,6 +11,7 @@ import { addWizardCheckpoint, clearWizardSession, readWizardSession, setWizardAn
 import type { AnswerValue, Question, WizardSession } from "../../lib/types";
 
 const LETTER_SCAN_QUESTION_IDS = ["letter_decision_context", "decision_timeline", "existing_followup", "follow_up_need"] as const;
+const LETTER_SCAN_QUESTION_KEYS = new Set<string>(["start_situation", ...LETTER_SCAN_QUESTION_IDS]);
 
 function toSelectionState(question: Question, value: AnswerValue | undefined) {
   if (question.selectionMode === "multi") {
@@ -19,6 +21,28 @@ function toSelectionState(question: Question, value: AnswerValue | undefined) {
   return typeof value === "string" ? value : "";
 }
 
+function normalizeLetterScanSession(session: WizardSession): WizardSession {
+  const timestamp = new Date().toISOString();
+  const keptAnswers = Object.fromEntries(
+    Object.entries(session.answers).filter(([questionId]) => LETTER_SCAN_QUESTION_KEYS.has(questionId)),
+  ) as WizardSession["answers"];
+  const answers = {
+    ...keptAnswers,
+    start_situation: "letter_or_decision",
+  };
+  const keepExistingLetterHistory = session.answers.start_situation === "letter_or_decision";
+
+  return {
+    answers,
+    startedAt: keepExistingLetterHistory ? session.startedAt : timestamp,
+    updatedAt: timestamp,
+    history: keepExistingLetterHistory
+      ? session.history.filter((entry) => LETTER_SCAN_QUESTION_KEYS.has(entry.questionId))
+      : [],
+    checklistState: {},
+  };
+}
+
 export function LetterScanPage() {
   const bundle = useContentBundle();
   const navigate = useNavigate();
@@ -26,6 +50,7 @@ export function LetterScanPage() {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [selection, setSelection] = useState<string | string[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
 
   const questions = useMemo(
     () =>
@@ -40,13 +65,17 @@ export function LetterScanPage() {
     null;
 
   useEffect(() => {
-    if (session.answers.start_situation === "letter_or_decision") {
+    const nextSession = normalizeLetterScanSession(readWizardSession());
+    const currentAnswers = JSON.stringify(session.answers);
+    const nextAnswers = JSON.stringify(nextSession.answers);
+
+    if (currentAnswers === nextAnswers && nextSession.history.length === session.history.length) {
       return;
     }
 
-    const nextSession = writeWizardSession(setWizardAnswer(session, "start_situation", "letter_or_decision"));
-    setSession(nextSession);
-  }, [session]);
+    const persistedSession = writeWizardSession(nextSession);
+    setSession(persistedSession);
+  }, []);
 
   useEffect(() => {
     if (!activeQuestion && questions.length > 0) {
@@ -140,21 +169,44 @@ export function LetterScanPage() {
 
   if (!activeQuestion) {
     const result = buildGuideResult(bundle, session.answers, session);
+    const summaryCard = result.letterSummaryCard ?? result.phoneCard;
+    const firstRiskItems = [
+      ...result.doNotAssumeList.filter((item) => item.includes("frist") || item.includes("brev") || item.includes("vedtak")),
+      ...result.riskNotes,
+    ].slice(0, 4);
+
+    async function handlePdfExport() {
+      if (isExportingPdf) {
+        return;
+      }
+
+      setIsExportingPdf(true);
+
+      try {
+        const pdfModule = await import("../../lib/pdf");
+        pdfModule.exportGuideResultToPdf(result, "action");
+      } finally {
+        setIsExportingPdf(false);
+      }
+    }
 
     return (
       <div className="page stack">
         <section className="hero-card hero-card--single">
           <div>
             <p className="eyebrow">Brevscanner</p>
-            <h1>{result.primaryRecommendation.recommendation.title}</h1>
-            <p className="lead">{result.primaryRecommendation.recommendation.summary}</p>
+            <h1>{summaryCard.title}</h1>
+            <p className="lead">{summaryCard.intro}</p>
           </div>
           <div className="action-row">
+            <button className="primary-button" disabled={isExportingPdf} onClick={handlePdfExport} type="button">
+              {isExportingPdf ? "Lager handlingskort..." : "PDF: handlingskort"}
+            </button>
             <Link className="primary-button" to="/result">
               Åpne full oversikt
             </Link>
-            <Link className="ghost-button" to="/brief">
-              Åpne kortversjon
+            <Link className="ghost-button" to="/call">
+              Før du ringer
             </Link>
             <button className="ghost-button" onClick={handleRestart} type="button">
               Start på nytt
@@ -162,7 +214,22 @@ export function LetterScanPage() {
           </div>
         </section>
 
-        <PublicNotice />
+        <section className="card stack">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Kort oppsummering</p>
+              <h2>Dette er det tryggeste neste grepet</h2>
+            </div>
+          </div>
+          <article className="policy-card">
+            <ul className="plain-list plain-list--spaced">
+              {summaryCard.items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <CopyBlock content={summaryCard.copyText} title="Kopier brevoppsummering" />
+        </section>
 
         {result.acuteItems.length ? (
           <section className="card stack">
@@ -186,12 +253,20 @@ export function LetterScanPage() {
             <div className="section-heading">
               <div>
                 <p className="eyebrow">Første grep</p>
-                <h2>Dette kan du gjøre videre</h2>
+                <h2>Dette kan du gjøre videre med brevet</h2>
               </div>
             </div>
             <article className="note-box note-box--fact">
               <h3>Kontakt først</h3>
               <p>{result.beforeContact.contactFirst}</p>
+            </article>
+            <article className="policy-card">
+              <h3>Si dette kort</h3>
+              <ul className="plain-list plain-list--spaced">
+                {result.beforeContact.sayThisFirst.slice(0, 2).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </article>
             <article className="policy-card">
               <h3>Det kan være lurt å be om</h3>
@@ -201,19 +276,40 @@ export function LetterScanPage() {
                 ))}
               </ul>
             </article>
+            {result.missingItems.length ? (
+              <article className="note-box note-box--missing">
+                <h3>Det som oftest mangler</h3>
+                <ul className="plain-list plain-list--spaced">
+                  {result.missingItems.slice(0, 3).map((item) => (
+                    <li key={item.title}>{item.title}</li>
+                  ))}
+                </ul>
+              </article>
+            ) : null}
           </section>
 
           <section className="card stack">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Ikke anta</p>
-                <h2>Dette bør du passe på</h2>
+                <p className="eyebrow">Frist og risiko</p>
+                <h2>Dette bør du passe på før du går videre</h2>
               </div>
             </div>
-            {result.doNotAssumeList.slice(0, 4).map((item) => (
+            {firstRiskItems.map((item) => (
               <article className="note-box note-box--warning" key={item}>
                 <p>{item}</p>
               </article>
+            ))}
+            {result.officialLinks.slice(0, 3).map((link) => (
+              <SafeExternalLink className="source-suggestion" href={link.url} key={link.id}>
+                <div className="source-suggestion__body">
+                  <div className="section-heading">
+                    <strong>{link.actionLabel}</strong>
+                    <StatusBadge>{link.publisher}</StatusBadge>
+                  </div>
+                  <span>{link.description}</span>
+                </div>
+              </SafeExternalLink>
             ))}
           </section>
         </section>
@@ -235,10 +331,6 @@ export function LetterScanPage() {
           </div>
           <StatusBadge>Rask flyt</StatusBadge>
         </div>
-
-        {activeQuestion.description ? <p className="lead lead--compact">{activeQuestion.description}</p> : null}
-        <PublicNotice />
-        {notice ? <InlineNotice tone="warning">{notice}</InlineNotice> : null}
 
         <form
           className="stack"
@@ -282,6 +374,9 @@ export function LetterScanPage() {
               );
             })}
           </fieldset>
+
+          {notice ? <InlineNotice tone="warning">{notice}</InlineNotice> : null}
+          {activeQuestion.description ? <p className="lead lead--compact">{activeQuestion.description}</p> : null}
 
           <div className="action-row">
             <button className="ghost-button" onClick={handleBack} type="button">

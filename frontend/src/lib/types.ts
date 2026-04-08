@@ -66,7 +66,7 @@ export type OfficialLink = {
   id: string;
   title: string;
   publisher: string;
-  group: "NAV" | "kommune" | "Husbanken" | "helse" | "rettshjelp";
+  group: "NAV" | "kommune" | "Husbanken" | "helse" | "skole" | "rettshjelp";
   url: string;
   actionLabel: string;
   description: string;
@@ -176,6 +176,54 @@ export type ResultDocumentSection = {
   items: string[];
 };
 
+export type SituationScoreLine = {
+  title: string;
+  score: number;
+  tone: "primary" | "alternative";
+  explanation: string[];
+  pullsUp: string[];
+  pullsDown: string[];
+  strengthPercent: number;
+  strengthLabel: "sterk" | "middels" | "svak";
+};
+
+export type SituationMap = {
+  keyFacts: string[];
+  scoreLines: SituationScoreLine[];
+};
+
+export type ActorGuideCard = {
+  group: OfficialLink["group"];
+  title: string;
+  description: string;
+  items: string[];
+};
+
+export type GlossaryTerm = {
+  id: string;
+  title: string;
+  description: string;
+};
+
+export type MissingInformationItem = {
+  title: string;
+  description: string;
+  severity: "high" | "medium" | "low";
+};
+
+export type WhatIfScenario = {
+  questionId: string;
+  questionTitle: string;
+  currentAnswer: string;
+  alternativeAnswer: string;
+  resultingRecommendation: string;
+  summary: string;
+  resultingSummary: string;
+  resultingContact: string;
+};
+
+export type PdfExportMode = "action" | "meeting" | "full";
+
 export type GuideResult = {
   evaluation: WizardEvaluation;
   primaryRecommendation: RankedRecommendation;
@@ -191,11 +239,19 @@ export type GuideResult = {
   beforeContact: BeforeContactCard;
   phoneCard: CompactGuideCard;
   meetingCard: CompactGuideCard;
+  situationMap: SituationMap;
+  actorGuidance: ActorGuideCard[];
+  glossaryTerms: GlossaryTerm[];
+  whatIfScenarios: WhatIfScenario[];
+  missingItems: MissingInformationItem[];
   consistencyNotes: ConsistencyNote[];
   nextSteps: string[];
   askForList: string[];
   riskNotes: string[];
   doNotAssumeList: string[];
+  letterSummaryCard: CompactGuideCard | null;
+  youthGuideCard: CompactGuideCard | null;
+  childSchoolCard: CompactGuideCard | null;
   contactDraft: string;
   summaryText: string;
   sessionHistory: WizardCheckpoint[];

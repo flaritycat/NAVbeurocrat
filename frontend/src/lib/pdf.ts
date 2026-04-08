@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import type { GuideResult } from "./types";
+import type { GuideResult, PdfExportMode } from "./types";
 
 type RgbColor = readonly [number, number, number];
 type PdfTone = "accent" | "warning" | "danger" | "neutral";
@@ -425,6 +425,58 @@ function drawSectionMapCard(state: PdfState, sections: string[]) {
   drawChecklistCard(state, label, title, sections, "neutral");
 }
 
+function drawCompactGuideCard(state: PdfState, label: string, title: string, intro: string, items: string[], tone: PdfTone) {
+  drawCallout(state, label, title, intro, tone);
+  drawChecklistCard(state, label, title, items, tone);
+}
+
+function drawSituationScoreCard(state: PdfState, result: GuideResult) {
+  result.situationMap.scoreLines.forEach((line) => {
+    drawChecklistCard(
+      state,
+      line.tone === "primary" ? "Hovedspor" : "Sammenligning",
+      `${line.title} · ${line.strengthLabel}`,
+      [
+        ...line.explanation,
+        ...line.pullsUp.map((item) => `Trekker opp: ${item}`),
+        ...line.pullsDown.map((item) => `Trekker ned: ${item}`),
+      ],
+      line.tone === "primary" ? "accent" : "neutral",
+    );
+  });
+}
+
+function drawMissingItemsSection(state: PdfState, result: GuideResult) {
+  if (!result.missingItems.length) {
+    return;
+  }
+
+  drawSectionHeading(state, "Hva som mangler", "Dette bør avklares før du legger for mye vekt på resultatet");
+  result.missingItems.forEach((item) => {
+    drawCallout(
+      state,
+      item.severity === "high" ? "Viktig" : item.severity === "medium" ? "Bør avklares" : "Nyttig",
+      item.title,
+      item.description,
+      item.severity === "high" ? "danger" : item.severity === "medium" ? "warning" : "neutral",
+    );
+  });
+}
+
+function drawSelectedCompactCards(state: PdfState, result: GuideResult) {
+  const cards = [result.letterSummaryCard, result.youthGuideCard, result.childSchoolCard].filter(
+    (card): card is NonNullable<typeof result.letterSummaryCard> => Boolean(card),
+  );
+  if (!cards.length) {
+    return;
+  }
+
+  drawSectionHeading(state, "Ekstra kort", "Kortversjoner for spesielle situasjoner");
+  cards.forEach((card) => {
+    drawCompactGuideCard(state, "Kortversjon", card.title, card.intro, card.items, "neutral");
+  });
+}
+
 function drawDocumentCard(state: PdfState, title: string, items: string[]) {
   const titleLines = measureLines(state.document, title, state.contentWidth - 28, {
     fontSize: 12,
@@ -583,13 +635,16 @@ function buildPdfFilename(title: string) {
   return `hjelpeveiviser-${slug || "resultat"}-${generatedAt}.pdf`;
 }
 
-export function exportGuideResultToPdf(result: GuideResult) {
+export function exportGuideResultToPdf(result: GuideResult, mode: PdfExportMode = "full") {
   const state = createPdfState(result);
-  const firstPageSteps = [
+  const leadCompactCard = result.letterSummaryCard ?? result.youthGuideCard ?? result.childSchoolCard ?? result.phoneCard;
+  const frontPageChecklist = [
+    result.acuteItems[0]
+      ? `Haster mest: ${result.acuteItems[0].rule.title}`
+      : `Det viktigste først: ${result.actionBuckets[0]?.items[0] ?? "Start med første kontakt og be om konkret veiledning."}`,
     `Kontakt først: ${result.beforeContact.contactFirst}`,
-    result.actionBuckets[0]?.items[0] ?? "Start med første kontakt og be om konkret veiledning.",
-    result.actionBuckets[1]?.items[0] ?? "Samle først den viktigste dokumentasjonen du faktisk har tilgjengelig.",
-    result.actionBuckets[2]?.items[0] ?? "Les de offisielle lenkene når det viktigste først er avklart.",
+    `Si først: ${result.beforeContact.sayThisFirst[0] ?? "Jeg trenger hjelp til å forstå hva som bør gjøres først."}`,
+    `Ha klart: ${result.beforeContact.haveReady[0] ?? "En kort oppsummering av situasjonen din."}`,
   ];
 
   drawHero(state, result);
@@ -603,31 +658,90 @@ export function exportGuideResultToPdf(result: GuideResult) {
 
   drawChecklistCard(
     state,
-    "Kort oversikt",
-    "Dette bør du ha med deg videre",
-    [
-      `Hovedspor: ${result.primaryRecommendation.recommendation.title}`,
-      `Kontakt først: ${result.beforeContact.contactFirst}`,
-      result.acuteItems[0]
-        ? `Haster mest: ${result.acuteItems[0].rule.title}`
-        : `Det viktigste først: ${result.actionBuckets[0]?.items[0] ?? "Start med første kontakt og be om konkret veiledning."}`,
-      ...result.beforeContact.sayThisFirst.slice(0, 1),
-      ...result.beforeContact.haveReady.slice(0, 2).map((item) => `Ha klart: ${item}`),
-    ],
+    "Handlingskort",
+    "Dette trenger du hvis du skal ringe, skrive eller møte noen nå",
+    frontPageChecklist,
     "accent",
   );
-  drawSectionMapCard(state, [
-    "Kort oversikt og viktige forbehold",
-    result.acuteItems.length ? "Hva som haster mest" : "Hva slags hjelp dette handler om",
-    "Handlingsplan og hovedspor",
-    "Andre spor som fortsatt kan være relevante",
-    "Telefonkort og møteark",
-    "Dokumentasjon, spørsmål og kontaktpunkter",
-    "Forbehold og offisielle lenker",
-  ]);
-  drawChecklistCard(state, "Førsteside", "Dette er de viktigste neste stegene", firstPageSteps, "warning");
+  drawChecklistCard(state, "Kortversjon", leadCompactCard.title, leadCompactCard.items, "neutral");
+  drawChecklistCard(
+    state,
+    "Situasjonskart",
+    "Svar som løftet denne retningen",
+    result.situationMap.keyFacts.slice(0, 4),
+    "neutral",
+  );
+  if (result.whatIfScenarios.length) {
+    drawChecklistCard(
+      state,
+      "Hvis noe endrer seg",
+      "Ett nøkkelsvar kan endre retningen",
+      result.whatIfScenarios.slice(0, 2).map((scenario) => scenario.summary),
+      "warning",
+    );
+  }
+
+  if (mode === "action") {
+    drawMissingItemsSection(state, result);
+    drawSectionHeading(state, "Før kontakt", "Kort notat du kan bruke med en gang");
+    drawTextPanel(state, leadCompactCard.title, leadCompactCard.copyText);
+    if (result.askForList.length) {
+      drawSectionHeading(state, "Be om dette", "Gjør første kontakt mer konkret");
+      drawBulletList(state, result.askForList.slice(0, 4));
+    }
+    if (result.officialLinks.length) {
+      drawSectionHeading(state, "Kontaktpunkter", "Offisielle lenker");
+      result.officialLinks.slice(0, 4).forEach((link) => {
+        drawLinkItem(state, `${link.actionLabel} · ${link.publisher}`, link.description, link.url);
+      });
+    }
+    drawSectionHeading(state, "Forbehold", "Dette er ikke et vedtak eller et juridisk dokument");
+    result.disclaimers.forEach((disclaimer) => {
+      drawCallout(state, "Forbehold", disclaimer.title, disclaimer.text, "danger");
+    });
+    drawPageFooters(state.document);
+    state.document.save(buildPdfFilename(`${result.primaryRecommendation.recommendation.title}-handlingskort`));
+    return;
+  }
+
+  if (mode === "meeting") {
+    drawMissingItemsSection(state, result);
+    drawSectionHeading(state, "Møteark", "Dette bør du ha klart til samtale eller møte");
+    drawChecklistCard(state, "Møteark", result.meetingCard.title, result.meetingCard.items, "accent");
+    if (result.documentSections.length) {
+      drawSectionHeading(state, "Dokumentasjon", "Samle dette før møtet");
+      result.documentSections.slice(0, 3).forEach((section) => {
+        drawDocumentCard(state, section.title, section.items);
+      });
+    }
+    if (result.askForList.length) {
+      drawSectionHeading(state, "Be om dette", "Spørsmål som gjør møtet mer konkret");
+      drawBulletList(state, result.askForList);
+    }
+    if (result.officialLinks.length) {
+      drawSectionHeading(state, "Kontaktpunkter", "Offisielle lenker");
+      result.officialLinks.slice(0, 4).forEach((link) => {
+        drawLinkItem(state, `${link.actionLabel} · ${link.publisher}`, link.description, link.url);
+      });
+    }
+    drawSectionHeading(state, "Forbehold", "Dette er ikke et vedtak eller et juridisk dokument");
+    result.disclaimers.forEach((disclaimer) => {
+      drawCallout(state, "Forbehold", disclaimer.title, disclaimer.text, "danger");
+    });
+    drawPageFooters(state.document);
+    state.document.save(buildPdfFilename(`${result.primaryRecommendation.recommendation.title}-moteark`));
+    return;
+  }
+
   addPage(state);
   drawSectionHeading(state, "Detaljert oversikt", "Dette bygger veiviseren videre på");
+  drawSectionMapCard(state, [
+    "Situasjonskart og hva som haster mest",
+    "Handlingsplan, hovedspor og alternative spor",
+    "Ringekort, møteark og dokumentasjon",
+    "Risiko, avgrensninger og hva du ikke bør anta",
+    "Kontaktpunkter, aktører og kort ordliste",
+  ]);
 
   if (result.acuteItems.length) {
     result.acuteItems.forEach((item) => {
@@ -656,6 +770,12 @@ export function exportGuideResultToPdf(result: GuideResult) {
     ? result.primaryRecommendation.reasons
     : ["Veiviseren har for lite informasjon til en mer presis prioritering, og foreslår derfor en trygg start med generell offentlig veiledning."];
   drawBulletList(state, primaryReasons);
+
+  drawSectionHeading(state, "Situasjonskart", "Derfor ble denne retningen løftet høyest");
+  drawSituationScoreCard(state, result);
+
+  drawMissingItemsSection(state, result);
+  drawSelectedCompactCards(state, result);
 
   if (result.alternativeAssessments.length) {
     drawSectionHeading(state, "Hvorfor ikke høyere", "Andre spor som fortsatt kan være relevante");
@@ -719,6 +839,19 @@ export function exportGuideResultToPdf(result: GuideResult) {
     drawBulletList(state, result.doNotAssumeList);
   }
 
+  if (result.whatIfScenarios.length) {
+    drawSectionHeading(state, "Hvis nøkkelsvar endrer seg", "Slik kan retningen skifte");
+    result.whatIfScenarios.forEach((scenario) => {
+      drawCallout(
+        state,
+        "Sammenlign",
+        scenario.questionTitle,
+        `${scenario.summary} Kontakt først da: ${scenario.resultingContact}.`,
+        "neutral",
+      );
+    });
+  }
+
   if (result.riskNotes.length) {
     drawSectionHeading(state, "Risiko og avgrensninger", "Forhold som kan endre vurderingen");
     drawCallout(
@@ -758,6 +891,20 @@ export function exportGuideResultToPdf(result: GuideResult) {
     });
   }
 
+  if (result.actorGuidance.length) {
+    drawSectionHeading(state, "Hvem gjør hva", "Skille mellom ulike hjelpeinstanser");
+    result.actorGuidance.forEach((card) => {
+      drawChecklistCard(state, "Aktør", card.title, [card.description, ...card.items], "neutral");
+    });
+  }
+
+  if (result.glossaryTerms.length) {
+    drawSectionHeading(state, "Kort ordliste", "Begreper du møter i resultatet");
+    result.glossaryTerms.forEach((term) => {
+      drawCallout(state, "Begrep", term.title, term.description, "neutral");
+    });
+  }
+
   if (result.sessionHistory.length) {
     drawSectionHeading(state, "Arbeidslogg", "Hvordan retningen endret seg i denne økten");
     result.sessionHistory.slice(-6).forEach((entry) => {
@@ -782,5 +929,5 @@ export function exportGuideResultToPdf(result: GuideResult) {
   });
 
   drawPageFooters(state.document);
-  state.document.save(buildPdfFilename(result.primaryRecommendation.recommendation.title));
+  state.document.save(buildPdfFilename(`${result.primaryRecommendation.recommendation.title}-full`));
 }

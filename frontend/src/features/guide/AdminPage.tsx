@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { CopyBlock } from "../../components/CopyBlock";
 import { InlineNotice } from "../../components/InlineNotice";
-import { PublicNotice } from "../../components/PublicNotice";
 import { defaultContentBundle } from "../../lib/contentBundle";
 import { exportContentBundleJson, hasLocalContentDraft, resetContentBundleDraft, saveContentBundleDraft, useContentBundle } from "../../lib/contentDrafts";
 import { isGuideContentBundle } from "../../lib/contentBundle";
@@ -137,9 +136,6 @@ export function AdminPage() {
           </p>
         </div>
       </section>
-
-      <PublicNotice />
-
       <section className="card">
         <div className="section-heading">
           <div>

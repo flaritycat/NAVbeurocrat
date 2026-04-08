@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { InlineNotice } from "../../components/InlineNotice";
 import { ProgressBar } from "../../components/ProgressBar";
-import { PublicNotice } from "../../components/PublicNotice";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useContentBundle } from "../../lib/contentDrafts";
 import { buildConsistencyNotes, buildGuideResult, buildQuestionReason, evaluateWizard } from "../../lib/ruleEngine";
@@ -224,6 +223,8 @@ export function GuidePage() {
   const questionReasons = buildQuestionReason(activeQuestion, evaluation);
   const consistencyNotes = buildConsistencyNotes(evaluation);
   const firstConsistencyNote = consistencyNotes[0];
+  const previewAcuteItem = previewResult?.acuteItems[0] ?? null;
+  const recentAnswers = evaluation.answeredFacts.slice(-2).reverse();
   const goalText =
     goal === "urgency"
       ? "Du kom hit via hurtigveien for hva som haster mest. Veiviseren vil fortsatt be om noen få opplysninger for å prioritere mer presist."
@@ -240,55 +241,12 @@ export function GuidePage() {
       <section className="card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Veiviser</p>
             <h1>{activeQuestion.title}</h1>
           </div>
-          <StatusBadge>{activeQuestion.selectionMode === "multi" ? "Flere svar mulig" : "Velg ett svar"}</StatusBadge>
+          <span className="guide-choice-mode">
+            <StatusBadge>{activeQuestion.selectionMode === "multi" ? "Flere svar mulig" : "Velg ett svar"}</StatusBadge>
+          </span>
         </div>
-
-        {activeQuestion.description ? <p className="lead lead--compact">{activeQuestion.description}</p> : null}
-        {questionReasons.length ? (
-          <article className="question-context">
-            <p className="eyebrow">Dette kan være aktuelt fordi</p>
-            <ul className="plain-list plain-list--spaced">
-              {questionReasons.map((reason) => (
-                <li key={reason}>{reason}</li>
-              ))}
-            </ul>
-          </article>
-        ) : null}
-        <PublicNotice />
-        {goalText ? <InlineNotice tone="warning">{goalText}</InlineNotice> : null}
-        {firstConsistencyNote ? (
-          <InlineNotice tone={firstConsistencyNote.tone === "warning" ? "warning" : "error"}>
-            <strong>{firstConsistencyNote.title}.</strong> {firstConsistencyNote.description}
-          </InlineNotice>
-        ) : null}
-        {previewResult ? (
-          <article className="question-preview">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Foreløpig retning</p>
-                <h3>{previewResult.primaryRecommendation.recommendation.title}</h3>
-              </div>
-              <StatusBadge tone="fact">{previewResult.primaryRecommendation.recommendation.category}</StatusBadge>
-            </div>
-            <p>{previewResult.primaryRecommendation.recommendation.summary}</p>
-            <ul className="plain-list plain-list--spaced">
-              {(previewResult.primaryRecommendation.reasons.length
-                ? previewResult.primaryRecommendation.reasons
-                : ["Dette ser foreløpig ut som et trygt sted å starte videre avklaring."]).map((reason) => (
-                <li key={reason}>{reason}</li>
-              ))}
-            </ul>
-          </article>
-        ) : null}
-        {previewConsistencyNote && previewConsistencyNote.title !== firstConsistencyNote?.title ? (
-          <InlineNotice tone={previewConsistencyNote.tone === "warning" ? "warning" : "error"}>
-            <strong>Hvis du velger dette:</strong> {previewConsistencyNote.title}. {previewConsistencyNote.description}
-          </InlineNotice>
-        ) : null}
-        {notice ? <InlineNotice tone={notice.tone}>{notice.message}</InlineNotice> : null}
 
         <form
           className="stack"
@@ -333,32 +291,97 @@ export function GuidePage() {
             })}
           </fieldset>
 
+          {notice ? <InlineNotice tone={notice.tone}>{notice.message}</InlineNotice> : null}
+          {activeQuestion.description ? <p className="lead lead--compact question-description question-description--desktop">{activeQuestion.description}</p> : null}
+          {activeQuestion.description ? (
+            <details className="question-description-mobile">
+              <summary>Les kort forklaring</summary>
+              <p>{activeQuestion.description}</p>
+            </details>
+          ) : null}
+          {goalText ? <InlineNotice tone="warning">{goalText}</InlineNotice> : null}
+          {firstConsistencyNote ? (
+            <InlineNotice tone={firstConsistencyNote.tone === "warning" ? "warning" : "error"}>
+              <strong>{firstConsistencyNote.title}.</strong> {firstConsistencyNote.description}
+            </InlineNotice>
+          ) : null}
+          {questionReasons.length ? (
+            <article className="question-context">
+              <p className="eyebrow">Hvorfor dette spørsmålet kommer nå</p>
+              <ul className="plain-list plain-list--spaced">
+                {questionReasons.map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
+            </article>
+          ) : null}
+          {previewResult ? (
+            <article className="question-preview">
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">Foreløpig retning</p>
+                  <h3>{previewResult.primaryRecommendation.recommendation.title}</h3>
+                </div>
+                <StatusBadge tone="fact">{previewResult.primaryRecommendation.recommendation.category}</StatusBadge>
+              </div>
+              <p className="question-preview__summary">{previewResult.primaryRecommendation.recommendation.summary}</p>
+              <ul className="plain-list plain-list--spaced question-preview__reasons">
+                {(previewResult.primaryRecommendation.reasons.length
+                  ? previewResult.primaryRecommendation.reasons
+                  : ["Dette ser foreløpig ut som et trygt sted å starte videre avklaring."]).map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
+            </article>
+          ) : null}
+          {previewAcuteItem ? (
+            <article className="question-preview">
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">Akuttvern</p>
+                  <h3>{previewAcuteItem.rule.title}</h3>
+                </div>
+                <StatusBadge tone="warning">Dette bryter inn</StatusBadge>
+              </div>
+              <p>{previewAcuteItem.rule.summary}</p>
+              <ul className="plain-list plain-list--spaced">
+                {previewAcuteItem.links.slice(0, 2).map((link) => (
+                  <li key={link.id}>{link.actionLabel}</li>
+                ))}
+              </ul>
+            </article>
+          ) : null}
+          {previewConsistencyNote && previewConsistencyNote.title !== firstConsistencyNote?.title ? (
+            <InlineNotice tone={previewConsistencyNote.tone === "warning" ? "warning" : "error"}>
+              <strong>Hvis du velger dette:</strong> {previewConsistencyNote.title}. {previewConsistencyNote.description}
+            </InlineNotice>
+          ) : null}
+
           <div className="action-row">
-            <button className="ghost-button" onClick={handleBack} type="button">
+            <button className="text-button" onClick={handleBack} type="button">
               Tilbake
             </button>
             <button className="primary-button" type="submit">
-              Fortsett
+              {previewAcuteItem ? "Fortsett med hastefokus" : "Fortsett"}
             </button>
           </div>
-        </form>
-      </section>
 
-      <section className="card">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Svar så langt</p>
-            <h2>Det veiviseren bygger på</h2>
-          </div>
-        </div>
-        <div className="stack stack--tight">
-          {evaluation.answeredFacts.length === 0 ? <p>Ingen svar registrert ennå.</p> : null}
-          {evaluation.answeredFacts.map((fact) => (
-            <div className="policy-card" key={fact}>
-              <p>{fact}</p>
-            </div>
-          ))}
-        </div>
+          {recentAnswers.length ? (
+            <section className="guide-recent">
+              <div className="guide-recent__header">
+                <p className="eyebrow">Siste svar</p>
+                <span className="guide-recent__count">{`${evaluation.answeredFacts.length} totalt`}</span>
+              </div>
+              <div className="guide-recent__items">
+                {recentAnswers.map((fact) => (
+                  <p className="guide-recent__item" key={fact}>
+                    {fact}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </form>
       </section>
     </div>
   );

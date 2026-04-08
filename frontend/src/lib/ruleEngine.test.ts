@@ -98,6 +98,15 @@ describe("ruleEngine flows", () => {
     expect(questionIds).toContain("income_level");
   });
 
+  it("routes municipal support users into a dedicated municipal clarification before other broad questions", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "municipal_support",
+    });
+
+    expect(questionIds).toContain("municipal_support_focus");
+    expect(questionIds).not.toContain("acute_now");
+  });
+
   it("captures additional household factors for child and caregiver related flows", () => {
     const questionIds = nextVisibleQuestionIds({
       start_situation: "caregiver_rights",
@@ -126,6 +135,41 @@ describe("ruleEngine flows", () => {
     expect(result.meetingCard.items.length).toBeGreaterThanOrEqual(4);
     expect(result.helpModeCards.length).toBeGreaterThan(0);
     expect(result.alternativeAssessments.every((item) => item.whyNotHigher.length > 0)).toBe(true);
+  });
+
+  it("builds a dedicated letter summary card and caution list for letter flows", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "letter_or_decision",
+      letter_decision_context: "dont_understand_letter",
+      decision_timeline: "deadline_soon",
+      existing_followup: "have_decision_or_rejection",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.letterSummaryCard).not.toBeNull();
+    expect(result.doNotAssumeList.length).toBeGreaterThan(0);
+  });
+
+  it("flags missing information when a letter flow still lacks the written decision context", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "letter_or_decision",
+      letter_decision_context: "dont_know",
+      decision_timeline: "dont_know",
+      existing_followup: "not_started_anything",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.missingItems.some((item) => item.title.includes("Selve brevet") || item.title.includes("Noen svar"))).toBe(true);
+  });
+
+  it("builds a youth card when the user is young or in first contact", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "young_or_first_contact",
+      young_first_contact_context: "under_25_and_unsure",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.youthGuideCard).not.toBeNull();
   });
 
   it("lifts coordinated child follow-up when several services and unclear ownership are involved", () => {
@@ -177,5 +221,89 @@ describe("ruleEngine flows", () => {
 
     expect(result.sessionHistory).toHaveLength(1);
     expect(result.summaryText).toContain("Hvordan retningen endret seg i denne økten");
+  });
+
+  it("shows the dedicated child support follow-up question in child and caregiver flows", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "caregiver_rights",
+      help_applies_to: "for_child",
+      support_needs: ["assistive_devices_daily_life"],
+      support_acute_now: "support_not_acute",
+      household_situation: "single_with_children",
+      child_household_detail: "children_live_mostly_with_me",
+    });
+
+    expect(questionIds).toContain("child_support_focus");
+  });
+
+  it("adds school-related guidance when school absence is part of the child flow", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "caregiver_rights",
+      help_applies_to: "for_child",
+      support_needs: ["school_kindergarten_adaptation", "coordination_between_services"],
+      child_support_focus: ["school_absence_or_dropoff"],
+      child_complex_needs_context: ["child_many_services", "child_no_clear_owner"],
+      support_acute_now: "support_not_acute",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.actorGuidance.some((card) => card.group === "skole")).toBe(true);
+    expect(result.officialLinks.some((link) => link.id === "skolefravar")).toBe(true);
+  });
+
+  it("builds a child and school compact card when school coordination is part of the case", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "municipal_support",
+      municipal_support_focus: "child_school_coordination",
+      help_applies_to: "for_child",
+      child_support_focus: ["school_absence_or_dropoff"],
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.childSchoolCard).not.toBeNull();
+  });
+
+  it("adds avlastning context when family needs relief around child care", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "caregiver_rights",
+      help_applies_to: "for_child",
+      support_needs: ["care_supervision_over_time"],
+      child_support_focus: ["needs_relief_for_family", "long_term_care_child"],
+      support_acute_now: "support_not_acute",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.officialLinks.some((link) => link.id === "avlastning")).toBe(true);
+    expect(result.glossaryTerms.some((term) => term.id === "avlastning")).toBe(true);
+  });
+
+  it("builds a situation map and what-if scenarios for housing-heavy flows", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "housing_risk",
+      acute_now: "nothing_acute",
+      housing_context_first: "can_lose_home",
+      income_level: "low_income",
+      household_situation: "single_with_children",
+      child_household_detail: "children_live_mostly_with_me",
+      household_finances: "household_depends_on_me",
+      housing_now: "hard_to_pay_housing",
+      follow_up_need: "money_first",
+    });
+
+    expect(result.situationMap.keyFacts.length).toBeGreaterThan(0);
+    expect(result.whatIfScenarios.length).toBeGreaterThan(0);
+  });
+
+  it("adds legal actor guidance and glossary when a letter flow is active", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "letter_or_decision",
+      letter_decision_context: "rejection_or_stop",
+      decision_timeline: "deadline_soon",
+      existing_followup: "have_decision_or_rejection",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.actorGuidance.some((card) => card.group === "rettshjelp")).toBe(true);
+    expect(result.glossaryTerms.some((term) => term.id === "vedtak")).toBe(true);
   });
 });

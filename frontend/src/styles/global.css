@@ -88,10 +88,26 @@ select:focus {
   max-width: 1540px;
 }
 
+.shell__header--focused {
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
 .shell__brand {
   display: grid;
   gap: 0.8rem;
   max-width: 74ch;
+}
+
+.shell__brand--focused {
+  gap: 0.3rem;
+}
+
+.shell__brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .shell__main {
@@ -113,6 +129,17 @@ select:focus {
   color: var(--muted);
 }
 
+.work-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.38rem 0.7rem;
+  background: rgba(23, 32, 38, 0.07);
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
 .topnav {
   display: flex;
   gap: 0.65rem;
@@ -130,6 +157,27 @@ select:focus {
 .topnav a.active {
   background: rgba(23, 32, 38, 0.06);
   color: var(--ink);
+}
+
+.topnav--focused {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-top: 0;
+  padding-bottom: 0.2rem;
+  scrollbar-width: none;
+}
+
+.topnav--focused::-webkit-scrollbar {
+  display: none;
+}
+
+.topnav--focused a {
+  white-space: nowrap;
+  padding: 0.52rem 0.8rem;
+}
+
+.topnav__item {
+  flex: 0 0 auto;
 }
 
 .page,
@@ -171,7 +219,8 @@ select:focus {
 .hero-card__signals,
 .stats-row,
 .process-grid,
-.timeline-grid {
+.timeline-grid,
+.call-sheet__grid {
   display: grid;
   gap: 1rem;
 }
@@ -189,6 +238,15 @@ select:focus {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.call-sheet {
+  display: grid;
+  gap: 1rem;
+}
+
+.call-sheet__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .signal-card {
   border-radius: 24px;
   padding: 1rem;
@@ -204,6 +262,28 @@ button.signal-card {
 .signal-card--selected {
   background: linear-gradient(180deg, rgba(220, 233, 236, 0.92), rgba(247, 252, 253, 0.94));
   border-color: rgba(31, 91, 108, 0.28);
+}
+
+.strength-meter {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(23, 32, 38, 0.08);
+  overflow: hidden;
+}
+
+.strength-meter__bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1d5d6a, #2d7a88);
+}
+
+.inline-glossary {
+  display: grid;
+  gap: 0.3rem;
+  border-radius: 16px;
+  padding: 0.85rem 0.95rem;
+  background: rgba(23, 32, 38, 0.04);
+  border: 1px solid rgba(23, 32, 38, 0.07);
 }
 
 .process-step {
@@ -277,6 +357,14 @@ button.signal-card {
   gap: 0.55rem;
 }
 
+.question-preview__summary {
+  color: var(--muted);
+}
+
+.question-preview__reasons {
+  margin-top: 0.1rem;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   color: var(--muted);
@@ -332,7 +420,8 @@ h3 {
 }
 
 .primary-button,
-.ghost-button {
+.ghost-button,
+.text-button {
   border: 0;
   border-radius: 999px;
   padding: 0.78rem 1rem;
@@ -346,6 +435,13 @@ h3 {
 .ghost-button {
   background: rgba(23, 32, 38, 0.06);
   color: var(--ink);
+}
+
+.text-button {
+  background: transparent;
+  color: var(--muted);
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .action-row {
@@ -427,6 +523,25 @@ h3 {
   background: linear-gradient(135deg, #1d5d6a, #2d7a88);
 }
 
+.progress-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+
+.progress-card__label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.progress-card__count {
+  font-size: 1rem;
+}
+
 .choices {
   border: 0;
   padding: 0;
@@ -442,16 +557,30 @@ h3 {
   border: 1px solid rgba(23, 32, 38, 0.08);
   background: rgba(255, 255, 255, 0.72);
   padding: 1rem;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease,
+    transform 140ms ease;
 }
 
 .choice-card.is-selected {
-  background: rgba(31, 91, 108, 0.1);
-  border-color: rgba(31, 91, 108, 0.3);
+  background: linear-gradient(180deg, rgba(220, 233, 236, 0.96), rgba(247, 252, 253, 0.92));
+  border-color: rgba(31, 91, 108, 0.42);
+  box-shadow:
+    0 0 0 2px rgba(31, 91, 108, 0.12),
+    0 16px 28px rgba(31, 91, 108, 0.12);
+  transform: translateY(-1px);
 }
 
 .choice-card input {
   width: auto;
   margin-top: 0.2rem;
+  accent-color: var(--accent);
+}
+
+.guide-choice-mode {
+  display: inline-flex;
 }
 
 .copy-block {
@@ -515,9 +644,105 @@ h3 {
   font-size: 0.92rem;
 }
 
+.question-description-mobile {
+  display: none;
+}
+
+.question-description-mobile summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.92rem;
+}
+
+.question-description-mobile p {
+  margin-top: 0.45rem;
+  color: var(--muted);
+}
+
+.guide-recent {
+  display: grid;
+  gap: 0.5rem;
+  border-top: 1px solid rgba(23, 32, 38, 0.08);
+  padding-top: 0.9rem;
+}
+
+.guide-recent__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.guide-recent__count {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.guide-recent__items {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.guide-recent__item {
+  padding: 0.68rem 0.78rem;
+  border-radius: 16px;
+  background: rgba(23, 32, 38, 0.05);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.result-mobile {
+  display: none;
+}
+
+.mobile-fold-card__summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.mobile-fold-card__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-fold-card__body {
+  margin-top: 0.9rem;
+}
+
+.mobile-fold-card__hint {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.result-priority {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .admin-textarea {
   min-height: 560px;
   font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+.answer-log[open] {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.answer-log__summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.answer-log__summary::-webkit-details-marker {
+  display: none;
 }
 
 .sr-only {
@@ -537,14 +762,15 @@ h3 {
   .hero-card,
   .process-grid,
   .stats-row,
-  .timeline-grid {
+  .timeline-grid,
+  .call-sheet__grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 760px) {
   .shell {
-    padding: 0.85rem;
+    padding: 0.7rem;
   }
 
   .shell__header,
@@ -554,5 +780,265 @@ h3 {
 
   .topnav {
     width: 100%;
+  }
+
+  .shell__header--focused {
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .topnav--focused {
+    width: calc(100% + 0.1rem);
+  }
+
+  .topnav--question-flow .topnav__item--secondary,
+  .topnav--question-flow .topnav__item--utility {
+    display: none;
+  }
+
+  .shell__brand-row {
+    gap: 0.5rem;
+  }
+
+  .brand {
+    font-size: 1.45rem;
+  }
+
+  .work-badge {
+    padding: 0.28rem 0.56rem;
+    font-size: 0.72rem;
+  }
+
+  .topnav {
+    gap: 0.35rem;
+  }
+
+  .topnav a {
+    padding: 0.5rem 0.72rem;
+    font-size: 0.94rem;
+  }
+
+  .topnav--focused a {
+    padding: 0.42rem 0.68rem;
+    font-size: 0.9rem;
+  }
+
+  .page,
+  .stack {
+    gap: 0.75rem;
+  }
+
+  .hero-card,
+  .card {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .hero-card,
+  .hero-card__signals,
+  .stats-row,
+  .process-grid,
+  .timeline-grid,
+  .call-sheet,
+  .call-sheet__grid {
+    gap: 0.75rem;
+  }
+
+  .signal-card,
+  .process-step,
+  .timeline-card,
+  .note-box,
+  .policy-card,
+  .copy-block,
+  .list-card,
+  .source-suggestion,
+  .question-context,
+  .question-preview {
+    padding: 0.82rem 0.88rem;
+    border-radius: 18px;
+  }
+
+  .section-heading {
+    gap: 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.18;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.22;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    line-height: 1.25;
+  }
+
+  .lead {
+    margin-top: 0.55rem;
+    font-size: 0.96rem;
+  }
+
+  .lead--compact {
+    margin-top: 0;
+    font-size: 0.94rem;
+  }
+
+  .status-badge {
+    padding: 0.3rem 0.56rem;
+    font-size: 0.76rem;
+  }
+
+  .progress-card {
+    padding: 0.78rem 0.88rem;
+  }
+
+  .progress-card__meta {
+    margin-bottom: 0.45rem;
+  }
+
+  .progress-card__label {
+    font-size: 0.74rem;
+  }
+
+  .progress-card__count {
+    font-size: 0.88rem;
+  }
+
+  .progress {
+    height: 8px;
+  }
+
+  .choices {
+    gap: 0.65rem;
+  }
+
+  .choice-card {
+    gap: 0.65rem;
+    padding: 0.82rem 0.88rem;
+    border-radius: 18px;
+  }
+
+  .choice-card input {
+    margin-top: 0.12rem;
+  }
+
+  .guide-choice-mode {
+    display: none;
+  }
+
+  .action-row {
+    gap: 0.55rem;
+  }
+
+  .primary-button,
+  .ghost-button {
+    padding: 0.68rem 0.88rem;
+  }
+
+  .plain-list {
+    padding-left: 1rem;
+  }
+
+  .plain-list--spaced {
+    gap: 0.28rem;
+  }
+
+  .inline-notice {
+    padding: 0.76rem 0.88rem;
+    border-radius: 16px;
+  }
+
+  .question-description--desktop,
+  .result-desktop {
+    display: none;
+  }
+
+  .question-description-mobile,
+  .result-mobile {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .question-preview__summary {
+    display: none;
+  }
+
+  .question-preview__reasons li:nth-child(n + 2) {
+    display: none;
+  }
+
+  .result-hero .hero-card__signals {
+    display: none;
+  }
+
+  .mobile-fold-card {
+    padding: 0.82rem 0.88rem;
+  }
+
+  .mobile-fold-card__summary {
+    gap: 0.55rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shell {
+    padding: 0.55rem;
+  }
+
+  .hero-card,
+  .card {
+    padding: 0.88rem;
+    border-radius: 20px;
+  }
+
+  .progress-card {
+    padding: 0.72rem 0.8rem;
+  }
+
+  h1 {
+    font-size: 1.72rem;
+  }
+
+  h2 {
+    font-size: 1.34rem;
+  }
+
+  .topnav a,
+  .topnav--focused a {
+    padding: 0.4rem 0.62rem;
+    font-size: 0.88rem;
+  }
+
+  .choice-card,
+  .signal-card,
+  .process-step,
+  .timeline-card,
+  .note-box,
+  .policy-card,
+  .copy-block,
+  .list-card,
+  .source-suggestion,
+  .question-context,
+  .question-preview,
+  .mobile-fold-card {
+    padding: 0.76rem 0.8rem;
+  }
+
+  .text-button {
+    font-size: 0.92rem;
+  }
+
+  .guide-recent {
+    padding-top: 0.75rem;
   }
 }
