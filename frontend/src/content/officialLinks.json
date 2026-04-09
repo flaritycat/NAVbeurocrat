@@ -275,6 +275,94 @@
     "priority": 1
   },
   {
+    "id": "krise_trygghet",
+    "title": "Hjelp ved vold, kontroll eller utrygghet",
+    "publisher": "Dinutvei",
+    "group": "krise",
+    "url": "https://dinutvei.no/",
+    "actionLabel": "Bruk hjelpetilbud ved vold, kontroll eller utrygghet",
+    "description": "Offisiell veiviser til hjelpetilbud ved vold i nære relasjoner, negativ kontroll, overgrep og andre utrygge situasjoner.",
+    "whenRelevant": "Bruk denne når trygghet, vold, kontroll eller behov for beskyttelse må avklares før annet.",
+    "priority": 1
+  },
+  {
+    "id": "alarmtelefon_barn",
+    "title": "Alarmtelefonen for barn og unge 116 111",
+    "publisher": "Alarmtelefonen",
+    "group": "barnevern",
+    "url": "https://www.116111.no/",
+    "actionLabel": "Bruk Alarmtelefonen hvis et barn eller en ungdom trenger hjelp raskt",
+    "description": "Offisiell hjelpelinje og chat for barn og unge, og for voksne som er bekymret for et barn.",
+    "whenRelevant": "Bruk denne når det gjelder bekymring for barn, utrygg omsorgssituasjon eller behov for rask råd om hva du bør gjøre.",
+    "priority": 1
+  },
+  {
+    "id": "familievern",
+    "title": "Familievern",
+    "publisher": "Bufdir",
+    "group": "familie",
+    "url": "https://www.bufdir.no/familie/familien/",
+    "actionLabel": "Undersøk om familievernet kan hjelpe med konflikt eller foreldresamarbeid",
+    "description": "Offisiell informasjon om familievern, samtaler og støtte ved konflikt, samlivsbrudd og vanskelige familiesituasjoner.",
+    "whenRelevant": "Bruk denne når du trenger hjelp til foreldresamarbeid, konflikt, brudd eller en mer fastlåst familiesituasjon.",
+    "priority": 3
+  },
+  {
+    "id": "barnevern",
+    "title": "Barnevern",
+    "publisher": "Bufdir",
+    "group": "barnevern",
+    "url": "https://www.bufdir.no/barnevern/",
+    "actionLabel": "Les om hvordan barnevernet kan hjelpe og hva du kan gjøre ved bekymring",
+    "description": "Offisiell informasjon om barnevern, hjelpetiltak og hva du kan gjøre hvis du er bekymret for et barn.",
+    "whenRelevant": "Bruk denne når barnets omsorgssituasjon, trygghet eller utvikling gir grunn til bekymring.",
+    "priority": 2
+  },
+  {
+    "id": "barn_unge_psykisk_helse",
+    "title": "Psykisk helse hos barn og unge",
+    "publisher": "Helsenorge",
+    "group": "helse",
+    "url": "https://www.helsenorge.no/psykisk-helse/barn-og-unges-psykiske-helse/",
+    "actionLabel": "Se hvor barn og unge kan få psykisk helsehjelp",
+    "description": "Offisiell informasjon om hvor barn og unge kan få hjelp ved psykiske plager, blant annet via kommune, fastlege og BUP.",
+    "whenRelevant": "Bruk denne når barnet eller den unge strever psykisk, eller når psykisk helse påvirker skole, hjem eller hverdagsfungering.",
+    "priority": 2
+  },
+  {
+    "id": "pasient_brukerombud",
+    "title": "Pasient- og brukerombudet",
+    "publisher": "Pasient- og brukerombudet",
+    "group": "rettshjelp",
+    "url": "https://www.pasientogbrukerombudet.no/kontakt-oss",
+    "actionLabel": "Kontakt Pasient- og brukerombudet ved spørsmål eller klage om helse- og omsorgstjenester",
+    "description": "Offisiell informasjon om ombudets kontaktpunkter og hva de kan hjelpe med i saker om helse- og omsorgstjenester.",
+    "whenRelevant": "Bruk denne når saken gjelder kommunale helse- og omsorgstjenester, rettigheter eller behov for hjelp til å klage.",
+    "priority": 3
+  },
+  {
+    "id": "statsforvalteren_klage",
+    "title": "Klage til Statsforvalteren",
+    "publisher": "Statsforvalteren",
+    "group": "rettshjelp",
+    "url": "https://www.statsforvalteren.no/portal/Folk-og-samfunn/helse-omsorg-og-sosialtjenester/",
+    "actionLabel": "Se når Statsforvalteren er riktig klageinstans",
+    "description": "Offisiell informasjon om Statsforvalterens rolle i klager på helse-, omsorgs- og sosiale tjenester.",
+    "whenRelevant": "Bruk denne når du trenger å forstå om saken bør løftes videre som klage på kommunale eller helsefaglige tjenester.",
+    "priority": 4
+  },
+  {
+    "id": "karriereveiledning",
+    "title": "Karriereveiledning",
+    "publisher": "Karriereveiledning.no",
+    "group": "skole",
+    "url": "https://karriereveiledning.no/",
+    "actionLabel": "Bruk gratis karriereveiledning for å sortere skole, arbeid og neste retning",
+    "description": "Offisiell offentlig tjeneste for gratis og anonym karriereveiledning på chat, telefon og nett.",
+    "whenRelevant": "Bruk denne når du er ung, står i overgang eller trenger hjelp til å sortere vei videre mot skole, arbeid eller aktivitet.",
+    "priority": 4
+  },
+  {
     "id": "klage_nav",
     "title": "Klage og anke",
     "publisher": "NAV",

@@ -1,7 +1,17 @@
 [
   {
-    "id": "urgent_health_or_safety_now",
+    "id": "unsafe_home_or_violence_now",
     "priority": 1,
+    "title": "Trygghet og beskyttelse må avklares først",
+    "summary": "Hvis situasjonen gjelder vold, kontroll, alvorlig utrygghet eller behov for beskyttelse, bør trygghet komme foran andre spor. Bruk krise- og hjelpetilbud først, og ring 113 hvis det er fare for liv og helse.",
+    "whenAnyFlags": ["urgent_unsafe_home", "needs_crisis_support"],
+    "documentListIds": ["health_docs", "household_docs"],
+    "officialLinkIds": ["krise_trygghet", "alarmtelefon_barn", "legevakt"],
+    "recommendedIds": ["krise_trygghet_vold", "barnevern_hjelpetiltak"]
+  },
+  {
+    "id": "urgent_health_or_safety_now",
+    "priority": 2,
     "title": "Helse eller trygghet må avklares først",
     "summary": "Hvis det gjelder akutt helsefare, rask forverring eller en situasjon som føles utrygg, bør du bruke helsetjenesten først. Ring 113 ved fare for liv og helse, og bruk ellers legevakt eller fastlege for rask avklaring.",
     "whenAnyFlags": ["urgent_health_or_safety"],
@@ -11,7 +21,7 @@
   },
   {
     "id": "urgent_housing_now",
-    "priority": 2,
+    "priority": 3,
     "title": "Boligsituasjonen bør avklares først",
     "summary": "Hvis du ikke har et sted å sove eller kan miste boligen svært snart, bør du kontakte NAV-kontoret raskt og be om vurdering av akutt hjelp eller midlertidig botilbud.",
     "whenAnyFlags": ["urgent_housing", "no_stable_home"],
@@ -21,7 +31,7 @@
   },
   {
     "id": "urgent_basic_needs_now",
-    "priority": 3,
+    "priority": 4,
     "title": "Nødvendige utgifter bør tas først",
     "summary": "Hvis du mangler penger til mat, strøm eller andre helt nødvendige utgifter nå, bør du raskt be om veiledning om akutt økonomisk hjelp.",
     "whenAnyFlags": ["urgent_basic_needs", "no_income"],
@@ -31,7 +41,7 @@
   },
   {
     "id": "debt_escalation",
-    "priority": 4,
+    "priority": 5,
     "title": "Betalingspresset bør ryddes tidlig",
     "summary": "Hvis inkasso eller andre krav bygger seg opp, kan det være viktig å få oversikt og råd tidlig før situasjonen blir mer låst.",
     "whenAnyFlags": ["severe_debt_pressure", "mounting_debt"],
@@ -41,7 +51,7 @@
   },
   {
     "id": "urgent_support_breakdown",
-    "priority": 5,
+    "priority": 6,
     "title": "Støtte og tilrettelegging bør avklares raskt",
     "summary": "Hvis manglende hjelp, hjelpemidler eller tilrettelegging gjør at hverdagen, omsorgen, skolen eller aktiviteten ikke fungerer forsvarlig nå, bør du raskt be riktig instans avklare ansvar og neste steg.",
     "whenAnyFlags": ["urgent_support_breakdown", "needs_quick_support_clarification"],

@@ -148,6 +148,116 @@
     }
   },
   {
+    "id": "krise_trygghet_vold",
+    "title": "Trygghet, vold og akutt krisehjelp",
+    "owner": "krisehjelp, kommunen og annet akutt hjelpeapparat",
+    "category": "hjelpetiltak",
+    "priority": 12,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis vold, kontroll, alvorlig utrygghet eller behov for beskyttelse må avklares før andre spor.",
+    "documentListIds": ["health_docs", "decision_docs", "household_docs"],
+    "phraseTemplateId": "crisis_safety_contact",
+    "officialLinkIds": ["krise_trygghet", "alarmtelefon_barn", "legevakt"],
+    "rationaleMap": {
+      "family_safety_start": "Du startet veiviseren med at dette gjelder barn, familie, trygghet eller en vanskelig hjemmesituasjon.",
+      "urgent_unsafe_home": "Du har oppgitt vold, kontroll eller en situasjon som føles utrygg hjemme eller i nære relasjoner.",
+      "needs_crisis_support": "Du har oppgitt at trygghet og beskyttelse må avklares før andre hjelpespor.",
+      "urgent_health_or_safety": "Du har oppgitt at trygghet eller helse kan haste og bør prioriteres først.",
+      "child_welfare_concern": "Du har oppgitt at barnets trygghet eller omsorgssituasjon gir grunn til bekymring."
+    }
+  },
+  {
+    "id": "familie_og_foreldrestotte",
+    "title": "Familie- og foreldrestøtte",
+    "owner": "familievern, kommunen og andre familietjenester",
+    "category": "tjeneste",
+    "priority": 33,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis konflikt, samlivsbrudd, foreldresamarbeid eller andre familiespenninger trenger et roligere og tydeligere hjelpespor.",
+    "documentListIds": ["household_docs", "school_docs", "decision_docs"],
+    "phraseTemplateId": "family_support_contact",
+    "officialLinkIds": ["familievern", "alarmtelefon_barn"],
+    "rationaleMap": {
+      "family_safety_start": "Du startet veiviseren med at dette gjelder barn, familie, trygghet eller en vanskelig hjemmesituasjon.",
+      "family_conflict_support": "Du har oppgitt konflikt, samlivsbrudd eller vansker med foreldresamarbeid som bør få et eget hjelpespor.",
+      "has_child_contact_issue": "Du har oppgitt at situasjonen påvirker samarbeid eller avklaringer rundt barn.",
+      "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå hvem som kan hjelpe og hva som bør tas først."
+    }
+  },
+  {
+    "id": "barnevern_hjelpetiltak",
+    "title": "Barnevern og hjelpetiltak for barn og familie",
+    "owner": "barneverntjenesten og kommunen",
+    "category": "tjeneste",
+    "priority": 13,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis barnets omsorgssituasjon, trygghet eller utvikling gir grunn til bekymring og det trengs rask avklaring av hjelp eller tiltak.",
+    "documentListIds": ["school_docs", "health_docs", "household_docs", "decision_docs"],
+    "phraseTemplateId": "child_welfare_contact",
+    "officialLinkIds": ["barnevern", "alarmtelefon_barn"],
+    "rationaleMap": {
+      "family_safety_start": "Du startet veiviseren med at dette gjelder barn, familie, trygghet eller en vanskelig hjemmesituasjon.",
+      "child_welfare_concern": "Du har oppgitt bekymring for barnets omsorgssituasjon, trygghet eller utvikling.",
+      "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom som trenger hjelp.",
+      "needs_service_coordination": "Du har oppgitt at flere tjenester eller instanser må forstå situasjonen rundt barnet.",
+      "urgent_unsafe_home": "Du har oppgitt at barnets trygghet eller hjemmesituasjon kan være akutt eller alvorlig."
+    }
+  },
+  {
+    "id": "barn_og_unge_psykisk_helse",
+    "title": "Psykisk helsehjelp for barn og unge",
+    "owner": "kommune, fastlege, skolehelse eller BUP",
+    "category": "tjeneste",
+    "priority": 34,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis et barn eller en ungdom strever psykisk, og det påvirker fungering hjemme, på skolen eller i hverdagen.",
+    "documentListIds": ["health_docs", "school_docs", "household_docs"],
+    "phraseTemplateId": "child_mental_health_contact",
+    "officialLinkIds": ["barn_unge_psykisk_helse", "skolehelsetjeneste", "alarmtelefon_barn"],
+    "rationaleMap": {
+      "child_youth_mental_health": "Du har oppgitt at psykisk helse hos barn eller unge er en viktig del av situasjonen.",
+      "child_needs_help": "Du har oppgitt at dette gjelder et barn eller en ungdom som trenger hjelp.",
+      "needs_health_support": "Du har oppgitt at riktig hjelp sannsynligvis må gå via helse- eller oppfølgingstjenester.",
+      "school_absence_concern": "Du har oppgitt at situasjonen også påvirker skole, fravær eller fungering i hverdagen."
+    }
+  },
+  {
+    "id": "karriereveiledning_ungdom",
+    "title": "Karriereveiledning og overgangsstøtte for unge",
+    "owner": "karrieresenter, fylkeskommune, skole eller NAV",
+    "category": "tjeneste",
+    "priority": 35,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du er ung eller i overgang og trenger hjelp til å sortere skole, arbeid, aktivitet og hvem du bør kontakte først.",
+    "documentListIds": ["follow_up_docs", "household_docs"],
+    "phraseTemplateId": "career_guidance_contact",
+    "officialLinkIds": ["karriereveiledning", "arbeid", "kontakt_oss"],
+    "rationaleMap": {
+      "young_adult": "Du har oppgitt at du er ung og trenger hjelp til å finne et trygt første steg.",
+      "first_public_contact": "Du har oppgitt at dette er første gang du trenger en slik offentlig avklaring.",
+      "transition_support": "Du har oppgitt overgang mellom hjem, skole, arbeid eller bolig som gjør retningen uklar.",
+      "needs_guidance": "Du har oppgitt at du trenger hjelp til å forstå hvem som gjør hva og hva som bør tas først."
+    }
+  },
+  {
+    "id": "kommunal_klage_ombud",
+    "title": "Klage, ombud og videre oppfølging av tjenester",
+    "owner": "Pasient- og brukerombudet, Statsforvalteren eller annen klageinstans",
+    "category": "tjeneste",
+    "priority": 41,
+    "minScore": 3,
+    "summary": "Kan være relevant hvis du trenger hjelp til å forstå om saken bør følges opp som klage, ombudssak eller annen formell henvendelse til riktig instans.",
+    "documentListIds": ["decision_docs", "legal_docs", "health_docs"],
+    "phraseTemplateId": "ombud_complaint_contact",
+    "officialLinkIds": ["pasient_brukerombud", "statsforvalteren_klage", "fri_rettshjelp"],
+    "rationaleMap": {
+      "needs_health_service_complaint": "Du har oppgitt at saken gjelder helse- eller omsorgstjenester og at du trenger hjelp til videre klage- eller ombudsspor.",
+      "has_existing_decision": "Du har oppgitt at det allerede finnes brev, vedtak eller skriftlig oppfølging i saken.",
+      "deadline_running": "Du har oppgitt at frist eller videre oppfølging kan være viktig å avklare raskt.",
+      "needs_legal_guidance": "Du har oppgitt at du trenger hjelp til å forstå rettigheter, klage eller riktig videre instans."
+    }
+  },
+  {
     "id": "okonomi_gjeld",
     "title": "Økonomi- og gjeldsrådgivning",
     "owner": "NAV-kontoret",

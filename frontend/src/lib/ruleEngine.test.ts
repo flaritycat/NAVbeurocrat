@@ -306,4 +306,65 @@ describe("ruleEngine flows", () => {
     expect(result.actorGuidance.some((card) => card.group === "rettshjelp")).toBe(true);
     expect(result.glossaryTerms.some((term) => term.id === "vedtak")).toBe(true);
   });
+
+  it("routes family and safety cases into a dedicated family context before broader follow-up", () => {
+    const questionIds = nextVisibleQuestionIds({
+      start_situation: "family_safety",
+    });
+
+    expect(questionIds).toContain("family_safety_context");
+    expect(questionIds).not.toContain("acute_now");
+  });
+
+  it("lifts crisis guidance and acute links when violence or unsafe home is part of the situation", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "family_safety",
+      family_safety_context: "violence_or_control_home",
+      existing_followup: "not_started_anything",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.acuteItems[0]?.rule.id).toBe("unsafe_home_or_violence_now");
+    expect(result.officialLinks.some((link) => link.id === "krise_trygghet")).toBe(true);
+    expect(result.actorGuidance.some((card) => card.group === "krise")).toBe(true);
+  });
+
+  it("surfaces child and youth mental health guidance when that is the main concern", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "family_safety",
+      family_safety_context: "child_mental_health",
+      help_applies_to: "for_child",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.primaryRecommendation.recommendation.id).toBe("barn_og_unge_psykisk_helse");
+    expect(result.officialLinks.some((link) => link.id === "barn_unge_psykisk_helse")).toBe(true);
+    expect(result.glossaryTerms.some((term) => term.id === "bup")).toBe(true);
+  });
+
+  it("shows ombud and complaint paths when the user needs help with health or care complaints", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "family_safety",
+      family_safety_context: "complaint_health_or_care",
+      decision_timeline: "deadline_soon",
+      existing_followup: "have_decision_or_rejection",
+      follow_up_need: "understand_decision_or_complaint",
+    });
+
+    expect(result.primaryRecommendation.recommendation.id).toBe("kommunal_klage_ombud");
+    expect(result.officialLinks.some((link) => link.id === "pasient_brukerombud")).toBe(true);
+    expect(result.officialLinks.some((link) => link.id === "statsforvalteren_klage")).toBe(true);
+  });
+
+  it("adds career guidance for young users who need help sorting school, work and next steps", () => {
+    const result = buildGuideResult(defaultContentBundle, {
+      start_situation: "young_or_first_contact",
+      young_first_contact_context: "transition_home_school_work",
+      acute_now: "nothing_acute",
+      follow_up_need: "guidance_to_contact_services",
+    });
+
+    expect(result.officialLinks.some((link) => link.id === "karriereveiledning")).toBe(true);
+    expect(result.glossaryTerms.some((term) => term.id === "karriereveiledning")).toBe(true);
+  });
 });

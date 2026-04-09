@@ -199,6 +199,7 @@ const questionFallbackReasons: Record<string, string> = {
   existing_followup: "Dette viser om du trenger å starte på nytt, følge opp noe som allerede finnes eller få hjelp til å forstå det som er i gang.",
   young_first_contact_context: "Dette spørsmålet gjør førstegangskontakten mindre overveldende og hjelper veiviseren å sortere mellom arbeid, økonomi, bolig og ren veiledning.",
   municipal_support_focus: "Dette gjør den kommunale delen mer presis ved å skille mellom praktisk bistand, avlastning, lavterskel helse og koordinering.",
+  family_safety_context: "Dette gjør familie-, trygghets- og barnesporet mer presist ved å skille mellom krise, bekymring for barn, konflikt, psykisk helse og klagebehov.",
   letter_decision_context: "Dette gjør brevet eller vedtaket mer konkret, slik at veiviseren lettere kan prioritere frist, klage og riktig første kontakt.",
   decision_timeline: "Brevdato og frister kan avgjøre om du må handle raskt eller om saken først og fremst trenger bedre oversikt.",
   follow_up_need: "Dette siste spørsmålet gjør resultatet mer handlingsrettet og lettere å bruke i møte med riktig instans.",
@@ -256,6 +257,18 @@ const actorGuideMeta: Record<
   rettshjelp: {
     title: "Klage og rettshjelp",
     description: "Klage- og rettshjelpsspor er nyttige når du må forstå brev, frister, begrunnelser eller uenighet i en sak.",
+  },
+  krise: {
+    title: "Krise og trygghet",
+    description: "Krise- og trygghetsspor bør komme først når vold, kontroll, alvorlig utrygghet eller akutt behov for beskyttelse er en del av situasjonen.",
+  },
+  familie: {
+    title: "Familie og foreldrestøtte",
+    description: "Familievern og foreldrestøtte kan være riktig når konflikt, samlivsbrudd eller samarbeid rundt barn må ryddes på en tryggere måte.",
+  },
+  barnevern: {
+    title: "Barnevern og barnets trygghet",
+    description: "Barnevern og hjelpetiltak kan være relevant når du er bekymret for barnets omsorgssituasjon, trygghet eller utvikling.",
   },
 };
 
@@ -349,6 +362,49 @@ const glossaryCatalog: Array<{
     recommendationIds: ["samordnet_barneoppfolging"],
     flags: ["needs_service_coordination", "child_multiple_services", "child_needs_coordinated_plan"],
   },
+  {
+    id: "krisesenter",
+    title: "Krisehjelp og beskyttelse",
+    description: "Krisehjelp handler om trygghet først. Hvis vold, kontroll eller alvorlig utrygghet er en del av situasjonen, bør du bruke akutt hjelpeapparat før andre spor.",
+    recommendationIds: ["krise_trygghet_vold"],
+    groups: ["krise"],
+  },
+  {
+    id: "familievern",
+    title: "Familievern",
+    description: "Familievernet gir samtaler og hjelp når konflikt, samlivsbrudd eller samarbeid rundt barn har låst seg og trenger roligere støtte.",
+    recommendationIds: ["familie_og_foreldrestotte"],
+    groups: ["familie"],
+  },
+  {
+    id: "barnevern",
+    title: "Barnevern og hjelpetiltak",
+    description: "Barnevernet kan gi hjelpetiltak og oppfølging når barnets omsorgssituasjon, trygghet eller utvikling gir grunn til bekymring.",
+    recommendationIds: ["barnevern_hjelpetiltak"],
+    groups: ["barnevern"],
+  },
+  {
+    id: "bup",
+    title: "BUP og psykisk helsehjelp for barn og unge",
+    description: "BUP og kommunale tjenester kan være aktuelle når barn eller unge strever psykisk og situasjonen går ut over fungering hjemme, på skolen eller i hverdagen.",
+    recommendationIds: ["barn_og_unge_psykisk_helse"],
+    flags: ["child_youth_mental_health"],
+    groups: ["helse", "skole"],
+  },
+  {
+    id: "pasient_og_brukerombud",
+    title: "Pasient- og brukerombud",
+    description: "Ombudet kan hjelpe deg å forstå rettigheter, klage og videre oppfølging når saken gjelder helse- eller omsorgstjenester.",
+    recommendationIds: ["kommunal_klage_ombud"],
+    groups: ["rettshjelp"],
+  },
+  {
+    id: "karriereveiledning",
+    title: "Karriereveiledning",
+    description: "Karriereveiledning kan være et trygt første steg for unge eller andre som trenger hjelp til å sortere skole, arbeid og neste retning.",
+    flags: ["young_adult", "transition_support"],
+    groups: ["skole"],
+  },
 ];
 
 const whatIfQuestionIds = [
@@ -361,6 +417,7 @@ const whatIfQuestionIds = [
   "child_household_detail",
   "household_finances",
   "young_first_contact_context",
+  "family_safety_context",
 ] as const;
 
 function matchesRule(rule: AcuteRule, flags: Set<string>) {
@@ -478,6 +535,18 @@ function recommendationNeedsMoreDocumentation(recommendationId: string, evaluati
     case "pleiepenger_barn":
     case "opplaeringspenger":
       return !flags.has("has_medical_followup") && !flags.has("child_extra_needs_costs");
+    case "krise_trygghet_vold":
+      return !flags.has("urgent_unsafe_home") && !flags.has("needs_crisis_support");
+    case "familie_og_foreldrestotte":
+      return !flags.has("family_conflict_support") && !flags.has("has_child_contact_issue");
+    case "barnevern_hjelpetiltak":
+      return !flags.has("child_welfare_concern");
+    case "barn_og_unge_psykisk_helse":
+      return !flags.has("child_youth_mental_health");
+    case "kommunal_klage_ombud":
+      return !flags.has("needs_health_service_complaint") && !flags.has("has_existing_decision");
+    case "karriereveiledning_ungdom":
+      return !flags.has("young_adult") && !flags.has("transition_support") && !flags.has("first_public_contact");
     case "juridisk_veiledning":
       return !flags.has("has_existing_decision") && !flags.has("deadline_running") && !flags.has("needs_help_with_forms");
     default:
@@ -527,6 +596,30 @@ function buildAlternativeAssessments(
 function buildContextOfficialLinkIds(evaluation: WizardEvaluation) {
   const flags = new Set(evaluation.flags);
   const extraLinkIds: string[] = [];
+
+  if (flags.has("urgent_unsafe_home") || flags.has("needs_crisis_support")) {
+    extraLinkIds.push("krise_trygghet", "alarmtelefon_barn");
+  }
+
+  if (flags.has("family_conflict_support") || flags.has("has_child_contact_issue")) {
+    extraLinkIds.push("familievern");
+  }
+
+  if (flags.has("child_welfare_concern")) {
+    extraLinkIds.push("barnevern", "alarmtelefon_barn");
+  }
+
+  if (flags.has("child_youth_mental_health")) {
+    extraLinkIds.push("barn_unge_psykisk_helse", "skolehelsetjeneste");
+  }
+
+  if (flags.has("needs_health_service_complaint")) {
+    extraLinkIds.push("pasient_brukerombud", "statsforvalteren_klage");
+  }
+
+  if (flags.has("young_adult") || flags.has("transition_support")) {
+    extraLinkIds.push("karriereveiledning");
+  }
 
   if (flags.has("needs_relief_support") || flags.has("family_coordination_overload") || flags.has("ongoing_care_need")) {
     extraLinkIds.push("avlastning");
@@ -633,7 +726,17 @@ function buildActorGuidance(officialLinks: OfficialLink[]) {
     return accumulator;
   }, {});
 
-  const orderedGroups: OfficialLink["group"][] = ["NAV", "kommune", "Husbanken", "helse", "skole", "rettshjelp"];
+  const orderedGroups: OfficialLink["group"][] = [
+    "krise",
+    "familie",
+    "barnevern",
+    "NAV",
+    "kommune",
+    "Husbanken",
+    "helse",
+    "skole",
+    "rettshjelp",
+  ];
 
   return orderedGroups
     .filter((group) => groupedLinks[group]?.length)
@@ -863,6 +966,30 @@ function buildAskForList(
   }
 
   switch (primaryRecommendation.recommendation.id) {
+    case "krise_trygghet_vold":
+      askForList.push("Be om at trygghet og beskyttelse blir vurdert først, før andre spørsmål i saken.");
+      askForList.push("Be om konkret hjelp til hvem du skal kontakte nå, og hvordan du kan holde barn og voksne trygge de neste dagene.");
+      break;
+    case "familie_og_foreldrestotte":
+      askForList.push("Be om hjelp til å rydde i konflikt, samarbeid eller kommunikasjon, ikke bare en generell samtale om at situasjonen er vanskelig.");
+      askForList.push("Be om å få vite hvilket kontaktpunkt som passer best når barn, samlivsbrudd eller foreldresamarbeid er en del av saken.");
+      break;
+    case "barnevern_hjelpetiltak":
+      askForList.push("Be om å få vite hva som kan gjøres nå for å gjøre situasjonen tryggere og mer forutsigbar for barnet.");
+      askForList.push("Be om en konkret forklaring på hvilke hjelpetiltak eller videre vurderinger som kan være aktuelle.");
+      break;
+    case "barn_og_unge_psykisk_helse":
+      askForList.push("Be om hjelp til å avklare om fastlege, skolehelsetjeneste, kommune eller BUP bør kobles inn først.");
+      askForList.push("Be om at belastning, fungering og endringer hjemme eller på skolen blir beskrevet konkret.");
+      break;
+    case "karriereveiledning_ungdom":
+      askForList.push("Be om hjelp til å sortere hva som er riktig første steg mellom skole, arbeid, NAV og andre hjelpetjenester.");
+      askForList.push("Be om en enkel plan for hva du bør gjøre først denne uken, og hvem som har ansvar videre.");
+      break;
+    case "kommunal_klage_ombud":
+      askForList.push("Be om å få vite om ombud, ny henvendelse eller formell klage er det tryggeste neste steget i saken.");
+      askForList.push("Be om en tydelig oversikt over frister, hva klagen bør handle om, og hvilke dokumenter som bør legges ved.");
+      break;
     case "okonomisk_sosialhjelp":
       askForList.push("Be om vurdering av økonomisk sosialhjelp til nødvendige utgifter og om noe kan behandles raskt.");
       askForList.push("Be om å få vite hvilke utgifter NAV mener er viktigst å dokumentere først.");
@@ -947,6 +1074,10 @@ function buildAskForList(
     askForList.push("Be om at kommunen vurderer avlastning eller annen pårørendestøtte hvis omsorgsbelastningen er blitt for stor.");
   }
 
+  if (evaluation.flags.includes("child_welfare_concern")) {
+    askForList.push("Be om tydelig beskjed om hvem som følger opp barnets trygghet videre, og hva som skjer først.");
+  }
+
   if (evaluation.flags.includes("home_assistive_need")) {
     askForList.push("Be om konkret kartlegging av hva som ikke fungerer hjemme, og hvilke hjelpemidler eller praktiske tiltak som kan prøves.");
   }
@@ -957,6 +1088,10 @@ function buildAskForList(
 
   if (evaluation.flags.includes("no_written_decision")) {
     askForList.push("Be om at videre beskjed eller vurdering blir gitt skriftlig hvis det er mulig, slik at det blir lettere å følge opp senere.");
+  }
+
+  if (evaluation.flags.includes("needs_health_service_complaint")) {
+    askForList.push("Be om å få vite om saken først bør tas opp med tjenesten, ombudet eller riktig klageinstans.");
   }
 
   if (parallelRecommendations.length > 0) {
@@ -1513,6 +1648,36 @@ function buildRiskNotes(
   }
 
   switch (primaryRecommendation.recommendation.id) {
+    case "krise_trygghet_vold":
+      riskNotes.push(
+        "Krise- og trygghetsspor handler først om sikkerhet, ikke om fullstendig oversikt. Det kan være riktig å bruke akutt hjelp før du har rukket å samle all dokumentasjon.",
+      );
+      break;
+    case "familie_og_foreldrestotte":
+      riskNotes.push(
+        "Familie- og foreldrestøtte løser ikke alene spørsmål om akutt trygghet, vold eller alvorlig bekymring for barn. Da kan andre spor måtte løftes først.",
+      );
+      break;
+    case "barnevern_hjelpetiltak":
+      riskNotes.push(
+        "Barnevern og hjelpetiltak vurderes konkret ut fra barnets situasjon, alvorlighetsgrad og hva som allerede er prøvd. Resultatet her kan derfor se annerledes ut når saken beskrives fullt ut.",
+      );
+      break;
+    case "barn_og_unge_psykisk_helse":
+      riskNotes.push(
+        "Psykisk helsehjelp for barn og unge vurderes konkret ut fra symptomer, funksjon, varighet og alvorlighetsgrad. Hvilket kontaktpunkt som er riktig først kan derfor variere.",
+      );
+      break;
+    case "karriereveiledning_ungdom":
+      riskNotes.push(
+        "Karriereveiledning kan være et godt første steg, men erstatter ikke vurdering av akutt økonomi, bolig, helse eller andre forhold som haster mer.",
+      );
+      break;
+    case "kommunal_klage_ombud":
+      riskNotes.push(
+        "Klage- og ombudsspor hjelper deg å forstå rettigheter og neste steg, men de løser ikke automatisk det praktiske behovet hvis saken også gjelder akutt hjelp, helse eller trygghet.",
+      );
+      break;
     case "dagpenger":
       riskNotes.push(
         "Dagpenger kan falle ut dersom du ikke oppfyller krav til tidligere arbeid og inntekt, eller dersom NAV vurderer at du ikke står til disposisjon som reell arbeidssøker.",
@@ -1630,9 +1795,15 @@ function buildDoNotAssumeList(
     evaluation.flags.includes("for_child") || evaluation.flags.includes("caregiver_rights")
       ? "Ikke anta at skole, helse, kommune og NAV automatisk deler all informasjon eller avklarer ansvar seg imellom uten at behovet beskrives tydelig."
       : "",
+    evaluation.flags.includes("child_welfare_concern") || evaluation.flags.includes("urgent_unsafe_home")
+      ? "Ikke anta at en utrygg situasjon bør vente til alt er dokumentert. Trygghet og akutt beskyttelse må vurderes først."
+      : "",
     primaryRecommendation.recommendation.id === "hjelpemidler_tilrettelegging" ||
     primaryRecommendation.recommendation.id === "samordnet_barneoppfolging"
       ? "Ikke anta at én instans har ansvar for hele saken. Hjelpemidler, tilrettelegging og koordinering kan ligge hos ulike deler av hjelpeapparatet."
+      : "",
+    primaryRecommendation.recommendation.id === "kommunal_klage_ombud"
+      ? "Ikke anta at ombud eller klageinstans automatisk er første sted å begynne. Noen ganger bør saken først tas opp med tjenesten eller avklares nærmere før du klager."
       : "",
     primaryRecommendation.recommendation.id === "juridisk_veiledning"
       ? "Ikke anta at klage eller juridisk veiledning automatisk endrer vedtaket. Det er fortsatt frister, vilkår og dokumentasjon som styrer videre behandling."

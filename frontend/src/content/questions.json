@@ -86,6 +86,16 @@
         }
       },
       {
+        "id": "family_safety",
+        "label": "Det gjelder barn, familie, trygghet eller en vanskelig hjemmesituasjon",
+        "description": "Du trenger hjelp til å sortere vold, konflikt, bekymring for barn, foreldresamarbeid eller psykisk helse hos barn og unge.",
+        "effects": {
+          "flags": ["family_safety_start"],
+          "scores": { "familie_og_foreldrestotte": 3, "barnevern_hjelpetiltak": 2, "barn_og_unge_psykisk_helse": 2, "krise_trygghet_vold": 1 },
+          "rationaleIds": ["family_safety_start"]
+        }
+      },
+      {
         "id": "municipal_support",
         "label": "Jeg trenger kommunal hjelp, praktisk støtte eller lavterskel oppfølging i hverdagen",
         "description": "Du trenger hjelp til å sortere kommunale tjenester som praktisk bistand, avlastning eller lavterskel helse- og oppfølgingstilbud.",
@@ -209,8 +219,8 @@
         "label": "Jeg er ung og trenger hjelp til å forstå hvor jeg skal starte",
         "effects": {
           "flags": ["young_adult", "needs_work_support"],
-          "scores": { "arbeid_oppfolging": 3, "kvalifiseringsprogram": 1 },
-          "rationaleIds": ["needs_guidance"]
+          "scores": { "arbeid_oppfolging": 3, "kvalifiseringsprogram": 1, "karriereveiledning_ungdom": 4 },
+          "rationaleIds": ["needs_guidance", "young_adult"]
         }
       },
       {
@@ -227,8 +237,8 @@
         "label": "Jeg står i overgang mellom hjem, skole, arbeid eller egen bolig og trenger hjelp til å sortere det",
         "effects": {
           "flags": ["transition_support", "needs_work_support", "income_loss", "housing_risk"],
-          "scores": { "arbeid_oppfolging": 3, "bostotte": 1, "okonomisk_sosialhjelp": 1 },
-          "rationaleIds": ["needs_guidance"]
+          "scores": { "arbeid_oppfolging": 3, "karriereveiledning_ungdom": 4, "bostotte": 1, "okonomisk_sosialhjelp": 1 },
+          "rationaleIds": ["needs_guidance", "transition_support"]
         }
       },
       {
@@ -236,7 +246,7 @@
         "label": "Jeg trenger mest å forstå hvem som gjør hva og hva jeg bør be om først",
         "effects": {
           "flags": ["needs_guidance"],
-          "scores": { "arbeid_oppfolging": 2, "juridisk_veiledning": 1 },
+          "scores": { "arbeid_oppfolging": 2, "juridisk_veiledning": 1, "karriereveiledning_ungdom": 2 },
           "rationaleIds": ["needs_guidance"]
         }
       },
@@ -310,6 +320,69 @@
           "flags": ["needs_guidance"],
           "scores": { "kommunal_stotte_oppfolging": 2 },
           "rationaleIds": ["municipal_support_start"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "family_safety_context",
+    "title": "Hva passer best om denne familie-, trygghets- eller barnesituasjonen?",
+    "description": "Dette spørsmålet brukes for å skille mellom krise, bekymring for barn, konflikt i familien, psykisk helse hos barn og unge og behov for klage eller ombud.",
+    "selectionMode": "single",
+    "showWhenAnyFlags": ["family_safety_start"],
+    "options": [
+      {
+        "id": "violence_or_control_home",
+        "label": "Det gjelder vold, kontroll, alvorlig utrygghet eller behov for beskyttelse",
+        "effects": {
+          "flags": ["urgent_unsafe_home", "needs_crisis_support", "child_welfare_concern"],
+          "scores": { "krise_trygghet_vold": 6, "barnevern_hjelpetiltak": 2, "juridisk_veiledning": 1 },
+          "rationaleIds": ["urgent_unsafe_home"]
+        }
+      },
+      {
+        "id": "worry_for_child",
+        "label": "Jeg er bekymret for et barn eller en ungdom og trenger hjelp til å forstå hva som bør gjøres",
+        "effects": {
+          "flags": ["child_welfare_concern", "child_needs_help", "needs_service_coordination"],
+          "scores": { "barnevern_hjelpetiltak": 5, "samordnet_barneoppfolging": 2, "familie_og_foreldrestotte": 1 },
+          "rationaleIds": ["child_welfare_concern"]
+        }
+      },
+      {
+        "id": "parent_conflict",
+        "label": "Det gjelder konflikt i familien, samlivsbrudd eller vansker med foreldresamarbeid",
+        "effects": {
+          "flags": ["family_conflict_support", "has_child_contact_issue"],
+          "scores": { "familie_og_foreldrestotte": 5, "samordnet_barneoppfolging": 1 },
+          "rationaleIds": ["family_conflict_support"]
+        }
+      },
+      {
+        "id": "child_mental_health",
+        "label": "Det gjelder psykisk helse hos barn eller unge",
+        "effects": {
+          "flags": ["child_youth_mental_health", "child_needs_help", "needs_health_support", "child_home_school_health"],
+          "scores": { "barn_og_unge_psykisk_helse": 5, "helsehjelp_oppfolging": 2, "samordnet_barneoppfolging": 1 },
+          "rationaleIds": ["child_youth_mental_health"]
+        }
+      },
+      {
+        "id": "complaint_health_or_care",
+        "label": "Jeg trenger hjelp til å klage på eller følge opp helse-, omsorgs- eller andre tjenester",
+        "effects": {
+          "flags": ["needs_health_service_complaint", "needs_legal_guidance", "has_existing_decision"],
+          "scores": { "kommunal_klage_ombud": 8, "juridisk_veiledning": 2 },
+          "rationaleIds": ["needs_health_service_complaint"]
+        }
+      },
+      {
+        "id": "dont_know",
+        "label": "Vet ikke",
+        "effects": {
+          "flags": ["needs_guidance"],
+          "scores": { "familie_og_foreldrestotte": 1, "barnevern_hjelpetiltak": 1, "barn_og_unge_psykisk_helse": 1 },
+          "rationaleIds": ["family_safety_start"]
         }
       }
     ]
@@ -1425,7 +1498,7 @@
     "title": "Hva er allerede avklart eller i gang?",
     "description": "Dette brukes for å se om du trenger en ny kontakt, tydeligere dokumentasjon eller hjelp til å forstå noe som allerede finnes.",
     "selectionMode": "single",
-    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "sick", "needs_work_support", "young_first_contact", "letter_start", "unknown_focus_health", "unknown_focus_support", "unknown_focus_legal"],
+    "showWhenAnyFlags": ["needs_disability_support", "caregiver_rights", "sick", "needs_work_support", "young_first_contact", "letter_start", "family_safety_start", "unknown_focus_health", "unknown_focus_support", "unknown_focus_legal"],
     "options": [
       {
         "id": "have_doctor_or_specialist",
@@ -1465,7 +1538,7 @@
         "label": "Det finnes allerede vedtak, avslag eller brev jeg trenger å forstå eller følge opp",
         "effects": {
           "flags": ["has_existing_decision"],
-          "scores": { "juridisk_veiledning": 4 },
+          "scores": { "juridisk_veiledning": 4, "kommunal_klage_ombud": 3 },
           "rationaleIds": ["has_existing_decision"]
         }
       },
@@ -1510,7 +1583,7 @@
         "label": "Jeg tror en frist løper snart, eller jeg er redd for å miste en frist",
         "effects": {
           "flags": ["deadline_running"],
-          "scores": { "juridisk_veiledning": 4 },
+          "scores": { "juridisk_veiledning": 4, "kommunal_klage_ombud": 2 },
           "rationaleIds": ["deadline_running"]
         }
       },
@@ -1519,7 +1592,7 @@
         "label": "Jeg har nylig fått et brev eller vedtak og trenger å forstå neste steg",
         "effects": {
           "flags": ["recent_decision"],
-          "scores": { "juridisk_veiledning": 3 },
+          "scores": { "juridisk_veiledning": 3, "kommunal_klage_ombud": 1 },
           "rationaleIds": ["recent_decision"]
         }
       },
@@ -1528,7 +1601,7 @@
         "label": "Saken er eldre, men jeg trenger fortsatt oversikt over hva som gjelder",
         "effects": {
           "flags": ["older_unresolved_case"],
-          "scores": { "juridisk_veiledning": 2 },
+          "scores": { "juridisk_veiledning": 2, "kommunal_klage_ombud": 1 },
           "rationaleIds": ["older_unresolved_case"]
         }
       },
@@ -1590,7 +1663,7 @@
         "label": "Jeg trenger hjelp til å forstå et vedtak, en klage eller et brev",
         "effects": {
           "flags": ["needs_legal_guidance"],
-          "scores": { "juridisk_veiledning": 5 },
+          "scores": { "juridisk_veiledning": 5, "kommunal_klage_ombud": 3 },
           "rationaleIds": ["needs_legal_guidance"]
         }
       },

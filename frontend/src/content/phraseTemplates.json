@@ -75,6 +75,36 @@
     "content": "Hei. Jeg trenger hjelp til å få avklart helse, funksjon eller belastning på en måte som gjør neste steg tydeligere. Jeg ønsker råd om hvem jeg bør kontakte først, hvilken dokumentasjon som bør på plass, og hvordan dette kan beskrives saklig videre."
   },
   {
+    "id": "crisis_safety_contact",
+    "title": "Forslag til formulering om trygghet og akutt hjelp",
+    "content": "Hei. Situasjonen min føles utrygg, og jeg trenger hjelp til å avklare hva som bør gjøres først for trygghet, beskyttelse og videre oppfølging. Jeg ønsker tydelig veiledning om riktig første kontaktpunkt og hva jeg bør si kort og konkret nå."
+  },
+  {
+    "id": "family_support_contact",
+    "title": "Forslag til formulering om familie- og foreldrestøtte",
+    "content": "Hei. Jeg trenger hjelp til å sortere en vanskelig familie- eller foreldresituasjon, og ønsker veiledning om hvem som kan hjelpe oss videre på en trygg og rolig måte. Jeg ønsker en konkret vurdering av hva som bør tas først og hva det er lurt å beskrive skriftlig."
+  },
+  {
+    "id": "child_welfare_contact",
+    "title": "Forslag til formulering om bekymring for barn og hjelpetiltak",
+    "content": "Hei. Jeg trenger hjelp til å forstå hvilke hjelpetiltak eller hvilken oppfølging som kan være riktig fordi jeg er bekymret for et barn eller en ungdom. Jeg ønsker veiledning om hva som bør sies først, hvem som bør kontaktes og hvordan bekymringen kan beskrives konkret."
+  },
+  {
+    "id": "child_mental_health_contact",
+    "title": "Forslag til formulering om psykisk helse hos barn og unge",
+    "content": "Hei. Jeg trenger hjelp til å forstå hvor vi bør starte fordi et barn eller en ungdom strever psykisk, og det påvirker hverdagen hjemme, på skolen eller i annen aktivitet. Jeg ønsker en konkret vurdering av riktig første kontaktpunkt og hva som bør beskrives og dokumenteres videre."
+  },
+  {
+    "id": "ombud_complaint_contact",
+    "title": "Forslag til formulering om klage, ombud og videre oppfølging",
+    "content": "Hei. Jeg trenger hjelp til å forstå om saken min bør følges opp som klage, ombudssak eller annen formell henvendelse. Jeg ønsker å få avklart hva som er riktig instans, hvilke frister eller rettigheter som gjelder, og hva jeg bør sende inn først."
+  },
+  {
+    "id": "career_guidance_contact",
+    "title": "Forslag til formulering om karriereveiledning og veien videre",
+    "content": "Hei. Jeg trenger hjelp til å sortere skole, arbeid og neste steg videre, og ønsker en enkel og konkret veiledning om hvem som kan hjelpe meg best nå. Jeg ønsker å få avklart hva som er riktig første kontakt og hva jeg bør gjøre først."
+  },
+  {
     "id": "legal_guidance_contact",
     "title": "Forslag til formulering om klage og juridisk veiledning",
     "content": "Hei. Jeg trenger hjelp til å forstå et brev, et vedtak eller hvilke rettigheter som gjelder videre i saken min. Jeg ønsker veiledning om hva jeg bør gripe tak i først, hvilke frister som gjelder, og om det finnes klage- eller rettshjelpsspor som passer."

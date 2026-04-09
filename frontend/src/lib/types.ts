@@ -66,7 +66,7 @@ export type OfficialLink = {
   id: string;
   title: string;
   publisher: string;
-  group: "NAV" | "kommune" | "Husbanken" | "helse" | "skole" | "rettshjelp";
+  group: "NAV" | "kommune" | "Husbanken" | "helse" | "skole" | "rettshjelp" | "krise" | "familie" | "barnevern";
   url: string;
   actionLabel: string;
   description: string;
